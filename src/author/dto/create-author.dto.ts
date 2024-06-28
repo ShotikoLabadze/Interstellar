@@ -2,13 +2,13 @@ import { IsString } from 'class-validator';
 
 export class CreateAuthorDto {
   @IsString()
-  readonly firstName: string;
+  firstName: string;
 
   @IsString()
-  readonly lastName: string;
+  lastName: string;
 
   // need music resource
 
   @IsString()
-  readonly biography: string;
+  biography: string;
 }
