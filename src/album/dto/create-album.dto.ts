@@ -1,4 +1,6 @@
-import { IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsString } from "class-validator";
+import { CreateMusicDto } from "src/music/dto/create-music.dto";
 
 export class CreateAlbumDto {
     @IsString()
@@ -7,8 +9,9 @@ export class CreateAlbumDto {
     @IsString()
     releaseDate: string;
 
-    
-
+    @IsArray()
+    @Type(() => CreateMusicDto)
+    musics:CreateMusicDto[]
 
     @IsString()
     artistName: string;
