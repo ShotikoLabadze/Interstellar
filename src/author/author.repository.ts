@@ -1,49 +1,47 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { AuthorEntity } from './entities/author.entity';
 
 @Injectable()
 export class AuthorRepository {
-  private authors = [];
+  private authors: AuthorEntity[] = [];
+  private idCounter = 1;
 
-  create(createAlbumDto: CreateAuthorDto) {
-    const newAlbum = { id: this.authors.length + 1, ...CreateAuthorDto };
-    this.authors.push(newAlbum);
-    return newAlbum;
+  create(createAuthorDto: CreateAuthorDto): AuthorEntity {
+    const newAuthor: AuthorEntity = {
+      id: this.idCounter++,
+      ...createAuthorDto,
+    };
+    this.authors.push(newAuthor);
+    return newAuthor;
   }
 
-  findAll() {
+  findAll(): AuthorEntity[] {
     return this.authors;
   }
 
-  findOne(id: number) {
-    for (let i = 0; i < this.authors.length; i++) {
-      if (this.authors[i].id === Number(id)) {
-        return this.authors[i];
-      }
+  findOne(id: number): AuthorEntity {
+    const author = this.authors.find((author) => author.id === id);
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${id} not found`);
     }
-    return 'error';
+    return author;
   }
 
-  update(id: number, updateAuthorDto: UpdateAuthorDto) {
-    for (let i = 0; i < this.authors.length; i++) {
-      if (this.authors[i].id === Number(id)) {
-        const updatedAuthors = { ...this.authors[i], ...UpdateAuthorDto };
-        this.authors[i] = updatedAuthors;
-        return updatedAuthors;
-      }
-    }
-    return 'error';
+  update(id: number, updateAuthorDto: UpdateAuthorDto): AuthorEntity {
+    const author = this.findOne(id);
+    const updatedAuthor = { ...author, ...updateAuthorDto };
+    const index = this.authors.findIndex((author) => author.id === id);
+    this.authors[index] = updatedAuthor;
+    return updatedAuthor;
   }
 
-  remove(id: number) {
-    for (let i = 0; i < this.authors.length; i++) {
-      if (this.authors[i].id === Number(id)) {
-        const [removedAuthors] = this.authors.splice(i, 1);
-        return removedAuthors;
-      }
+  remove(id: number): void {
+    const index = this.authors.findIndex((author) => author.id === id);
+    if (index === -1) {
+      throw new NotFoundException(`Author with ID ${id} not found`);
     }
-    return 'error';
+    this.authors.splice(index, 1);
   }
 }
