@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorEntity } from './entities/author.entity';
+import { GetAuthorSearchDto } from './dto/seach-author.dto';
 
 @Injectable()
 export class AuthorRepository {
@@ -22,9 +23,10 @@ export class AuthorRepository {
   }
 
   findOne(id: number): AuthorEntity {
-    const author = this.authors.find((author) => author.id === id);
+    const parsedId = parseInt(id.toString(), 10); // Ensure id is parsed correctly
+    const author = this.authors.find((author) => author.id === parsedId);
     if (!author) {
-      throw new NotFoundException(`Author with ID ${id} not found`);
+      throw new NotFoundException('Author with ID ${parsedId} not found');
     }
     return author;
   }
@@ -40,8 +42,18 @@ export class AuthorRepository {
   remove(id: number): void {
     const index = this.authors.findIndex((author) => author.id === id);
     if (index === -1) {
-      throw new NotFoundException(`Author with ID ${id} not found`);
+      throw new NotFoundException('Author with ID ${id} not found');
     }
     this.authors.splice(index, 1);
+  }
+  //search logic
+  search(getAuthorSearchDto: GetAuthorSearchDto): AuthorEntity[] {
+    const { search } = getAuthorSearchDto;
+    return this.authors.filter(
+      (author) =>
+        author.firstName.includes(search) ||
+        author.lastName.includes(search) ||
+        author.biography.includes(search),
+    );
   }
 }

@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorRepository } from './author.repository';
+import { GetAuthorSearchDto } from './dto/seach-author.dto';
 import { AuthorEntity } from './entities/author.entity';
 
 @Injectable()
@@ -29,5 +30,9 @@ export class AuthorService {
 
   remove(id: number) {
     return this.authorsRepository.remove(id);
+  }
+  //search added
+  search(getAuthorSearchDto: GetAuthorSearchDto): AuthorEntity[] {
+    return this.authorsRepository.search(getAuthorSearchDto);
   }
 }
