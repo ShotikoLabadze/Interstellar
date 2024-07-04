@@ -22,20 +22,15 @@ export class AuthorController {
   create(@Body() createAuthorDto: CreateAuthorDto): AuthorEntity {
     return this.authorService.create(createAuthorDto);
   }
-  //search logic
-  @Get('search')
-  search(@Query() getAuthorSearchDto: GetAuthorSearchDto): AuthorEntity[] {
-    return this.authorService.search(getAuthorSearchDto);
-  }
 
   @Get()
-  findAll(): AuthorEntity[] {
-    return this.authorService.findAll();
+  findAll(@Query() getAuthorSearchDto: GetAuthorSearchDto): AuthorEntity[] {
+    return this.authorService.findAll(getAuthorSearchDto);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string): AuthorEntity {
-    return this.authorService.findOne(+id); // Ensure +id parses string to number
+    return this.authorService.findOne(+id);
   }
 
   @Patch(':id')
@@ -48,6 +43,6 @@ export class AuthorController {
 
   @Delete(':id')
   remove(@Param('id') id: string): void {
-    return this.authorService.remove(+id);
+    this.authorService.remove(+id);
   }
 }

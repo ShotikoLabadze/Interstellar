@@ -7,32 +7,29 @@ import { AuthorEntity } from './entities/author.entity';
 
 @Injectable()
 export class AuthorService {
-  searchAuthors(search: string): AuthorEntity[] {
-    throw new Error('Method not implemented.');
-  }
   constructor(private readonly authorsRepository: AuthorRepository) {}
 
-  create(createAuthorDto: CreateAuthorDto) {
+  create(createAuthorDto: CreateAuthorDto): AuthorEntity {
     return this.authorsRepository.create(createAuthorDto);
   }
 
-  findAll() {
-    return this.authorsRepository.findAll();
+  findAll(getAuthorSearchDto: GetAuthorSearchDto): AuthorEntity[] {
+    if (getAuthorSearchDto && getAuthorSearchDto.search) {
+      return this.authorsRepository.search(getAuthorSearchDto);
+    } else {
+      return this.authorsRepository.findAll();
+    }
   }
 
-  findOne(id: number) {
+  findOne(id: number): AuthorEntity {
     return this.authorsRepository.findOne(id);
   }
 
-  update(id: number, updateAuthorDto: UpdateAuthorDto) {
+  update(id: number, updateAuthorDto: UpdateAuthorDto): AuthorEntity {
     return this.authorsRepository.update(id, updateAuthorDto);
   }
 
-  remove(id: number) {
-    return this.authorsRepository.remove(id);
-  }
-  //search added
-  search(getAuthorSearchDto: GetAuthorSearchDto): AuthorEntity[] {
-    return this.authorsRepository.search(getAuthorSearchDto);
+  remove(id: number): void {
+    this.authorsRepository.remove(id);
   }
 }
