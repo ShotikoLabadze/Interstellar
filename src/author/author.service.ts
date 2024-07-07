@@ -2,34 +2,28 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorRepository } from './author.repository';
-import { GetAuthorSearchDto } from './dto/seach-author.dto';
-import { AuthorEntity } from './entities/author.entity';
 
 @Injectable()
 export class AuthorService {
-  constructor(private readonly authorsRepository: AuthorRepository) {}
+  constructor(private readonly authorRepository: AuthorRepository) {}
 
-  create(createAuthorDto: CreateAuthorDto): AuthorEntity {
-    return this.authorsRepository.create(createAuthorDto);
+  create(createAuthorDto: CreateAuthorDto) {
+    return this.authorRepository.create(createAuthorDto);
   }
 
-  findAll(getAuthorSearchDto: GetAuthorSearchDto): AuthorEntity[] {
-    if (getAuthorSearchDto && getAuthorSearchDto.search) {
-      return this.authorsRepository.search(getAuthorSearchDto);
-    } else {
-      return this.authorsRepository.findAll();
-    }
+  findAll() {
+    return this.authorRepository.findAll();
   }
 
-  findOne(id: number): AuthorEntity {
-    return this.authorsRepository.findOne(id);
+  findOne(id: number) {
+    return this.authorRepository.findOne(id);
   }
 
-  update(id: number, updateAuthorDto: UpdateAuthorDto): AuthorEntity {
-    return this.authorsRepository.update(id, updateAuthorDto);
+  update(id: number, updateAuthorDto: UpdateAuthorDto) {
+    return this.authorRepository.update(id, updateAuthorDto);
   }
 
-  remove(id: number): void {
-    this.authorsRepository.remove(id);
+  remove(id: number) {
+    return this.authorRepository.remove(id);
   }
 }
