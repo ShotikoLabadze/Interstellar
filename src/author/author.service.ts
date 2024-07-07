@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorRepository } from './author.repository';
+<<<<<<< Updated upstream
 import { AuthorEntity } from './entities/author.entity';
+=======
+>>>>>>> Stashed changes
 
 @Injectable()
 export class AuthorService {

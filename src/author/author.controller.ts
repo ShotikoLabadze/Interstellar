@@ -9,7 +9,10 @@ import {
 } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
+<<<<<<< Updated upstream
 import { UpdateAuthorDto } from './dto/update-author.dto';
+=======
+>>>>>>> Stashed changes
 
 @Controller('author')
 export class AuthorController {
@@ -31,8 +34,13 @@ export class AuthorController {
   }
 
   @Patch(':id')
+<<<<<<< Updated upstream
   update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
     return this.authorService.update(+id, updateAuthorDto);
+=======
+  update(@Param('id') id: string, @Body() createAuthorDto: CreateAuthorDto) {
+    return this.authorService.update(+id, createAuthorDto);
+>>>>>>> Stashed changes
   }
 
   @Delete(':id')
