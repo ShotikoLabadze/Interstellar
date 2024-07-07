@@ -1,10 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-<<<<<<< Updated upstream
-import { AuthorEntity } from './entities/author.entity';
-=======
->>>>>>> Stashed changes
 
 @Injectable()
 export class AuthorRepository {
@@ -20,18 +16,11 @@ export class AuthorRepository {
     return this.authors;
   }
 
-<<<<<<< Updated upstream
-  findOne(id: number): AuthorEntity {
-    const author = this.authors.find((author) => author.id === id);
-    if (!author) {
-      throw new NotFoundException(`Author with ID ${id} not found`);
-=======
   findOne(id: number) {
     for (let i = 0; i < this.authors.length; i++) {
       if (this.authors[i].id === Number(id)) {
         return this.authors[i];
       }
->>>>>>> Stashed changes
     }
     return 'error';
   }
@@ -47,14 +36,6 @@ export class AuthorRepository {
     return 'error';
   }
 
-<<<<<<< Updated upstream
-  remove(id: number): void {
-    const index = this.authors.findIndex((author) => author.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`Author with ID ${id} not found`);
-    }
-    this.authors.splice(index, 1);
-=======
   remove(id: number) {
     for (let i = 0; i < this.authors.length; i++) {
       if (this.authors[i].id === Number(id)) {
@@ -63,6 +44,5 @@ export class AuthorRepository {
       }
     }
     return 'error';
->>>>>>> Stashed changes
   }
 }
