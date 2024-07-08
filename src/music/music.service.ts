@@ -5,15 +5,14 @@ import { MusicRepository } from './music.repository';
 
 @Injectable()
 export class MusicService {
-
-  constructor(private readonly musicRepository: MusicRepository){}
+  constructor(private readonly musicRepository: MusicRepository) {}
 
   create(createMusicDto: CreateMusicDto) {
     return this.musicRepository.create(createMusicDto);
   }
 
-  findAll() {
-    return this.musicRepository.findAll();
+  findAll(search?: string) {
+    return this.musicRepository.findAll(search);
   }
 
   findOne(id: number) {
