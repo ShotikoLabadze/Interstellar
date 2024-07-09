@@ -22,9 +22,9 @@ export class AlbumController {
     return this.albumService.create(createAlbumDto);
   }
 
-  @Get()
-  findAll(@Query() searchDto: SearchDto) {
-    return this.albumService.findAll(searchDto.search);
+  @Get(@Query() searchDto:SearchDto)
+  findAll() {
+    return this.albumService.findAll(searchDto:SearchDto);
   }
 
   @Get(':id')

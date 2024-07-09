@@ -12,16 +12,8 @@ export class AlbumRepository {
     return newAlbum;
   }
 
-  findAll(search?: string) {
-    if (search) {
-      return this.albums.filter(
-        (album) =>
-          album.title.includes(search) ||
-          album.releaseDate.includes(search) ||
-          album.artistName.includes(search) ||
-          album.musics.includes(search),
-      );
-    }
+  findAll() {
+    return this.albums;
   }
 
   findOne(id: number) {
