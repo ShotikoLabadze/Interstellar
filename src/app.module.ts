@@ -6,7 +6,7 @@ import { MusicModule } from './music/music.module';
 import { SearchModule } from './search/search.module';
 
 @Module({
-  imports: [AuthorModule, MusicModule, SearchModule],
+  imports: [AuthorModule, MusicModule, SearchModule, AlbumModule],
   controllers: [AppController],
   providers: [AppService],
 })

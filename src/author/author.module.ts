@@ -4,10 +4,17 @@ import { AuthorController } from './author.controller';
 import { AuthorRepository } from './author.repository';
 import { SearchService } from 'src/search/search.service';
 import { MusicRepository } from 'src/music/music.repository';
+import { AlbumRepository } from 'src/album/album.repository';
 
 @Module({
   controllers: [AuthorController],
-  providers: [AuthorService, AuthorRepository, SearchService, MusicRepository],
+  providers: [
+    AlbumRepository,
+    AuthorService,
+    AuthorRepository,
+    SearchService,
+    MusicRepository,
+  ],
   exports: [AuthorRepository],
 })
 export class AuthorModule {}

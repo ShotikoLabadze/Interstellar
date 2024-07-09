@@ -7,7 +7,13 @@ export class CreateAuthorDto {
   @IsString()
   lastName: string;
 
+<<<<<<< Updated upstream
   // need music resource
+=======
+  @IsArray()
+  @Type(() => CreateMusicDto)
+  musics: CreateMusicDto[];
+>>>>>>> Stashed changes
 
   @IsString()
   biography: string;
