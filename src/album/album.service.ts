@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Search } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumRepository } from './album.repository';
@@ -11,8 +11,8 @@ export class AlbumService {
     return this.albumsRepository.create(createAlbumDto);
   }
 
-  findAll() {
-    return this.albumsRepository.findAll();
+  findAll(search?: string) {
+    return this.albumsRepository.findAll(search);
   }
 
   findOne(id: number) {

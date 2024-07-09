@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAlbumDto } from './dto/create-album.dto';
+
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { CreateAlbumDto } from './dto/create-album.dto';
 
 @Injectable()
 export class AlbumRepository {
@@ -12,8 +13,16 @@ export class AlbumRepository {
     return newAlbum;
   }
 
-  findAll() {
-    return this.albums;
+  findAll(search?: string) {
+    if (search) {
+      return this.albums.filter(
+        (album) =>
+          album.title.includes(search) ||
+          album.releaseDate.includes(search) ||
+          album.musics.includes(search) ||
+          album.artistName.inlcudes(search),
+      );
+    }
   }
 
   findOne(id: number) {

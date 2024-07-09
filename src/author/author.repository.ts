@@ -17,7 +17,8 @@ export class AuthorRepository {
         (author) =>
           author.firstName.includes(search) ||
           author.lastName.includes(search) ||
-          author.biography.includes(search),
+          author.biography.includes(search) ||
+          author.musics.includes(search),
       );
     }
     return this.authors;
