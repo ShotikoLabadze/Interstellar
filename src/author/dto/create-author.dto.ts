@@ -9,10 +9,9 @@ export class CreateAuthorDto {
   @IsString()
   lastName: string;
 
-  // @IsArray()
-  // @ValidateNested({ each: true })
-  // @Type(() => CreateMusicDto)
-  // musics: CreateMusicDto[];
+  @IsArray()
+  @Type(() => CreateMusicDto)
+  musics: CreateMusicDto[];
 
   @IsString()
   biography: string;
