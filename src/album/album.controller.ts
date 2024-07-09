@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { SearchDto } from 'src/search/dto/search.dto';
 
 @Controller('album')
 export class AlbumController {
@@ -13,8 +23,8 @@ export class AlbumController {
   }
 
   @Get()
-  findAll() {
-    return this.albumService.findAll();
+  findAll(@Query() searchDto: SearchDto) {
+    return this.albumService.findAll(searchDto.search);
   }
 
   @Get(':id')
