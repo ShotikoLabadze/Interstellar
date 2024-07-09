@@ -12,7 +12,12 @@ export class MusicRepository {
     return newMusic;
   }
 
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return this.musics.filter(
+        (music) => music.name.includes(search) || music.url.includes(search),
+      );
+    }
     return this.musics;
   }
 

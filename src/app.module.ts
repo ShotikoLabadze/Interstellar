@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AlbumModule } from './album/album.module';
 import { MusicModule } from './music/music.module';
+import { SearchModule } from './search/search.module';
 import { AuthorModule } from './author/author.module';
 
 @Module({
-  imports: [AlbumModule, MusicModule, AuthorModule],
+  imports: [AuthorModule, MusicModule, SearchModule],
   controllers: [AppController],
   providers: [AppService],
 })

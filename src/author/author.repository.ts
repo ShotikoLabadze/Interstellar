@@ -11,8 +11,15 @@ export class AuthorRepository {
     this.authors.push(newAuthor);
     return newAuthor;
   }
-
-  findAll() {
+  findAll(search?: string) {
+    if (search) {
+      return this.authors.filter(
+        (author) =>
+          author.firstName.includes(search) ||
+          author.lastName.includes(search) ||
+          author.biography.includes(search),
+      );
+    }
     return this.authors;
   }
 

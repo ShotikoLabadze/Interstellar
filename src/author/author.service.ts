@@ -11,8 +11,8 @@ export class AuthorService {
     return this.authorRepository.create(createAuthorDto);
   }
 
-  findAll() {
-    return this.authorRepository.findAll();
+  findAll(search?: string) {
+    return this.authorRepository.findAll(search);
   }
 
   findOne(id: number) {

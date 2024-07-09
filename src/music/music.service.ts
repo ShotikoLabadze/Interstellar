@@ -11,8 +11,8 @@ export class MusicService {
     return this.musicRepository.create(createMusicDto);
   }
 
-  findAll() {
-    return this.musicRepository.findAll();
+  findAll(search?: string) {
+    return this.musicRepository.findAll(search);
   }
 
   findOne(id: number) {
