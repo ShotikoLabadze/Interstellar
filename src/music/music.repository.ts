@@ -18,14 +18,17 @@ constructor(@InjectRepository(Music)
                  .save(music)
 }
 
-    findAll(search: string) {
-     // if(search){
+     findAll(search: string) {
+     if(search){
         return this.musicRepository
-                 .createQueryBuilder('music')
-                 .where('music.name like :name', { name: `%${search}%`})
-                 .getMany()
+                   .createQueryBuilder('music')
+                   .where('music.name LIKE :name', { name: `%${search}%`})
+                   .getMany()
 
+      } else {
+        return this.musicRepository.find();
       }
+    }
   
 
     findOne(id: number) {
