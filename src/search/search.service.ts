@@ -10,8 +10,8 @@ export class SearchService {
     private readonly albumRepository: AlbumRepository,
   ) {}
 
-async findAll(search: string) {
-  const music = await this.musicRepository.findAll(search);
-  return { music, };
+async findAll(search?: string) {
+  const music = await this.musicRepository.findAllSearch(search);
+  return { music };
 }
 }

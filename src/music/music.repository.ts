@@ -7,6 +7,9 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class MusicRepository {
+  findAllSearch(search: string) {
+    throw new Error('Method not implemented.');
+  }
  
 
 constructor(@InjectRepository(Music)
@@ -18,16 +21,14 @@ constructor(@InjectRepository(Music)
                  .save(music)
 }
 
-     findAll(search: string) {
-     if(search){
-        return this.musicRepository
-                   .createQueryBuilder('music')
-                   .where('music.name LIKE :name', { name: `%${search}%`})
-                   .getMany()
-
-      } else {
-        return this.musicRepository.find();
+    findAll(search?: string) {
+      const query = this.musicRepository.createQueryBuilder('music');
+  
+      if (search) {
+        query.where('music.name LIKE :name', { name: `%${search}%` });
       }
+  
+      return query.getMany();
     }
   
 
