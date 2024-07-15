@@ -9,9 +9,9 @@ export class CreateAlbumDto {
     @IsString()
     releaseDate: string;
 
-    @IsArray()
-    @Type(() => CreateMusicDto)
-    musics:CreateMusicDto[]
+    // @IsArray()
+    // @Type(() => CreateMusicDto)
+    // musics:CreateMusicDto[]
 
     @IsString()
     artistName: string;

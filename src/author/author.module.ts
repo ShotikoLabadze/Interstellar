@@ -7,9 +7,10 @@ import { MusicRepository } from 'src/music/music.repository';
 import { AlbumRepository } from 'src/album/album.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Music } from 'src/music/entities/music.entity';
+import { Album } from 'src/album/entities/album.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Music])],
+  imports: [TypeOrmModule.forFeature([Music,Album])],
   controllers: [AuthorController],
   providers: [
     AlbumRepository,

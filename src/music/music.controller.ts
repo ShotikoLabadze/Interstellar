@@ -23,12 +23,13 @@ export class MusicController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    if (search) {
-      return this.musicService.findAllSearch(search);
-    } else {
-      return this.musicService.findAll();
-    }
+ findAll(){
+    return this.musicService.findAll()
+  }
+
+  @Get()
+  findAllSearch(@Query() searchDto: SearchDto) {
+    return this.musicService.findAllSearch();
   }
 
   @Get(':id')

@@ -8,9 +8,10 @@ import { AlbumRepository } from 'src/album/album.repository';
 import { AlbumModule } from 'src/album/album.module';
 import { Music } from 'src/music/entities/music.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Album } from 'src/album/entities/album.entity';
 
 @Module({
-  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([Music])],
+  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([Music,Album])],
   providers: [SearchService, MusicRepository, AlbumRepository],
   controllers: [SearchController],
 })

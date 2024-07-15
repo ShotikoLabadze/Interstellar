@@ -12,6 +12,7 @@ export class SearchService {
 
 async findAll(search?: string) {
   const music = await this.musicRepository.findAllSearch(search);
+ // const album = await this.albumRepository.findAllSearch(search);
   return { music };
 }
 }
