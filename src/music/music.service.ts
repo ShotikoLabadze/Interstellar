@@ -10,14 +10,10 @@ export class MusicService {
   create(createMusicDto: CreateMusicDto) {
     return this.musicRepository.create(createMusicDto);
   }
-  async findAll() {
-    return this.musicRepository.findAll();
-  }
 
-  async findAllSearch(search: string) {
+  findAll(search?: string) {
     return this.musicRepository.findAll(search);
   }
-
 
   findOne(id: number) {
     return this.musicRepository.findOne(id);
