@@ -10,9 +10,12 @@ export class AlbumService {
   create(createAlbumDto: CreateAlbumDto) {
     return this.albumsRepository.create(createAlbumDto);
   }
+  async findAll() {
+    return this.albumsRepository.findAll();
+  }
 
-  findAll(search?: string) {
-    return this.albumsRepository.findAll(search);
+  async findAllSearch(search: string) {
+    return this.albumsRepository.findAllSearch(search);
   }
 
   findOne(id: number) {

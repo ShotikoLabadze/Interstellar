@@ -23,8 +23,12 @@ export class AlbumController {
   }
 
   @Get()
-  findAll(@Query() searchDto: SearchDto) {
-    return this.albumService.findAll(searchDto.search);
+  findAll(@Query('search') search?: string) {
+    if (search) {
+      return this.albumService.findAllSearch(search);
+    } else {
+      return this.albumService.findAll();
+    }
   }
 
   @Get(':id')

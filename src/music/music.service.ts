@@ -5,19 +5,20 @@ import { MusicRepository } from './music.repository';
 
 @Injectable()
 export class MusicService {
+
   constructor(private readonly musicRepository: MusicRepository) {}
 
   create(createMusicDto: CreateMusicDto) {
-    return this.musicRepository.create(createMusicDto);
+   return this.musicRepository.create(createMusicDto)
   }
-  async findAll() {
+
+  findAll() {
     return this.musicRepository.findAll();
   }
 
-  async findAllSearch(search: string) {
-    return this.musicRepository.findAll(search);
+  findAllSearch(search?: string) {
+    return this.musicRepository.findAllSearch(search);
   }
-
 
   findOne(id: number) {
     return this.musicRepository.findOne(id);
@@ -31,3 +32,4 @@ export class MusicService {
     return this.musicRepository.remove(id);
   }
 }
+
