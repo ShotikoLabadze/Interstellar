@@ -6,7 +6,7 @@ export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
-  findAll(@Query('search') search: string) {
-    return this.searchService.findAll(search);
+  findAllSearch(@Query('search') search: string) {
+    return this.searchService.findAllSearch(search);
   }
 }
