@@ -6,9 +6,13 @@ import { MusicModule } from '../music/music.module';
 import { MusicRepository } from 'src/music/music.repository';
 import { AlbumRepository } from 'src/album/album.repository';
 import { AlbumModule } from 'src/album/album.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Music } from 'src/music/entities/music.entity';
+import { Album } from 'src/album/entities/album.entity';
+import { Author } from 'src/author/entities/author.entity';
 
 @Module({
-  imports: [AuthorModule, MusicModule, AlbumModule],
+  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([Music,Album,Author])],
   providers: [SearchService, MusicRepository, AlbumRepository],
   controllers: [SearchController],
 })
