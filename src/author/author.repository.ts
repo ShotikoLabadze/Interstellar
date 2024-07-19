@@ -22,19 +22,20 @@ export class AuthorRepository {
   }
 
   async findAllSearch(search?: string) {
+    const query = this.authorRepository.createQueryBuilder('author');
+
     if (search) {
-      return await this.authorRepository
-        .createQueryBuilder('author')
+      query
         .where('author.firstName LIKE :search', { search: `%${search}%` })
         .orWhere('author.lastName LIKE :search', { search: `%${search}%` })
-        .orWhere('author.biography LIKE :search', { search: `%${search}%` })
-        .getMany();
+        .orWhere('author.biography LIKE :search', { search: `%${search}%` });
     }
-    return await this.authorRepository.find();
+
+    return await query.getMany();
   }
 
   async findOne(id: number) {
-    return this.authorRepository
+    return await this.authorRepository
       .createQueryBuilder('author')
       .where('author.id = :id', { id })
       .getMany();

@@ -24,11 +24,7 @@ export class AuthorController {
 
   @Get()
   findAll(@Query('search') search?: string) {
-    if (search) {
-      return this.authorService.findAllSearch(search);
-    } else {
-      return this.authorService.findAll();
-    }
+    return this.authorService.findAllSearch(search);
   }
 
   @Get(':id')
