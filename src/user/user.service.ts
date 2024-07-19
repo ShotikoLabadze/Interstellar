@@ -7,8 +7,8 @@ import { UserRepository } from './user.repository';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  create(createUserDto: CreateUserDto) {
-    return this.userRepository.create(createUserDto);
+  async create(createUserDto: CreateUserDto) {
+    return await this.userRepository.create(createUserDto);
   }
 
   findAll() {

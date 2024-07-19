@@ -11,6 +11,7 @@ import {
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { SearchDto } from 'src/search/dto/search.dto';
+import { UpdateAuthorDto } from './dto/update-author.dto';
 
 @Controller('author')
 export class AuthorController {
@@ -32,8 +33,8 @@ export class AuthorController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() createAuthorDto: CreateAuthorDto) {
-    return this.authorService.update(+id, createAuthorDto);
+  update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
+    return this.authorService.update(+id, updateAuthorDto);
   }
 
   @Delete(':id')
