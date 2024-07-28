@@ -2,37 +2,38 @@ import { Injectable } from '@nestjs/common';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Music } from './entities/music.entity';
-import { DeepPartial, Repository } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { MusicEntity } from './entities/music.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MusicRepository {
-  constructor(@InjectRepository(Music)
-              private musicRepository: Repository<Music>){}
+  constructor(@InjectRepository(MusicEntity)
+              private musicRepository: Repository<MusicEntity>){}
 
-  create(createMusicDto: CreateMusicDto){
+  async create(createMusicDto: CreateMusicDto){
     const music = this.musicRepository.create(createMusicDto)
-    return this.musicRepository.save(music)
+    return await this.musicRepository.save(music)
   }
 
-  findAll() {
-    return this.musicRepository
+  async findAll() {
+    return await this.musicRepository
                .createQueryBuilder('music')
                .getMany();
   }
 
-  findAllSearch(search?: string) {
+  async findAllSearch(search?: string) {
     if (search) {
-      return this.musicRepository
+      return await this.musicRepository
                  .createQueryBuilder('music')
-                 .where('music.name LIKE :name', { name: `%${search}%`})
+                 .where('name LIKE :search', { search: `%${search}%`})
                  .getMany();
+    }else {
+      return await "there is nothing try search something else";
     }
   }
 
-  findOne(id: number) {
-    return this.musicRepository
+  async findOne(id: number) {
+    return await this.musicRepository
                .createQueryBuilder('music')
                .where('music.id = :id', { id })
                .getOne();
@@ -43,7 +44,7 @@ export class MusicRepository {
               .createQueryBuilder('music')
               .update()
               .set(updateMusicDto)
-              .where('music.id = :id', { id })
+              .where('id = :id', { id })
               .execute()
     
     return this.findOne(id)
@@ -51,7 +52,7 @@ export class MusicRepository {
 
   async remove(id: number) {
     await this.musicRepository.softDelete(id);
-    return this.musicRepository
+    return await this.musicRepository
                .createQueryBuilder('music')
                .withDeleted()
                .where('music.id = :id', { id })

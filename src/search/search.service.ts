@@ -5,11 +5,13 @@ import { AlbumRepository } from 'src/album/album.repository';
 @Injectable()
 export class SearchService {
   constructor(
-    private readonly musicRepository: MusicRepository
+    private readonly musicRepository: MusicRepository,
+    private readonly albumRepository: AlbumRepository
   ) {}
 
   async findAll(search: string) {
     const music = await this.musicRepository.findAllSearch(search);
-    return { music } 
+    const album = await this.albumRepository.findAllSearch(search);
+    return { music , album} 
   }
 }

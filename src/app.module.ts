@@ -8,7 +8,7 @@ import { AlbumModule } from './album/album.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [MusicModule,
+  imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -19,7 +19,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    SearchModule, AuthorModule, AlbumModule
+    MusicModule,
+    SearchModule, 
+    AuthorModule, 
+    AlbumModule
   ],
   controllers: [AppController],
   providers: [AppService],

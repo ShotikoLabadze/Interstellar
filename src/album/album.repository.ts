@@ -2,56 +2,60 @@ import { Injectable } from '@nestjs/common';
 
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { AlbumEntity } from './entities/album.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AlbumRepository {
-  private albums = [];
+  constructor(@InjectRepository(AlbumEntity)
+              private albumRepository: Repository<AlbumEntity>){}
 
-  create(createAlbumDto: CreateAlbumDto) {
-    const newAlbum = { id: this.albums.length + 1, ...createAlbumDto };
-    this.albums.push(newAlbum);
-    return newAlbum;
+  async create(createAlbumDto: CreateAlbumDto){
+    const album = this.albumRepository.create(createAlbumDto)
+    return await this.albumRepository.save(album)
   }
 
-  findAll(search?: string) {
+  async findAll() {
+    return await this.albumRepository
+               .createQueryBuilder('album')
+               .getMany();
+  }
+
+  async findAllSearch(search?: string) {
     if (search) {
-      return this.albums.filter(
-        (album) =>
-          album.title.includes(search) ||
-          album.releaseDate.includes(search) ||
-          album.musics.includes(search) ||
-          album.artistName.inlcudes(search),
-      );
+      return await this.albumRepository
+                 .createQueryBuilder('album')
+                 .where('album.title LIKE :name', { name: `%${search}%`})
+                 .getMany();
     }
   }
 
-  findOne(id: number) {
-    for (let i = 0; i < this.albums.length; i++) {
-      if (this.albums[i].id === Number(id)) {
-        return this.albums[i];
-      }
-    }
-    return 'error';
+  async findOne(id: number) {
+    return await this.albumRepository
+               .createQueryBuilder('album')
+               .where('album.id = :id', { id })
+               .getOne();
   }
 
-  update(id: number, updateAlbumsDto: UpdateAlbumDto) {
-    for (let i = 0; i < this.albums.length; i++) {
-      if (this.albums[i].id === Number(id)) {
-        const updatedAlbums = { ...this.albums[i], ...updateAlbumsDto };
-        this.albums[i] = updatedAlbums;
-        return updatedAlbums;
-      }
-    }
-    return 'error';
+  async update(id: number, updateAlbumDto: UpdateAlbumDto) {
+    const query =  await this.albumRepository
+              .createQueryBuilder()
+              .update()
+              .set(updateAlbumDto)
+              .where('id = :id', {id})  
+              .execute()
+    
+    return await this.findOne(id)
   }
 
-  remove(id: number) {
-    for (let i = 0; i < this.albums.length; i++) {
-      if (this.albums[i].id === Number(id)) {
-        const [removedAlbums] = this.albums.splice(i, 1);
-        return removedAlbums;
-      }
-    }
-    return 'error';
+  async remove(id: number) {
+    await this.albumRepository.softDelete(id);
+    return await this.albumRepository
+               .createQueryBuilder('album')
+               .withDeleted()
+               .where('album.id = :id', { id })
+               .getOne()
   }
+
 }
