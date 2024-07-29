@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
-import { Author } from './entities/author.entity';
+import { AuthorEntity } from './entities/author.entity';
 
 @Injectable()
 export class AuthorRepository {
   constructor(
-    @InjectRepository(Author)
-    private authorRepository: Repository<Author>,
+    @InjectRepository(AuthorEntity)
+    private authorRepository: Repository<AuthorEntity>,
   ) {}
 
   async create(createAuthorDto: CreateAuthorDto) {
@@ -44,7 +44,7 @@ export class AuthorRepository {
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {
     await this.authorRepository
       .createQueryBuilder('author')
-      .update(Author)
+      .update(AuthorEntity)
       .set(updateAuthorDto)
       .where('id = :id', { id })
       .execute();

@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Author {
+export class AuthorEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -18,8 +18,8 @@ export class Author {
   @Column()
   lastName: string;
 
-  //   @OneToMany(() => Music, (music) => music.author)
-  //   musics: Music[];
+  // @OneToMany(() => Music, (music) => music.author)
+  // musics: Music[];
 
   @Column()
   biography: string;
