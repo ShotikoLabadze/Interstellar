@@ -10,8 +10,8 @@ export class SearchService {
     private readonly albumRepository: AlbumRepository,
   ) {}
 
-  findAll(search: string) {
-    const authors = this.authorRepository.findAll(search);
+  findAllSearch(search: string) {
+    const authors = this.authorRepository.findAllSearch(search);
     const music = this.musicRepository.findAll(search);
     const album = this.albumRepository.findAll(search);
     return { authors, music, album };

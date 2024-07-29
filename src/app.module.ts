@@ -5,9 +5,25 @@ import { MusicModule } from './music/music.module';
 import { SearchModule } from './search/search.module';
 import { AuthorModule } from './author/author.module';
 import { AlbumModule } from './album/album.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [MusicModule, SearchModule, AuthorModule, AlbumModule],
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '12345',
+      database: 'artist-module',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+    MusicModule,
+    SearchModule,
+    AuthorModule,
+    AlbumModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

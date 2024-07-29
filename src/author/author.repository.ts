@@ -1,56 +1,62 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { AuthorEntity } from './entities/author.entity';
 
 @Injectable()
 export class AuthorRepository {
-  private authors = [];
+  constructor(
+    @InjectRepository(AuthorEntity)
+    private authorRepository: Repository<AuthorEntity>,
+  ) {}
 
-  create(createAuthorDto: CreateAuthorDto) {
-    const newAuthor = { id: this.authors.length + 1, ...createAuthorDto };
-    this.authors.push(newAuthor);
-    return newAuthor;
+  async create(createAuthorDto: CreateAuthorDto) {
+    const author = this.authorRepository.create(createAuthorDto);
+    return await this.authorRepository.save(author);
   }
-  findAll(search?: string) {
+
+  async findAll() {
+    return await this.authorRepository.createQueryBuilder('author').getMany();
+  }
+
+  async findAllSearch(search?: string) {
+    const query = this.authorRepository.createQueryBuilder('author');
+
     if (search) {
-      return this.authors.filter(
-        (author) =>
-          author.firstName.includes(search) ||
-          author.lastName.includes(search) ||
-          author.biography.includes(search) ||
-          author.musics.includes(search),
-      );
+      query
+        .where('author.firstName LIKE :search', { search: `%${search}%` })
+        .orWhere('author.lastName LIKE :search', { search: `%${search}%` })
+        .orWhere('author.biography LIKE :search', { search: `%${search}%` });
     }
-    return this.authors;
+
+    return await query.getMany();
   }
 
-  findOne(id: number) {
-    for (let i = 0; i < this.authors.length; i++) {
-      if (this.authors[i].id === Number(id)) {
-        return this.authors[i];
-      }
-    }
-    return 'error';
+  async findOne(id: number) {
+    return await this.authorRepository
+      .createQueryBuilder('author')
+      .where('author.id = :id', { id })
+      .getMany();
   }
 
-  update(id: number, updateAuthorDto: UpdateAuthorDto) {
-    for (let i = 0; i < this.authors.length; i++) {
-      if (this.authors[i].id === Number(id)) {
-        const updatedAuthors = { ...this.authors[i], ...updateAuthorDto };
-        this.authors[i] = updatedAuthors;
-        return updatedAuthors;
-      }
-    }
-    return 'error';
+  async update(id: number, updateAuthorDto: UpdateAuthorDto) {
+    await this.authorRepository
+      .createQueryBuilder('author')
+      .update(AuthorEntity)
+      .set(updateAuthorDto)
+      .where('id = :id', { id })
+      .execute();
   }
 
-  remove(id: number) {
-    for (let i = 0; i < this.authors.length; i++) {
-      if (this.authors[i].id === Number(id)) {
-        const [removedAuthors] = this.authors.splice(i, 1);
-        return removedAuthors;
-      }
-    }
-    return 'error';
+  async remove(id: number) {
+    await this.authorRepository.softDelete(id);
+
+    return this.authorRepository
+      .createQueryBuilder('author')
+      .withDeleted()
+      .where('author.id = :id', { id })
+      .getOne();
   }
 }
