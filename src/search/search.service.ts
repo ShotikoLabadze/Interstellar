@@ -7,7 +7,7 @@ export class SearchService {
   constructor(
     private readonly musicRepository: MusicRepository,
     private readonly albumRepository: AlbumRepository,
-    private readonly authorRepository: AuthorRepository
+    private readonly authorRepository: AuthorRepository,
   ) {}
 
   async findAllSearch(search: string) {
