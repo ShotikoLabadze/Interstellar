@@ -11,9 +11,9 @@ export class SearchService {
   ) {}
 
   async findAllSearch(search: string) {
-    const authors = this.authorRepository.findAllSearch(search);
-    const music = this.musicRepository.findAllSearch(search);
-    const album = this.albumRepository.findAllSearch(search);
+    const authors = await this.authorRepository.findAllSearch(search);
+    const music = await this.musicRepository.findAllSearch(search);
+    const album = await this.albumRepository.findAllSearch(search);
     return { authors, music, album };
 
 }

@@ -7,6 +7,6 @@ export class SearchController {
 
   @Get()
   async findAllSearch(@Query('search') search: string) {
-    return await this.searchService.findAll(search);
+    return await this.searchService.findAllSearch(search);
   }
 }
