@@ -6,12 +6,14 @@ import { AlbumRepository } from 'src/album/album.repository';
 export class SearchService {
   constructor(
     private readonly musicRepository: MusicRepository,
-    private readonly albumRepository: AlbumRepository
+    private readonly albumRepository: AlbumRepository,
+    private readonly authorRepository: AuthorRepository
   ) {}
 
   async findAll(search: string) {
+    const authors = this.authorRepository.findAllSearch(search);
     const music = await this.musicRepository.findAllSearch(search);
     const album = await this.albumRepository.findAllSearch(search);
-    return { music , album} 
+    return { music , album, author} 
   }
 }
