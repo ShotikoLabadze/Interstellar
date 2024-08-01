@@ -14,17 +14,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '12345',
-      database: 'artist-module',
+      password: '',
+      database: 'music_module',
       autoLoadEntities: true,
       synchronize: true,
     }),
     MusicModule,
-    SearchModule,
-    AuthorModule,
-    AlbumModule,
+    SearchModule, 
+    AuthorModule, 
+    AlbumModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
+

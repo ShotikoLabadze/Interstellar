@@ -46,7 +46,6 @@ export class MusicRepository {
               .set(updateMusicDto)
               .where('id = :id', { id })
               .execute()
-              
 
     return this.findOne(id)
   }

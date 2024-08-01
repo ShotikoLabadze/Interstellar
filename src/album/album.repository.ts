@@ -45,7 +45,7 @@ export class AlbumRepository {
               .set(updateAlbumDto)
               .where('id = :id', {id})  
               .execute()
-              
+
     return await this.findOne(id)
   }
 
