@@ -7,15 +7,12 @@ import { MusicRepository } from 'src/music/music.repository';
 import { AlbumRepository } from 'src/album/album.repository';
 import { AlbumModule } from 'src/album/album.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MusicEntity } from 'src/music/entities/music.entity';
+import { AlbumEntity } from 'src/album/entities/album.entity';
 import { AuthorEntity } from 'src/author/entities/author.entity';
 
 @Module({
-  imports: [
-    AuthorModule,
-    MusicModule,
-    AlbumModule,
-    TypeOrmModule.forFeature([AuthorEntity]),
-  ],
+  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([MusicEntity,AlbumEntity,AuthorEntity])],
   providers: [SearchService, MusicRepository, AlbumRepository],
   controllers: [SearchController],
 })

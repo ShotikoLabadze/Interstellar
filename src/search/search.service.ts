@@ -5,15 +5,15 @@ import { AlbumRepository } from 'src/album/album.repository';
 @Injectable()
 export class SearchService {
   constructor(
-    private readonly authorRepository: AuthorRepository,
     private readonly musicRepository: MusicRepository,
     private readonly albumRepository: AlbumRepository,
+    private readonly authorRepository: AuthorRepository
   ) {}
 
-  findAllSearch(search: string) {
+  async findAll(search: string) {
     const authors = this.authorRepository.findAllSearch(search);
-    const music = this.musicRepository.findAll(search);
-    const album = this.albumRepository.findAll(search);
-    return { authors, music, album };
+    const music = await this.musicRepository.findAllSearch(search);
+    const album = await this.albumRepository.findAllSearch(search);
+    return { music , album, author} 
   }
 }
