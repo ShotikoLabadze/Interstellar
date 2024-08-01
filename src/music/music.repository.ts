@@ -1,53 +1,63 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { MusicEntity } from './entities/music.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class MusicRepository {
-  private musics = [];
+  constructor(@InjectRepository(MusicEntity)
+              private musicRepository: Repository<MusicEntity>){}
 
-  create(createMusicDto: CreateMusicDto) {
-    const newMusic = { id: this.musics.length + 1, ...createMusicDto };
-    this.musics.push(newMusic);
-    return newMusic;
+  async create(createMusicDto: CreateMusicDto){
+    const music = this.musicRepository.create(createMusicDto)
+    return await this.musicRepository.save(music)
   }
 
-  findAll(search?: string) {
+  async findAll() {
+    return await this.musicRepository
+               .createQueryBuilder('music')
+               .getMany();
+  }
+
+  async findAllSearch(search?: string) {
     if (search) {
-      return this.musics.filter(
-        (music) => music.name.includes(search) || music.url.includes(search),
-      );
+      return await this.musicRepository
+                 .createQueryBuilder('music')
+                 .where('name LIKE :search', { search: `%${search}%`})
+                 .getMany();
+    }else {
+      return await "there is nothing try search something else";
     }
-    return this.musics;
   }
 
-  findOne(id: number) {
-    for (let i = 0; i < this.musics.length; i++) {
-      if (this.musics[i].id === Number(id)) {
-        return this.musics[i];
-      }
-    }
-    return 'error';
+  async findOne(id: number) {
+    return await this.musicRepository
+               .createQueryBuilder('music')
+               .where('music.id = :id', { id })
+               .getOne();
   }
 
-  update(id: number, updateMusicDto: UpdateMusicDto) {
-    for (let i = 0; i < this.musics.length; i++) {
-      if (this.musics[i].id === Number(id)) {
-        const updatedMusics = { ...this.musics[i], ...updateMusicDto };
-        this.musics[i] = updatedMusics;
-        return updatedMusics;
-      }
-    }
-    return 'error';
+  async update(id: number, updateMusicDto: UpdateMusicDto) {
+    await this.musicRepository
+              .createQueryBuilder('music')
+              .update()
+              .set(updateMusicDto)
+              .where('id = :id', { id })
+              .execute()
+              
+
+    return this.findOne(id)
   }
 
-  remove(id: number) {
-    for (let i = 0; i < this.musics.length; i++) {
-      if (this.musics[i].id === Number(id)) {
-        const [removedMusics] = this.musics.splice(i, 1);
-        return removedMusics;
-      }
-    }
-    return 'error';
+  async remove(id: number) {
+    await this.musicRepository.softDelete(id);
+    return await this.musicRepository
+               .createQueryBuilder('music')
+               .withDeleted()
+               .where('music.id = :id', { id })
+               .getOne()
   }
+
 }

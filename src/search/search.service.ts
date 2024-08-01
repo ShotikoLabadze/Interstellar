@@ -12,8 +12,8 @@ export class SearchService {
 
   findAllSearch(search: string) {
     const authors = this.authorRepository.findAllSearch(search);
-    const music = this.musicRepository.findAll(search);
-    const album = this.albumRepository.findAll(search);
+    const music = this.musicRepository.findAllSearch(search);
+    const album = this.albumRepository.findAllSearch(search);
     return { authors, music, album };
   }
 }

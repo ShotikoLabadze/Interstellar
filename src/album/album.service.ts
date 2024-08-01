@@ -7,23 +7,27 @@ import { AlbumRepository } from './album.repository';
 export class AlbumService {
   constructor(private readonly albumsRepository: AlbumRepository) {}
 
-  create(createAlbumDto: CreateAlbumDto) {
-    return this.albumsRepository.create(createAlbumDto);
+  async create(createAlbumDto: CreateAlbumDto) {
+    return await this.albumsRepository.create(createAlbumDto);
   }
 
-  findAll(search?: string) {
-    return this.albumsRepository.findAll(search);
+  async findAll() {
+    return await this.albumsRepository.findAll();
   }
 
-  findOne(id: number) {
-    return this.albumsRepository.findOne(id);
+  async findAllSearch(search?: string) {
+    return await this.albumsRepository.findAllSearch(search);
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return this.albumsRepository.update(id, updateAlbumDto);
+  async findOne(id: number) {
+    return await this.albumsRepository.findOne(id);
   }
 
-  remove(id: number) {
-    return this.albumsRepository.remove(id);
+  async update(id: number, updateAlbumDto: UpdateAlbumDto) {
+    return await this.albumsRepository.update(id, updateAlbumDto);
+  }
+
+  async remove(id: number) {
+    return await this.albumsRepository.remove(id);
   }
 }
