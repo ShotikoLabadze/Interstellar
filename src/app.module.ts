@@ -20,13 +20,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true,
     }),
     MusicModule,
-    SearchModule, 
-    AuthorModule, 
-    AlbumModule
+    SearchModule,
+    AuthorModule,
+    AlbumModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
-
-
