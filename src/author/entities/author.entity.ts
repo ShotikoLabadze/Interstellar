@@ -1,4 +1,5 @@
-import { Music } from 'src/music/entities/music.entity';
+
+import { MusicEntity } from 'src/music/entities/music.entity';
 import {
   Column,
   CreateDateColumn,
@@ -18,8 +19,8 @@ export class AuthorEntity {
   @Column()
   lastName: string;
 
-  // @OneToMany(() => Music, (music) => music.author)
-  // musics: Music[];
+  @OneToMany(() => MusicEntity, (music) => music.author, {cascade: true})
+  musics: MusicEntity[];
 
   @Column()
   biography: string;

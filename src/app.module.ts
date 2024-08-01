@@ -15,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'music_module',
+      database: 'miulai',
       autoLoadEntities: true,
       synchronize: true,
     }),

@@ -10,10 +10,11 @@ export class SearchService {
     private readonly authorRepository: AuthorRepository
   ) {}
 
-  async findAll(search: string) {
+  async findAllSearch(search: string) {
     const authors = this.authorRepository.findAllSearch(search);
     const music = this.musicRepository.findAllSearch(search);
     const album = this.albumRepository.findAllSearch(search);
     return { authors, music, album };
 
+}
 }

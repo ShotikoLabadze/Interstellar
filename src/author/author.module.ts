@@ -11,7 +11,7 @@ import { MusicModule } from 'src/music/music.module';
 import { AlbumModule } from 'src/album/album.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthorRepository]), MusicModule, AlbumModule],
+  imports: [TypeOrmModule.forFeature([AuthorEntity]), MusicModule, AlbumModule],
   controllers: [AuthorController],
   providers: [
     AlbumRepository,
