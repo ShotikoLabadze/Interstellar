@@ -6,6 +6,8 @@ import { SearchModule } from './search/search.module';
 import { AuthorModule } from './author/author.module';
 import { AlbumModule } from './album/album.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ListenerModule } from './listeners/listeners.module';
+import { ListenerEntity } from './listeners/entities/listener.entity';
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: '',
+      password: '12345',
       database: 'miulai',
       autoLoadEntities: true,
       synchronize: true,
@@ -23,6 +25,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     SearchModule,
     AuthorModule,
     AlbumModule,
+    ListenerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
