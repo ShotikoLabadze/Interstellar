@@ -7,16 +7,18 @@ import { AuthorModule } from './author/author.module';
 import { AlbumModule } from './album/album.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlaylistModule } from './playlist/playlist.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'database-1.cri4ciqww4v1.eu-north-1.rds.amazonaws.com',
-      port: 3306, 
-      username: 'admin',
-      password: 'SadgacShorsromMzea3',
-      database: 'miulai2',
+      host: process.env.DATABASE_HOST,
+      port: +process.env.DATABASE_PORT, 
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
       synchronize: true,
     }),
