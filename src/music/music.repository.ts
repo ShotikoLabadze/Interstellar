@@ -28,7 +28,7 @@ export class MusicRepository {
                  .where('name LIKE :search', { search: `%${search}%`})
                  .getMany();
     }else {
-      return await "there is nothing try search something else";
+      return await [];
     }
   }
 

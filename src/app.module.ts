@@ -6,16 +6,17 @@ import { SearchModule } from './search/search.module';
 import { AuthorModule } from './author/author.module';
 import { AlbumModule } from './album/album.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PlaylistModule } from './playlist/playlist.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'miulai',
+      host: 'database-1.cri4ciqww4v1.eu-north-1.rds.amazonaws.com',
+      port: 3306, 
+      username: 'admin',
+      password: 'SadgacShorsromMzea3',
+      database: 'miulai2',
       autoLoadEntities: true,
       synchronize: true,
     }),
@@ -23,6 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     SearchModule,
     AuthorModule,
     AlbumModule,
+    PlaylistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

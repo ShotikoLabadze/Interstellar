@@ -9,9 +9,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthorEntity } from './entities/author.entity';
 import { MusicModule } from 'src/music/music.module';
 import { AlbumModule } from 'src/album/album.module';
+import { PlaylistModule } from 'src/playlist/playlist.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthorEntity]), MusicModule, AlbumModule],
+  imports: [TypeOrmModule.forFeature([AuthorEntity]), MusicModule, AlbumModule, PlaylistModule],
   controllers: [AuthorController],
   providers: [
     AlbumRepository,

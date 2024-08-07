@@ -10,10 +10,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import { AlbumEntity } from 'src/album/entities/album.entity';
 import { AuthorEntity } from 'src/author/entities/author.entity';
+import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
+import { PlaylistRepository } from 'src/playlist/playlist.repository';
 
 @Module({
-  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([MusicEntity,AlbumEntity,AuthorEntity])],
-  providers: [SearchService, MusicRepository, AlbumRepository],
+  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([MusicEntity,AlbumEntity,AuthorEntity,PlaylistEntity])],
+  providers: [SearchService, MusicRepository, AlbumRepository, PlaylistRepository],
   controllers: [SearchController],
 })
 export class SearchModule {}
