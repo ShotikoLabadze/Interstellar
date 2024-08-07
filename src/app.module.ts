@@ -12,11 +12,11 @@ import { PlaylistModule } from './playlist/playlist.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'miulai',
+      host: 'database-1.cri4ciqww4v1.eu-north-1.rds.amazonaws.com',
+      port: 3306, 
+      username: 'admin',
+      password: 'SadgacShorsromMzea3',
+      database: 'miulai2',
       autoLoadEntities: true,
       synchronize: true,
     }),
