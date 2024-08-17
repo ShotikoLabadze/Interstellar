@@ -40,6 +40,6 @@ export class ListenersController {
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.listenerService.remove(parseInt(id, 10));
+    return await this.listenerService.remove(parseInt(id, 10));
   }
 }

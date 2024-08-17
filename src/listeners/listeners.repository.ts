@@ -9,7 +9,7 @@ import { ListenerEntity } from './entities/listener.entity';
 export class ListenerRepository {
   constructor(
     @InjectRepository(ListenerEntity)
-    private listenerRepository: Repository<ListenerEntity>,
+    private readonly listenerRepository: Repository<ListenerEntity>,
   ) {}
 
   async create(createListenerDto: CreateListenerDto) {
@@ -18,14 +18,22 @@ export class ListenerRepository {
   }
 
   async findAll() {
-    return await this.listenerRepository.find();
+    return await this.listenerRepository.find({
+      relations: ['album', 'music'],
+    });
   }
 
   async findOne(id: number) {
-    return await this.listenerRepository
+    const listener = await this.listenerRepository
       .createQueryBuilder('listener')
+      .leftJoinAndSelect('listener.album', 'album')
+      .leftJoinAndSelect('listener.music', 'music')
       .where('listener.id = :id', { id })
       .getOne();
+
+    console.log('Found listener:', listener);
+
+    return listener;
   }
 
   async update(id: number, updateListenerDto: UpdateListenerDto) {
@@ -35,6 +43,12 @@ export class ListenerRepository {
 
   async remove(id: number) {
     await this.listenerRepository.softDelete(id);
-    return this.findOne(id);
+    return await this.listenerRepository
+      .createQueryBuilder('listener')
+      .withDeleted()
+      .leftJoinAndSelect('listener.album', 'album')
+      .leftJoinAndSelect('listener.music', 'music')
+      .where('listener.id = :id', { id })
+      .getOne();
   }
 }
