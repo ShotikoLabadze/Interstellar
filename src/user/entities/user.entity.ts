@@ -1,9 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ListenerEntity } from 'src/listeners/entities/listener.entity';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @OneToMany(() => ListenerEntity, (listener) => listener.user)
+  listeners: ListenerEntity[];
 
   @Column()
   name: string;

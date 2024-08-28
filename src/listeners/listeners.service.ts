@@ -1,33 +1,46 @@
 import { Injectable } from '@nestjs/common';
-import { ListenerRepository } from './listeners.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ListenerEntity } from './entities/listener.entity';
 import { CreateListenerDto } from './dto/create-listener.dto';
 import { UpdateListenerDto } from './dto/update-listener.dto';
-import { ListenerEntity } from './entities/listener.entity';
 
 @Injectable()
-export class ListenerService {
-  constructor(private readonly listenerRepository: ListenerRepository) {}
+export class ListenersService {
+  constructor(
+    @InjectRepository(ListenerEntity) // Change to ListenersEntity
+    private listenerRepository: Repository<ListenerEntity>, // Change to ListenersEntity
+  ) {}
 
-  async create(createListenerDto: CreateListenerDto): Promise<ListenerEntity> {
-    return this.listenerRepository.create(createListenerDto);
+  async create(
+    createListenerDto: CreateListenerDto, // Change to CreateListenersDto
+  ): Promise<ListenerEntity> {
+    const listener = this.listenerRepository.create(createListenerDto);
+    return this.listenerRepository.save(listener);
   }
 
   async findAll(): Promise<ListenerEntity[]> {
-    return this.listenerRepository.findAll();
+    return this.listenerRepository.find({
+      relations: ['user', 'music', 'album'],
+    });
   }
 
   async findOne(id: number): Promise<ListenerEntity> {
-    return this.listenerRepository.findOne(id);
+    return this.listenerRepository.findOne({
+      where: { id },
+      relations: ['user', 'music', 'album'],
+    });
   }
 
   async update(
     id: number,
     updateListenerDto: UpdateListenerDto,
   ): Promise<ListenerEntity> {
-    return this.listenerRepository.update(id, updateListenerDto);
+    await this.listenerRepository.update(id, updateListenerDto);
+    return this.findOne(id);
   }
 
-  async remove(id: number): Promise<ListenerEntity> {
-    return this.listenerRepository.remove(id);
+  async delete(id: number): Promise<void> {
+    await this.listenerRepository.delete(id);
   }
 }

@@ -10,6 +10,6 @@ import { AlbumModule } from 'src/album/album.module';
   imports: [TypeOrmModule.forFeature([MusicEntity]), AlbumModule],
   controllers: [MusicController],
   providers: [MusicService, MusicRepository],
-  exports: [MusicService, MusicRepository,TypeOrmModule]
+  exports: [MusicService, MusicRepository, TypeOrmModule],
 })
 export class MusicModule {}

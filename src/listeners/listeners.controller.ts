@@ -3,43 +3,43 @@ import {
   Get,
   Post,
   Body,
-  Param,
   Patch,
+  Param,
   Delete,
 } from '@nestjs/common';
+import { ListenersService } from './listeners.service';
 import { CreateListenerDto } from './dto/create-listener.dto';
 import { UpdateListenerDto } from './dto/update-listener.dto';
-import { ListenerService } from './listeners.service';
 
 @Controller('listeners')
 export class ListenersController {
-  constructor(private readonly listenerService: ListenerService) {}
+  constructor(private readonly listenersService: ListenersService) {}
 
   @Post()
-  async create(@Body() createListenerDto: CreateListenerDto) {
-    return this.listenerService.create(createListenerDto);
+  create(@Body() createListenerDto: CreateListenerDto) {
+    return this.listenersService.create(createListenerDto);
   }
 
   @Get()
-  async findAll() {
-    return this.listenerService.findAll();
+  findAll() {
+    return this.listenersService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.listenerService.findOne(parseInt(id, 10));
+  findOne(@Param('id') id: string) {
+    return this.listenersService.findOne(+id);
   }
 
   @Patch(':id')
-  async update(
+  update(
     @Param('id') id: string,
     @Body() updateListenerDto: UpdateListenerDto,
   ) {
-    return this.listenerService.update(parseInt(id, 10), updateListenerDto);
+    return this.listenersService.update(+id, updateListenerDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.listenerService.remove(parseInt(id, 10));
+  remove(@Param('id') id: string) {
+    return this.listenersService.delete(+id);
   }
 }

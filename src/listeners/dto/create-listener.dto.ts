@@ -1,10 +1,15 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateListenerDto {
-  @IsInt()
   @IsNotEmpty()
+  @IsNumber()
   userId: number;
 
-  @IsString()
-  listenerName: string;
+  @IsNotEmpty()
+  @IsNumber()
+  musicId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  albumId: number;
 }

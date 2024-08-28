@@ -6,8 +6,8 @@ import { SearchModule } from './search/search.module';
 import { AuthorModule } from './author/author.module';
 import { AlbumModule } from './album/album.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ListenerModule } from './listeners/listeners.module';
-import { ListenerEntity } from './listeners/entities/listener.entity';
+import { ListenersModule } from './listeners/listeners.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -21,11 +21,12 @@ import { ListenerEntity } from './listeners/entities/listener.entity';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    UserModule,
     MusicModule,
     SearchModule,
     AuthorModule,
     AlbumModule,
-    ListenerModule,
+    ListenersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

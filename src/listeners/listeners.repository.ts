@@ -1,54 +1,63 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { CreateListenerDto } from './dto/create-listener.dto';
 import { UpdateListenerDto } from './dto/update-listener.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 import { ListenerEntity } from './entities/listener.entity';
+import { Repository } from 'typeorm';
+import { UserEntity } from 'src/user/entities/user.entity';
+import { MusicEntity } from 'src/music/entities/music.entity';
+import { AlbumEntity } from 'src/album/entities/album.entity';
 
 @Injectable()
-export class ListenerRepository {
+export class ListenersRepository {
   constructor(
     @InjectRepository(ListenerEntity)
-    private readonly listenerRepository: Repository<ListenerEntity>,
+    private listenerRepository: Repository<ListenerEntity>,
   ) {}
 
-  async create(createListenerDto: CreateListenerDto) {
+  async create(createListenerDto: CreateListenerDto): Promise<ListenerEntity> {
     const listener = this.listenerRepository.create(createListenerDto);
-    return await this.listenerRepository.save(listener);
+
+    listener.user = { id: createListenerDto.userId } as UserEntity;
+    listener.music = { id: createListenerDto.musicId } as MusicEntity;
+    listener.album = { id: createListenerDto.albumId } as AlbumEntity;
+
+    return this.listenerRepository.save(listener);
   }
 
   async findAll() {
-    return await this.listenerRepository.find({
-      relations: ['album', 'music'],
-    });
+    return await this.listenerRepository
+      .createQueryBuilder('listeners')
+      .getMany();
   }
 
   async findOne(id: number) {
-    const listener = await this.listenerRepository
-      .createQueryBuilder('listener')
-      .leftJoinAndSelect('listener.album', 'album')
-      .leftJoinAndSelect('listener.music', 'music')
-      .where('listener.id = :id', { id })
+    return await this.listenerRepository
+      .createQueryBuilder('listeners')
+      .leftJoinAndSelect('listeners.user', 'user')
+      .leftJoinAndSelect('listeners.music', 'music')
+      .leftJoinAndSelect('listeners.album', 'album')
+      .where('listeners.id = :id', { id })
       .getOne();
-
-    console.log('Found listener:', listener);
-
-    return listener;
   }
 
   async update(id: number, updateListenerDto: UpdateListenerDto) {
-    await this.listenerRepository.update(id, updateListenerDto);
+    await this.listenerRepository
+      .createQueryBuilder('listeners')
+      .update()
+      .set(updateListenerDto)
+      .where('id = :id', { id })
+      .execute();
+
     return this.findOne(id);
   }
 
   async remove(id: number) {
     await this.listenerRepository.softDelete(id);
     return await this.listenerRepository
-      .createQueryBuilder('listener')
+      .createQueryBuilder('listeners')
       .withDeleted()
-      .leftJoinAndSelect('listener.album', 'album')
-      .leftJoinAndSelect('listener.music', 'music')
-      .where('listener.id = :id', { id })
+      .where('listeners.id = :id', { id })
       .getOne();
   }
 }

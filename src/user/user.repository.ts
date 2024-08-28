@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const user = this.userRepository.create(createUserDto);
     return await this.userRepository.save(user);
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserEntity[]> {
     return await this.userRepository.createQueryBuilder('user').getMany();
   }
 
-  async findOne(id: number): Promise<User | null> {
+  async findOne(id: number): Promise<UserEntity | null> {
     return await this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
@@ -31,7 +31,7 @@ export class UserRepository {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
     const result = await this.userRepository
       .createQueryBuilder()
-      .update(User)
+      .update(UserEntity)
       .set(updateUserDto)
       .where('id = :id', { id })
       .execute();
@@ -40,7 +40,7 @@ export class UserRepository {
     }
   }
 
-  async remove(id: number): Promise<User | null> {
+  async remove(id: number): Promise<UserEntity | null> {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })

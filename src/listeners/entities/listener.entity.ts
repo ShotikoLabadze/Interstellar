@@ -1,34 +1,38 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
+import { UserEntity } from 'src/user/entities/user.entity';
 import { AlbumEntity } from 'src/album/entities/album.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
 
 @Entity()
 export class ListenerEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => MusicEntity, { eager: true })
-  music: MusicEntity;
-
-  @ManyToOne(() => AlbumEntity, { eager: true })
-  album: AlbumEntity;
-
-  @Column({ type: 'varchar', length: 255 })
-  listenerName: string;
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  songRequest: string;
-
   @Column()
   userId: number;
+
+  @Column({ nullable: true })
+  musicId: number;
+
+  @Column({ nullable: true })
+  albumId: number;
+
+  @ManyToOne(() => UserEntity, (user) => user.listeners)
+  user: UserEntity;
+
+  @ManyToOne(() => MusicEntity, (music) => music.listeners)
+  music: MusicEntity;
+
+  @ManyToOne(() => AlbumEntity, (album) => album.listeners)
+  album: AlbumEntity;
 
   @CreateDateColumn()
   createdAt: Date;
