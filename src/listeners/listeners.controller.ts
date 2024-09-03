@@ -16,30 +16,30 @@ export class ListenersController {
   constructor(private readonly listenersService: ListenersService) {}
 
   @Post()
-  create(@Body() createListenerDto: CreateListenerDto) {
-    return this.listenersService.create(createListenerDto);
+  async create(@Body() createListenerDto: CreateListenerDto) {
+    return await this.listenersService.create(createListenerDto);
   }
 
   @Get()
-  findAll() {
-    return this.listenersService.findAll();
+  async findAll() {
+    return await this.listenersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.listenersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.listenersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateListenerDto: UpdateListenerDto,
   ) {
-    return this.listenersService.update(+id, updateListenerDto);
+    return await this.listenersService.update(+id, updateListenerDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.listenersService.delete(+id);
+  async remove(@Param('id') id: string) {
+    return await this.listenersService.remove(+id);
   }
 }

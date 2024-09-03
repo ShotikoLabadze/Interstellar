@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateListenerDto {
   @IsNotEmpty()
@@ -9,7 +9,8 @@ export class CreateListenerDto {
   @IsNumber()
   musicId: number;
 
+  @IsOptional()
   @IsNotEmpty()
   @IsNumber()
-  albumId: number;
+  albumId?: number;
 }

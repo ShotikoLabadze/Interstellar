@@ -22,7 +22,7 @@ export class ListenersRepository {
     listener.music = { id: createListenerDto.musicId } as MusicEntity;
     listener.album = { id: createListenerDto.albumId } as AlbumEntity;
 
-    return this.listenerRepository.save(listener);
+    return await this.listenerRepository.save(listener);
   }
 
   async findAll() {
@@ -49,7 +49,7 @@ export class ListenersRepository {
       .where('id = :id', { id })
       .execute();
 
-    return this.findOne(id);
+    return await this.findOne(id);
   }
 
   async remove(id: number) {

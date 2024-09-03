@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { ListenerEntity } from './entities/listener.entity';
 import { CreateListenerDto } from './dto/create-listener.dto';
 import { UpdateListenerDto } from './dto/update-listener.dto';
@@ -8,39 +8,39 @@ import { UpdateListenerDto } from './dto/update-listener.dto';
 @Injectable()
 export class ListenersService {
   constructor(
-    @InjectRepository(ListenerEntity) // Change to ListenersEntity
-    private listenerRepository: Repository<ListenerEntity>, // Change to ListenersEntity
+    @InjectRepository(ListenerEntity)
+    private listenerRepository: Repository<ListenerEntity>,
   ) {}
 
-  async create(
-    createListenerDto: CreateListenerDto, // Change to CreateListenersDto
-  ): Promise<ListenerEntity> {
+  async create(createListenerDto: CreateListenerDto) {
     const listener = this.listenerRepository.create(createListenerDto);
-    return this.listenerRepository.save(listener);
+    return await this.listenerRepository.save(listener);
   }
 
-  async findAll(): Promise<ListenerEntity[]> {
-    return this.listenerRepository.find({
+  async findAll() {
+    return await this.listenerRepository.find({
       relations: ['user', 'music', 'album'],
     });
   }
 
-  async findOne(id: number): Promise<ListenerEntity> {
-    return this.listenerRepository.findOne({
+  async findOne(id: number) {
+    return await this.listenerRepository.findOne({
       where: { id },
       relations: ['user', 'music', 'album'],
     });
   }
 
-  async update(
-    id: number,
-    updateListenerDto: UpdateListenerDto,
-  ): Promise<ListenerEntity> {
+  async update(id: number, updateListenerDto: UpdateListenerDto) {
     await this.listenerRepository.update(id, updateListenerDto);
-    return this.findOne(id);
+    return await this.findOne(id);
   }
 
-  async delete(id: number): Promise<void> {
-    await this.listenerRepository.delete(id);
+  async remove(id: number) {
+    const result = await this.listenerRepository.softDelete(id);
+    if (result.affected > 0) {
+      return { message: 'Listener successfully deleted.' };
+    } else {
+      throw new NotFoundException('Listener not found.');
+    }
   }
 }
