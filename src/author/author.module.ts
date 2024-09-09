@@ -5,8 +5,14 @@ import { AuthorRepository } from './author.repository';
 import { SearchService } from 'src/search/search.service';
 import { MusicRepository } from 'src/music/music.repository';
 import { AlbumRepository } from 'src/album/album.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthorEntity } from './entities/author.entity';
+import { MusicModule } from 'src/music/music.module';
+import { AlbumModule } from 'src/album/album.module';
+import { PlaylistModule } from 'src/playlist/playlist.module';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([AuthorEntity]), MusicModule, AlbumModule, PlaylistModule],
   controllers: [AuthorController],
   providers: [
     AlbumRepository,

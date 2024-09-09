@@ -23,8 +23,8 @@ export class AuthorController {
   }
 
   @Get()
-  findAll(@Query() searchDto: SearchDto) {
-    return this.authorService.findAll(searchDto.search);
+  findAll(@Query('search') search?: string) {
+    return this.authorService.findAllSearch(search);
   }
 
   @Get(':id')

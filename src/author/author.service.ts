@@ -12,7 +12,11 @@ export class AuthorService {
   }
 
   findAll(search?: string) {
-    return this.authorRepository.findAll(search);
+    return this.authorRepository.findAll();
+  }
+
+  findAllSearch(search?: string) {
+    return this.authorRepository.findAllSearch(search);
   }
 
   findOne(id: number) {

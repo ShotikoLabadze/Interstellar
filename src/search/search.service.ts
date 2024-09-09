@@ -2,18 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { AuthorRepository } from '../author/author.repository';
 import { MusicRepository } from '../music/music.repository';
 import { AlbumRepository } from 'src/album/album.repository';
+import { PlaylistRepository } from 'src/playlist/playlist.repository';
 @Injectable()
 export class SearchService {
   constructor(
-    private readonly authorRepository: AuthorRepository,
     private readonly musicRepository: MusicRepository,
     private readonly albumRepository: AlbumRepository,
+    private readonly authorRepository: AuthorRepository,
+    private readonly playlistRepository: PlaylistRepository,
   ) {}
 
-  findAll(search: string) {
-    const authors = this.authorRepository.findAll(search);
-    const music = this.musicRepository.findAll(search);
-    const album = this.albumRepository.findAll(search);
-    return { authors, music, album };
-  }
+  async findAllSearch(search: string) {
+    const authors = await this.authorRepository.findAllSearch(search);
+    const music = await this.musicRepository.findAllSearch(search);
+    const album = await this.albumRepository.findAllSearch(search);
+    const playlist =  await this.playlistRepository.findAllSearch(search);
+    return { authors, music, album, playlist };
+
+}
 }

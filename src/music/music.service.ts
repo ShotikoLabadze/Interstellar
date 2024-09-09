@@ -7,23 +7,27 @@ import { MusicRepository } from './music.repository';
 export class MusicService {
   constructor(private readonly musicRepository: MusicRepository) {}
 
-  create(createMusicDto: CreateMusicDto) {
-    return this.musicRepository.create(createMusicDto);
+  async create(createMusicDto: CreateMusicDto) {
+    return await this.musicRepository.create(createMusicDto);
   }
 
-  findAll(search?: string) {
-    return this.musicRepository.findAll(search);
+  async findAll() {
+    return await this.musicRepository.findAll();
   }
 
-  findOne(id: number) {
-    return this.musicRepository.findOne(id);
+  async findAllSearch(search?: string) {
+    return await this.musicRepository.findAllSearch(search);
   }
 
-  update(id: number, updateMusicDto: UpdateMusicDto) {
-    return this.musicRepository.update(id, updateMusicDto);
+  async findOne(id: number) {
+    return await this.musicRepository.findOne(id);
   }
 
-  remove(id: number) {
-    return this.musicRepository.remove(id);
+  async update(id: number, updateMusicDto: UpdateMusicDto) {
+    return await this.musicRepository.update(id, updateMusicDto);
+  }
+
+  async remove(id: number) {
+    return await this.musicRepository.remove(id);
   }
 }
