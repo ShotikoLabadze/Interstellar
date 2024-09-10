@@ -22,7 +22,8 @@ export class UserRepository {
       return user;
     } catch (err) {
       if (err.errno == 1062) {
-        throw new BadRequestException('mail already exists');
+        return "mail exsist try another"
+       // throw new BadRequestException('mail already exists');
 
       }
     }
