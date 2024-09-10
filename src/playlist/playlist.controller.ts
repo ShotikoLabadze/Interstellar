@@ -7,12 +7,6 @@ import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 export class PlaylistController {
   constructor(private readonly playlistService: PlaylistService) {}
 
-  // @Post()
-  // async create(@Body() createPlaylistDto: CreatePlaylistDto , @Req() req: any) {
-  //   return await this.playlistService.create(createPlaylistDto , req.userId);
-  // }
-
-
   @Post()
   async create(@Body() createPlaylistDto: CreatePlaylistDto) {
     const { userId } = createPlaylistDto;

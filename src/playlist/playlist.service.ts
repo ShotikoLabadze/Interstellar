@@ -24,17 +24,6 @@ export class PlaylistService {
   }
  
 
-  // async create(createPlaylistDto: CreatePlaylistDto) {
-  //   if (createPlaylistDto.userId) {
-  //     const user = await this.userRepository.findOne(createPlaylistDto.userId);
-  //     if (!user) {
-  //       throw new NotFoundException(`User with ID ${createPlaylistDto.userId} not found`);
-  //     }
-  //     createPlaylistDto.user = user; 
-  //   }
-  //   return await this.playlistRepository.create(createPlaylistDto)
-  // }
-
   async findAll() {
     return await this.playlistRepository.findAll();
   }
@@ -43,9 +32,6 @@ export class PlaylistService {
     return await this.playlistRepository.findAllSearch(search);
   }
 
-  // async findOne(id: number): Promise<PlaylistEntity>  {
-  //   return await this.playlistRepository.findOne(id);
-  // }
 
   async findOne(id: number): Promise<PlaylistEntity> {
     const playlist = await this.playlistRepository.findOne(id);
@@ -57,9 +43,6 @@ export class PlaylistService {
     return playlist;
 }
 
-  // async update(id: number, updatePlaylistDto: UpdatePlaylistDto) {
-  //   return await this.playlistRepository.update(id, updatePlaylistDto);
-  // }
 
   async update(id: number, updatePlaylistDto: UpdatePlaylistDto) {
     const playlist = await this.playlistRepository.findOne(id);

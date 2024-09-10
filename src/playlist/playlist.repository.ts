@@ -19,14 +19,6 @@ export class PlaylistRepository{
                 
             }
 
-            // async create(createPlaylistDto: CreatePlaylistDto) {
-            //   const playlist = this.playlistRepository.create({
-            //       ...createPlaylistDto,
-            //       user: createPlaylistDto.user
-            //   });
-            //   return await this.playlistRepository.save(playlist);
-          
-            
               async findAll() {
               return  await this.playlistRepository
                            .createQueryBuilder('playlist')
@@ -48,20 +40,6 @@ export class PlaylistRepository{
                 }
             }
             
-              // async findOne(id: number): Promise<PlaylistEntity>{
-              //   const playlist = await this.playlistRepository
-              //              .createQueryBuilder('playlist')
-              //              .leftJoinAndSelect('playlist.user', 'user')
-              //              .where('playlist.id = :id', { id })
-              //              .getOne();
-
-              //              if (!playlist) {
-              //               throw new NotFoundException(`Playlist with ID ${id} not found`);
-              //           }
-                    
-              //           return playlist;
-
-              // }
               async findOne(id: number): Promise<PlaylistEntity> {
                 const playlist = await this.playlistRepository.findOne({
                     where: { id },
