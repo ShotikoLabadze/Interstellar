@@ -2,6 +2,7 @@ import { Injectable, Search } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumRepository } from './album.repository';
+import { AlbumEntity } from './entities/album.entity';
 
 @Injectable()
 export class AlbumService {
@@ -19,7 +20,7 @@ export class AlbumService {
     return await this.albumsRepository.findAllSearch(search);
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<AlbumEntity> {
     return await this.albumsRepository.findOne(id);
   }
 

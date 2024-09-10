@@ -18,7 +18,9 @@ export class AuthorRepository {
   }
 
   async findAll() {
-    return await this.authorRepository.createQueryBuilder('author').getMany();
+    return await this.authorRepository
+    .createQueryBuilder('author')
+    .getMany();
   }
 
   async findAllSearch(search?: string) {
@@ -34,11 +36,15 @@ export class AuthorRepository {
     return await query.getMany();
   }
 
-  async findOne(id: number) {
-    return await this.authorRepository
+  async findOne(id: number): Promise<AuthorEntity> {
+    const author = await this.authorRepository
       .createQueryBuilder('author')
       .where('author.id = :id', { id })
-      .getMany();
+      .getOne();
+
+      if (!author) {
+        throw new NotFoundException(`Author with ID ${id} not found`);
+      } return author
   }
 
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {

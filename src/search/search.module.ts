@@ -12,9 +12,10 @@ import { AlbumEntity } from 'src/album/entities/album.entity';
 import { AuthorEntity } from 'src/author/entities/author.entity';
 import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 import { PlaylistRepository } from 'src/playlist/playlist.repository';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Module({
-  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([MusicEntity,AlbumEntity,AuthorEntity,PlaylistEntity])],
+  imports: [AuthorModule, MusicModule, AlbumModule, TypeOrmModule.forFeature([MusicEntity,AlbumEntity,AuthorEntity,PlaylistEntity,UserEntity])],
   providers: [SearchService, MusicRepository, AlbumRepository, PlaylistRepository],
   controllers: [SearchController],
 })

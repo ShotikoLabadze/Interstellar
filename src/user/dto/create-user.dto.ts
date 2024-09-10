@@ -1,10 +1,18 @@
 import {
+  IsArray,
   IsEmail,
   IsNotEmpty,
+  IsNumber,
+  IsOptional,
   IsString,
+  IsStrongPassword,
   Matches,
   MinLength,
+  Validate,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
+import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 
 export class CreateUserDto {
   @IsString()
@@ -17,8 +25,12 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(8, { message: 'password must be at least 8 chattacters long' })
-  @Matches(/^(?=.*\d)(?=.*[!@#$%^&*])/, {
-    message: 'Password must contain one number and one symbol',
-  })
+  @IsStrongPassword()
   password: string;
+
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({each: true})
+  playlists: PlaylistEntity[];  
 }

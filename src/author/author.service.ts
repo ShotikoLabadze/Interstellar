@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorRepository } from './author.repository';
+import { AlbumEntity } from 'src/album/entities/album.entity';
+import { AuthorEntity } from './entities/author.entity';
 
 @Injectable()
 export class AuthorService {
@@ -19,7 +21,7 @@ export class AuthorService {
     return this.authorRepository.findAllSearch(search);
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<AuthorEntity>{
     return this.authorRepository.findOne(id);
   }
 
