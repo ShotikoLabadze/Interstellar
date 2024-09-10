@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserRepository {
@@ -12,23 +13,33 @@ export class UserRepository {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const user = this.userRepository.create(createUserDto);
-    return await this.userRepository.save(user);
+  async create(createUserDto: CreateUserDto) {
+    const newUser = this.userRepository.create(createUserDto);
+    newUser.password = await bcrypt.hash(newUser.password, 10);
+    try {
+      const result = await this.userRepository.save(newUser);
+      const { password, ...user } = result;
+      return user;
+    } catch (err) {
+      if (err.errno == 1062) {
+        return 'mail already exists';
+      }
+    }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll() {
     return await this.userRepository.createQueryBuilder('user').getMany();
   }
 
-  async findOne(id: number): Promise<User | null> {
-    return await this.userRepository
+  async findOne(email: string) {
+    const user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.id = :id', { id })
+      .where('user.email = :email', { email })
       .getOne();
+    return await user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const result = await this.userRepository
       .createQueryBuilder()
       .update(User)
@@ -40,7 +51,7 @@ export class UserRepository {
     }
   }
 
-  async remove(id: number): Promise<User | null> {
+  async remove(id: number) {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
