@@ -4,6 +4,7 @@ import {
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -15,7 +16,7 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
+  @Column({unique: true})
   email: string;
 
   @Column()
