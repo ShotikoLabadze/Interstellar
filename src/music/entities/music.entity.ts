@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
+import { ListenerEntity } from 'src/listeners/entities/listener.entity';
 
 @Entity()
 export class MusicEntity {
@@ -31,6 +32,9 @@ export class MusicEntity {
 
   @OneToMany(() => FavoritesEntity, (favorites) => favorites.music)
   favorites: FavoritesEntity[];
+
+  @OneToMany(() => ListenerEntity, (listener) => listener.music)
+  listeners: ListenerEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

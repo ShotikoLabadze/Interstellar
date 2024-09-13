@@ -9,11 +9,15 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
+import { ListenerEntity } from 'src/listeners/entities/listener.entity';
 
 @Entity()
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @OneToMany(() => ListenerEntity, (listener) => listener.user)
+  listeners: ListenerEntity[];
 
   @Column()
   name: string;
