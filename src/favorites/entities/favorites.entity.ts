@@ -4,6 +4,9 @@ import {
   ManyToOne,
   JoinColumn,
   Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
@@ -25,4 +28,13 @@ export class FavoritesEntity {
   @ManyToOne(() => MusicEntity, (music) => music.favorites, { eager: true })
   @JoinColumn({ name: 'musicId' })
   music: MusicEntity;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
