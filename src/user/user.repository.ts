@@ -40,7 +40,7 @@ export class UserRepository {
       
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<void> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const result = await this.userRepository
       .createQueryBuilder()
       .update(UserEntity)
@@ -49,8 +49,14 @@ export class UserRepository {
       .execute();
     if (result.affected === 0) {
       throw new Error(`User with ID ${id} not found`);
-    }
-  }
+    } const updatedUser = await this.userRepository
+          .createQueryBuilder('user')
+          .where('user.id = :id', { id })
+          .getOne();
+          
+  return updatedUser;
+}
+  
 
   async remove(id: number): Promise<UserEntity | null> {
     const user = await this.userRepository
