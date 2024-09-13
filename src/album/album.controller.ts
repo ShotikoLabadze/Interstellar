@@ -19,6 +19,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(@Body() createAlbumDto: CreateAlbumDto) {
     return await this.albumService.create(createAlbumDto);
