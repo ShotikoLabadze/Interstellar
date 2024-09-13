@@ -31,12 +31,19 @@ export class UserRepository {
     return await this.userRepository.createQueryBuilder('user').getMany();
   }
 
-  async findOne(email: string) {
+  async findOneByEmail(email: string) {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.email = :email', { email })
       .getOne();
     return await user;
+  }
+
+  async findOne(id: number) {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

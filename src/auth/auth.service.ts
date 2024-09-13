@@ -13,7 +13,7 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string) {
-    const user = await this.userRepository.findOne(email);
+    const user = await this.userRepository.findOneByEmail(email);
     if (user) {
       if (await bcrypt.compare(password, user.password)) {
         const payload = {
