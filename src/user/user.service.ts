@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
-import { encodePassword } from 'src/utils/bcrypt';
+//import { encodePassword } from './src/utils/bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 import { Repository } from 'typeorm';
@@ -17,12 +17,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await encodePassword(createUserDto.password);
-
-    return await this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
-    });
+    return await this.userRepository.create(createUserDto);
   }
 
   findAll() {

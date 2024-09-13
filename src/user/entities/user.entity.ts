@@ -9,7 +9,7 @@ export class UserEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column()  //{unique: true}
   email: string;
 
   @Column()
@@ -17,7 +17,6 @@ export class UserEntity {
 
   @OneToMany(() => PlaylistEntity, (playlist) => playlist.user)
   playlists: PlaylistEntity[];
-
 
   @CreateDateColumn()
   createdAt: Date;
