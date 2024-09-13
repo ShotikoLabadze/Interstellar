@@ -2,9 +2,11 @@ import { MusicEntity } from 'src/music/entities/music.entity';
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -18,7 +20,7 @@ export class AuthorEntity {
   @Column()
   lastName: string;
 
-  @OneToMany(() => MusicEntity, (music) => music.author, {cascade: true})
+  @OneToMany(() => MusicEntity, (music) => music.author, { cascade: true })
   musics: MusicEntity[];
 
   @Column()
@@ -27,9 +29,9 @@ export class AuthorEntity {
   @CreateDateColumn()
   createdAt: Date;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @CreateDateColumn()
+  @DeleteDateColumn()
   deletedAt: Date;
 }

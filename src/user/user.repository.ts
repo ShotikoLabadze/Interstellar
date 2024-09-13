@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -9,8 +9,8 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserRepository {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -22,9 +22,8 @@ export class UserRepository {
       return user;
     } catch (err) {
       if (err.errno == 1062) {
-        return "mail exsist try another"
-       // throw new BadRequestException('mail already exists');
-
+        return 'mail exsist try another';
+        // throw new BadRequestException('mail already exists');
       }
     }
   }
@@ -33,7 +32,7 @@ export class UserRepository {
     return await this.userRepository.createQueryBuilder('user').getMany();
   }
 
-  async findOne(email: string) {
+  async findOneByEmail(email: string) {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.email = :email', { email })
@@ -41,10 +40,17 @@ export class UserRepository {
     return await user;
   }
 
+  async findOne(id: number) {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const result = await this.userRepository
       .createQueryBuilder()
-      .update(User)
+      .update(UserEntity)
       .set(updateUserDto)
       .where('id = :id', { id })
       .execute();

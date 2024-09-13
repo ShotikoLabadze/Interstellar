@@ -10,6 +10,8 @@ import { PlaylistModule } from './playlist/playlist.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { FavoritesModule } from './favorites/favorites.module';
+import { ListenersModule } from './listeners/listeners.module';
 
 @Module({
   imports: [
@@ -24,6 +26,7 @@ import { UserModule } from './user/user.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
+    UserModule,
     MusicModule,
     SearchModule,
     AuthorModule,
@@ -31,6 +34,8 @@ import { UserModule } from './user/user.module';
     PlaylistModule,
     UserModule,
     AuthModule,
+    FavoritesModule,
+    ListenersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
