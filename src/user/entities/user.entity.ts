@@ -3,10 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
 
 @Entity()
 export class UserEntity {
@@ -16,11 +18,14 @@ export class UserEntity {
   @Column()
   name: string;
 
-  @Column()  //{unique: true}
+  @Column() //{unique: true}
   email: string;
 
   @Column()
   password: string;
+
+  @OneToMany(() => FavoritesEntity, (favorites) => favorites.user)
+  favorites: FavoritesEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

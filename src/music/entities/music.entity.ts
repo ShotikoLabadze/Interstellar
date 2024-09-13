@@ -1,31 +1,43 @@
-import { AlbumEntity } from "src/album/entities/album.entity";
-import { AuthorEntity } from "src/author/entities/author.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { AlbumEntity } from 'src/album/entities/album.entity';
+import { AuthorEntity } from 'src/author/entities/author.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
 
 @Entity()
 export class MusicEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ type: 'varchar', length:255})
-    name: string;
+  @Column({ type: 'varchar', length: 255 })
+  name: string;
 
-    @Column({ type: 'varchar', length:255})
-    url: string;
+  @Column({ type: 'varchar', length: 255 })
+  url: string;
 
-    @ManyToOne(() => AlbumEntity, (album) => album.musics)
-    album: AlbumEntity[];
+  @ManyToOne(() => AlbumEntity, (album) => album.musics)
+  album: AlbumEntity[];
 
-    @ManyToOne(() => AuthorEntity, (author) => author.musics)
-    author: AuthorEntity[];
+  @ManyToOne(() => AuthorEntity, (author) => author.musics)
+  author: AuthorEntity[];
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @OneToMany(() => FavoritesEntity, (favorites) => favorites.music)
+  favorites: FavoritesEntity[];
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @DeleteDateColumn()
-    deletedAt: Date;
-    
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
