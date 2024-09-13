@@ -10,11 +10,10 @@ export class FavoritesRepository {
     @InjectRepository(FavoritesEntity)
     private readonly favoritesRepository: Repository<FavoritesEntity>,
   ) {}
-
   async create(createFavoritesDto: CreateFavoritesDto) {
     const favorites = this.favoritesRepository.create({
-      user: { id: createFavoritesDto.userId },
-      music: { id: createFavoritesDto.musicId },
+      userId: createFavoritesDto.userId,
+      musicId: createFavoritesDto.musicId,
     });
     return await this.favoritesRepository.save(favorites);
   }
