@@ -9,10 +9,10 @@ export class CreateAuthorDto {
   @IsString()
   lastName: string;
 
+  @IsString()
+  biography: string;
+
   @IsArray()
   @Type(() => CreateMusicDto)
   musics: CreateMusicDto[];
-
-  @IsString()
-  biography: string;
 }
