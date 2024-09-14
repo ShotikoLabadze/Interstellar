@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { MusicRepository } from './music.repository';
+import { MusicEntity } from './entities/music.entity';
 
 @Injectable()
 export class MusicService {
@@ -19,7 +20,7 @@ export class MusicService {
     return await this.musicRepository.findAllSearch(search);
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise <MusicEntity> {
     return await this.musicRepository.findOne(id);
   }
 

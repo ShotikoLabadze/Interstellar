@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
 import { ListenerEntity } from 'src/listeners/entities/listener.entity';
+import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 
 @Entity()
 export class UserEntity {
@@ -22,7 +23,8 @@ export class UserEntity {
   @Column()
   name: string;
 
-  @Column() //{unique: true}
+  //{unique: true}
+  @Column() 
   email: string;
 
   @Column()
@@ -30,6 +32,9 @@ export class UserEntity {
 
   @OneToMany(() => FavoritesEntity, (favorites) => favorites.user)
   favorites: FavoritesEntity[];
+
+  @OneToMany(() => PlaylistEntity, (playlist) => playlist.user)
+  playlists: PlaylistEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

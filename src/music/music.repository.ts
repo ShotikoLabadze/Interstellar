@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -32,11 +32,18 @@ export class MusicRepository {
     }
   }
 
-  async findOne(id: number) {
-    return await this.musicRepository
+  async findOne(id: number): Promise<MusicEntity> {
+    const music = await this.musicRepository
                .createQueryBuilder('music')
                .where('music.id = :id', { id })
                .getOne();
+
+               if (!music) {
+                throw new NotFoundException(`Music with ID ${id} not found`);
+            }
+        
+            return music;
+              
   }
 
   async update(id: number, updateMusicDto: UpdateMusicDto) {

@@ -4,12 +4,14 @@ import { UserController } from './user.controller';
 import { UserRepository } from './user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
+import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
+import { PlaylistRepository } from 'src/playlist/playlist.repository';
 import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, FavoritesEntity])],
+  imports: [TypeOrmModule.forFeature([UserEntity,PlaylistEntity, FavoritesEntity])],
   controllers: [UserController],
-  providers: [UserService, UserRepository],
-  exports: [UserRepository, UserService, TypeOrmModule],
+  providers: [UserService, UserRepository , PlaylistRepository],
+  exports: [UserRepository],
 })
 export class UserModule {}

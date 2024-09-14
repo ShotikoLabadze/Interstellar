@@ -1,24 +1,31 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreatePlaylistDto } from "./dto/create-playlist.dto";
 import { Repository } from "typeorm";
-import { UpdatePlaylistDto } from "./dto/update-playlist.dto";
 import { PlaylistEntity } from "./entities/playlist.entity";
+import { UserEntity } from "src/user/entities/user.entity";
 
 @Injectable()
 export class PlaylistRepository{
     constructor(@InjectRepository(PlaylistEntity)
               private playlistRepository: Repository<PlaylistEntity>){}
 
-              async create(createPlaylistDto: CreatePlaylistDto){
-                const playlist = this.playlistRepository.create(createPlaylistDto)
-                return await this.playlistRepository.save(playlist)
-              }
-            
+              async create(createPlaylistDto: CreatePlaylistDto, user: UserEntity){
+                const playlist = this.playlistRepository.create({
+                  ...createPlaylistDto,
+                    user: user });
+                return await this.playlistRepository.save(playlist);
+                
+            }
+
               async findAll() {
-                return await this.playlistRepository
+              return  await this.playlistRepository
                            .createQueryBuilder('playlist')
+                           .leftJoinAndSelect('playlist.user', 'user')
+                           .orderBy('playlist.createdAt', 'DESC')
                            .getMany();
+
+                        
               }
             
               async findAllSearch(search?: string) {
@@ -32,14 +39,22 @@ export class PlaylistRepository{
                 }
             }
             
-              async findOne(id: number) {
-                return await this.playlistRepository
-                           .createQueryBuilder('playlist')
-                           .where('playlist.id = :id', { id })
-                           .getOne();
-              }
+              async findOne(id: number): Promise<PlaylistEntity> {
+                const playlist = await this.playlistRepository
+                                            .createQueryBuilder('playlist')
+                                            .leftJoinAndSelect('playlist.user', 'user')
+                                            .where('playlist.id = :id', { id })
+                                            .getOne();
+
             
-              async update(id: number, updatePlaylistDto: UpdatePlaylistDto) {
+                if (!playlist) {
+                    throw new NotFoundException(`Playlist with ID ${id} not found`);
+                }
+            
+                return playlist;
+            }
+            
+              async update(id: number, updatePlaylistDto: Partial<PlaylistEntity>) {
                 await this.playlistRepository
                           .createQueryBuilder('playlist')
                           .update()
@@ -49,6 +64,9 @@ export class PlaylistRepository{
             
                 return this.findOne(id)
               }
+
+            
+        
             
               async remove(id: number) {
                 await this.playlistRepository.softDelete(id);

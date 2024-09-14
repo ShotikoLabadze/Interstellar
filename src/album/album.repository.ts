@@ -1,24 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { AlbumEntity } from './entities/album.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { MusicEntity } from 'src/music/entities/music.entity';
 
 @Injectable()
 export class AlbumRepository {
   constructor(@InjectRepository(AlbumEntity)
-              private albumRepository: Repository<AlbumEntity>){}
+              private albumRepository: Repository<AlbumEntity>,
+              @InjectRepository(MusicEntity) 
+              private musicRepository: Repository<MusicEntity>){}
 
   async create(createAlbumDto: CreateAlbumDto){
-    const album = this.albumRepository.create(createAlbumDto)
-    return await this.albumRepository.save(album)
+    const { musicIds, ...albumData } = createAlbumDto;
+    const album = this.albumRepository.create(albumData);
+    
+    if (musicIds && musicIds.length > 0) {
+      const musics = [];
+      for (const id of musicIds) {
+          const music = await this.musicRepository.findOne({ where: { id } });
+          if (music) {
+              musics.push(music);
+          }
+      }
+      album.musics = musics;
   }
+
+  return await this.albumRepository.save(album);
+}
 
   async findAll() {
     return await this.albumRepository
                .createQueryBuilder('album')
+               .orderBy('album.createdAt', 'DESC')
+               .leftJoinAndSelect('album.musics', 'musics')
                .getMany();
   }
 
@@ -31,23 +49,50 @@ export class AlbumRepository {
     }
   }
 
-  async findOne(id: number) {
-    return await this.albumRepository
+  async findOne(id: number): Promise<AlbumEntity> {
+    const album =  await this.albumRepository
                .createQueryBuilder('album')
+               .leftJoinAndSelect('album.musics', 'musics')
                .where('album.id = :id', { id })
                .getOne();
+
+               
+               if (!album) {
+                throw new NotFoundException(`Album with ID ${id} not found`);
+            }
+        
+            return album;
+              
   }
 
   async update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    const query =  await this.albumRepository
+ 
+  const { musicIds, ...albumData } = updateAlbumDto;
+
+  await this.albumRepository
               .createQueryBuilder()
               .update()
-              .set(updateAlbumDto)
-              .where('id = :id', {id})  
-              .execute()
+              .set(albumData)
+              .where('id = :id', { id })
+              .execute();
 
-    return await this.findOne(id)
-  }
+              if (musicIds && musicIds.length > 0) {
+                const musics = [];
+                for (const musicId of musicIds) {
+                    const music = await this.musicRepository.findOne({ where: { id: musicId } });
+                    if (music) {
+                        musics.push(music);
+                    }
+                }
+                const album = await this.findOne(id);
+                 if (album) {
+                album.musics = musics;
+                await this.albumRepository.save(album);
+        }
+    }
+               return await this.findOne(id);
+              }
+            
 
   async remove(id: number) {
     await this.albumRepository.softDelete(id);
