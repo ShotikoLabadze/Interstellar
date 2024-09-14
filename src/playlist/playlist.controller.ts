@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { PlaylistService } from './playlist.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
@@ -9,8 +9,13 @@ export class PlaylistController {
 
   @Post()
   async create(@Body() createPlaylistDto: CreatePlaylistDto) {
-    return await this.playlistService.create(createPlaylistDto);
-  }
+    const { userId } = createPlaylistDto;
+    if(!userId){
+      throw new Error('User Id is required')
+    }
+    return await this.playlistService.create(createPlaylistDto , userId);
+}
+
 
   @Get()
   async findAll() {
@@ -32,4 +37,3 @@ export class PlaylistController {
     return await this.playlistService.remove(+id);
   }
 }
-

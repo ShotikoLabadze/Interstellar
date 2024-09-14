@@ -5,12 +5,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
+import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 import { ListenerEntity } from 'src/listeners/entities/listener.entity';
 
 @Entity()
@@ -30,11 +32,14 @@ export class MusicEntity {
   @ManyToOne(() => AuthorEntity, (author) => author.musics)
   author: AuthorEntity[];
 
+  @ManyToOne(() => ListenerEntity, (listener) => listener.music)
+  listeners: ListenerEntity[];
+
+  @ManyToMany(() => PlaylistEntity, (playlist) => playlist.musics)
+  playlists: PlaylistEntity[];
+
   @OneToMany(() => FavoritesEntity, (favorites) => favorites.music)
   favorites: FavoritesEntity[];
-
-  @OneToMany(() => ListenerEntity, (listener) => listener.music)
-  listeners: ListenerEntity[];
 
   @CreateDateColumn()
   createdAt: Date;
