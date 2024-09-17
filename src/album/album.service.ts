@@ -3,13 +3,19 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumRepository } from './album.repository';
 import { AlbumEntity } from './entities/album.entity';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(private readonly albumsRepository: AlbumRepository) {}
+  constructor(
+    private readonly albumsRepository: AlbumRepository,
+    private readonly fileService: FilesService,
+    
+  ) {}
 
-  async create(createAlbumDto: CreateAlbumDto) {
-    return await this.albumsRepository.create(createAlbumDto);
+  async create(file, createAlbumDto: CreateAlbumDto) {
+    const res = await this.fileService.uploadFile(file);
+    return await this.albumsRepository.create(res, createAlbumDto);
   }
 
   async findAll() {

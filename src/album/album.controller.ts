@@ -7,19 +7,26 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { SearchDto } from 'src/search/dto/search.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
 
   @Post()
-  async create(@Body() createAlbumDto: CreateAlbumDto) {
-    return await this.albumService.create(createAlbumDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createAlbumDto: CreateAlbumDto,
+  ) {
+    return await this.albumService.create(file, createAlbumDto);
   }
 
   @Get()
@@ -38,7 +45,10 @@ export class AlbumController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateAlbumDto: UpdateAlbumDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateAlbumDto: UpdateAlbumDto,
+  ) {
     return await this.albumService.update(+id, updateAlbumDto);
   }
 

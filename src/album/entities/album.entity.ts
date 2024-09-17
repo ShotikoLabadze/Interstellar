@@ -1,3 +1,4 @@
+import { FileEntity } from 'src/files/entities/file.entity';
 import { ListenerEntity } from 'src/listeners/entities/listener.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import {
@@ -5,6 +6,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -29,6 +31,10 @@ export class AlbumEntity {
 
   @OneToMany(() => ListenerEntity, (listener) => listener.album)
   listeners: ListenerEntity[];
+
+  @OneToMany(() => FileEntity, (file) => file.music, { cascade: true })
+  @JoinColumn()
+  files: FileEntity[];
 
   @CreateDateColumn()
   createdAt: Date;
