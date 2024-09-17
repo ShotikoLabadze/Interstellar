@@ -1,9 +1,11 @@
+import { FileEntity } from 'src/files/entities/file.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -22,6 +24,10 @@ export class AuthorEntity {
 
   @OneToMany(() => MusicEntity, (music) => music.author, { cascade: true })
   musics: MusicEntity[];
+
+  @OneToMany(() => FileEntity, (file) => file.author, { cascade: true })
+  @JoinColumn()
+  files: FileEntity[];
 
   @Column()
   biography: string;
