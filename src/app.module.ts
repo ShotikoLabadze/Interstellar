@@ -12,6 +12,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ListenersModule } from './listeners/listeners.module';
+import { FilesModule } from './files/files.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { ListenersModule } from './listeners/listeners.module';
     AuthModule,
     FavoritesModule,
     ListenersModule,
+    FilesModule,
+    AwsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -3,13 +3,18 @@ import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { MusicRepository } from './music.repository';
 import { MusicEntity } from './entities/music.entity';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class MusicService {
-  constructor(private readonly musicRepository: MusicRepository) {}
+  constructor(
+    private readonly fileService: FilesService,
+    private readonly musicRepository: MusicRepository) {}
 
-  async create(createMusicDto: CreateMusicDto) {
-    return await this.musicRepository.create(createMusicDto);
+  async create(file, createMusicDto: CreateMusicDto) {
+    const res = await this.fileService.uploadFile(file);
+    return await this.musicRepository.create(res, createMusicDto);
+    
   }
 
   async findAll() {
