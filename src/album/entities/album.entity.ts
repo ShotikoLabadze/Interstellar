@@ -24,10 +24,10 @@ export class AlbumEntity {
   releaseDate: string;
 
   @Column({ type: 'varchar', length: 255 })
-  artistName: string;
+  albumName: string;
 
-  @OneToMany(() => MusicEntity, (music) => music.album, { cascade: true })
-  musics: MusicEntity[];
+  // @OneToMany(() => MusicEntity, (music) => music.album, { cascade: true })
+  // musics: MusicEntity[];
 
   @OneToMany(() => ListenerEntity, (listener) => listener.album)
   listeners: ListenerEntity[];

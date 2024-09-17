@@ -5,13 +5,15 @@ import { PlaylistRepository } from './playlist.repository';
 import { UserRepository } from 'src/user/user.repository';
 import { PlaylistEntity } from './entities/playlist.entity';
 import { MusicRepository } from 'src/music/music.repository';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class PlaylistService {
   constructor(private readonly playlistRepository: PlaylistRepository,
-              private readonly userRepository: UserRepository){}
+              private readonly userRepository: UserRepository,
+              private readonly fileService: FilesService,){}
 
-  async create(createPlaylistDto: CreatePlaylistDto , userId: number) {
+  async create(file,createPlaylistDto: CreatePlaylistDto , userId: number) {
     if (!userId) {
       throw new Error('User ID is required');
   }
@@ -19,7 +21,8 @@ export class PlaylistService {
     if(!user){
       throw new Error(`User with ID ${userId} not found`)
     }
-    const playlist = await this.playlistRepository.create(createPlaylistDto,user);
+    const res = await this.fileService.uploadFile(file);
+    const playlist = await this.playlistRepository.create(res,createPlaylistDto,user);
     return playlist
   }
  

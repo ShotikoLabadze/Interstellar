@@ -18,19 +18,19 @@ export class AlbumRepository {
   ) {}
 
   async create(file: FileEntity, createAlbumDto: CreateAlbumDto) {
-    const { musicIds, ...albumData } = createAlbumDto;
+    const { ...albumData } = createAlbumDto;
     const album = this.albumRepository.create({...albumData, files: [file] });
 
-    if (musicIds && musicIds.length > 0) {
-      const musics = [];
-      for (const id of musicIds) {
-        const music = await this.musicRepository.findOne({ where: { id } });
-        if (music) {
-          musics.push(music);
-        }
-      }
-      album.musics = musics;
-    }
+    // if (musicIds && musicIds.length > 0) {
+    //   const musics = [];
+    //   for (const id of musicIds) {
+    //     const music = await this.musicRepository.findOne({ where: { id } });
+    //     if (music) {
+    //       musics.push(music);
+    //     }
+    //   }
+    //   album.musics = musics;
+    // }
 
     return await this.albumRepository.save(album);
   }
@@ -67,7 +67,7 @@ export class AlbumRepository {
   }
 
   async update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    const { musicIds, ...albumData } = updateAlbumDto;
+    const { ...albumData } = updateAlbumDto;
 
     await this.albumRepository
       .createQueryBuilder()
@@ -76,22 +76,22 @@ export class AlbumRepository {
       .where('id = :id', { id })
       .execute();
 
-    if (musicIds && musicIds.length > 0) {
-      const musics = [];
-      for (const musicId of musicIds) {
-        const music = await this.musicRepository.findOne({
-          where: { id: musicId },
-        });
-        if (music) {
-          musics.push(music);
-        }
-      }
-      const album = await this.findOne(id);
-      if (album) {
-        album.musics = musics;
-        await this.albumRepository.save(album);
-      }
-    }
+    // if (musicIds && musicIds.length > 0) {
+    //   const musics = [];
+    //   for (const musicId of musicIds) {
+    //     const music = await this.musicRepository.findOne({
+    //       where: { id: musicId },
+    //     });
+    //     if (music) {
+    //       musics.push(music);
+    //     }
+    //   }
+    //   const album = await this.findOne(id);
+    //   if (album) {
+    //     album.musics = musics;
+    //     await this.albumRepository.save(album);
+    //   }
+    // }
     return await this.findOne(id);
   }
 
