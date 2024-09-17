@@ -9,6 +9,7 @@ import { AwsModule } from 'src/aws/aws.module';
 @Module({
   imports:[TypeOrmModule.forFeature([FileEntity]), AwsModule],
   controllers: [FilesController],
-  providers: [FilesService,FilesRepository]
+  providers: [FilesService,FilesRepository],
+  exports: [FilesService]
 })
 export class FilesModule {}

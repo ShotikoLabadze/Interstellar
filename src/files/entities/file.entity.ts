@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { MusicEntity } from "src/music/entities/music.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 
@@ -16,6 +17,9 @@ export class FileEntity{
 
     @Column()
     bucket: string
+
+    @ManyToOne(() => MusicEntity, (music) => music.files )
+    music: MusicEntity;
 
     @Column()
     fileName: string;

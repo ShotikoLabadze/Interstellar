@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -14,6 +15,7 @@ import {
 import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
 import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 import { ListenerEntity } from 'src/listeners/entities/listener.entity';
+import { FileEntity } from 'src/files/entities/file.entity';
 
 @Entity()
 export class MusicEntity {
@@ -23,8 +25,8 @@ export class MusicEntity {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  url: string;
+  @Column()
+  artistName: string;
 
   @ManyToOne(() => AlbumEntity, (album) => album.musics)
   album: AlbumEntity[];
@@ -40,6 +42,10 @@ export class MusicEntity {
 
   @OneToMany(() => FavoritesEntity, (favorites) => favorites.music)
   favorites: FavoritesEntity[];
+
+  @OneToMany(() => FileEntity, (file) => file.music, { cascade: true })
+  @JoinColumn()
+  files: FileEntity[];
 
   @CreateDateColumn()
   createdAt: Date;
