@@ -7,19 +7,26 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { SearchDto } from 'src/search/dto/search.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('author')
 export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
   @Post()
-  create(@Body() createAuthorDto: CreateAuthorDto) {
-    return this.authorService.create(createAuthorDto);
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createAuthorDto: CreateAuthorDto,
+  ) {
+    return this.authorService.create(file,createAuthorDto);
   }
 
   @Get()

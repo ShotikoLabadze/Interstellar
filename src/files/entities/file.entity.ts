@@ -1,4 +1,5 @@
 import { AlbumEntity } from 'src/album/entities/album.entity';
+import { AuthorEntity } from 'src/author/entities/author.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
@@ -25,6 +26,9 @@ export class FileEntity {
   
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.files)
   playlist: AlbumEntity;
+
+  @ManyToOne(() => AuthorEntity, (author) => author.files)
+  author: AuthorEntity;
 
   @Column()
   fileName: string;
