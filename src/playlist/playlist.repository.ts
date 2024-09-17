@@ -17,17 +17,16 @@ export class PlaylistRepository {
     const playlist = this.playlistRepository.create({
       ...createPlaylistDto,
       user: user,
+      files: [file],
     });
     return await this.playlistRepository.save(playlist);
   }
 
   async findAll() {
-    return await this.playlistRepository
-      .createQueryBuilder('playlist')
-      .leftJoinAndSelect('playlist.user', 'user')
-      .leftJoinAndSelect('playlisits.files', 'files')
-      .orderBy('playlist.createdAt', 'DESC')
-      .getMany();
+    return await this.playlistRepository.find({
+      relations:['user', 'files'],
+      order:{ createdAt:'DESC'}
+    })
   }
 
   async findAllSearch(search?: string) {

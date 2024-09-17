@@ -36,11 +36,13 @@ export class AlbumRepository {
   }
 
   async findAll() {
-    return await this.albumRepository
-      .createQueryBuilder('album')
-      .orderBy('album.createdAt', 'DESC')
-      .leftJoinAndSelect('album.musics', 'musics')
-      .getMany();
+    return await this.albumRepository.find({
+      relations:['files'],
+      order: {
+        createdAt:'DESC'
+      }
+
+    })
   }
 
   async findAllSearch(search?: string) {

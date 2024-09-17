@@ -11,6 +11,7 @@ export class PlaylistController {
   @Post()
   @UseInterceptors(FileInterceptor('file')) 
   async create(@UploadedFile() file: Express.Multer.File,@Body() createPlaylistDto: CreatePlaylistDto) {
+    console.log('Uploaded file:', file); 
     const { userId } = createPlaylistDto;
     if(!userId){
       throw new Error('User Id is required')
