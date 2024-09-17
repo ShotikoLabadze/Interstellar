@@ -1,19 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { PlaylistService } from './playlist.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('playlist')
 export class PlaylistController {
   constructor(private readonly playlistService: PlaylistService) {}
 
   @Post()
-  async create(@Body() createPlaylistDto: CreatePlaylistDto) {
+  @UseInterceptors(FileInterceptor('file')) 
+  async create(@UploadedFile() file: Express.Multer.File,@Body() createPlaylistDto: CreatePlaylistDto) {
     const { userId } = createPlaylistDto;
     if(!userId){
       throw new Error('User Id is required')
     }
-    return await this.playlistService.create(createPlaylistDto , userId);
+    return await this.playlistService.create(file,createPlaylistDto , userId)
 }
 
 

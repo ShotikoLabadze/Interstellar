@@ -8,9 +8,10 @@ import { UserEntity } from 'src/user/entities/user.entity';
 import { UserRepository } from 'src/user/user.repository';
 import { MusicRepository } from 'src/music/music.repository';
 import { MusicEntity } from 'src/music/entities/music.entity';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([PlaylistEntity,UserEntity,MusicEntity])],
+  imports:[TypeOrmModule.forFeature([PlaylistEntity,UserEntity,MusicEntity]),FilesModule],
   controllers: [PlaylistController],
   providers: [PlaylistService,PlaylistRepository,UserRepository,MusicRepository],
   exports: [PlaylistRepository]
