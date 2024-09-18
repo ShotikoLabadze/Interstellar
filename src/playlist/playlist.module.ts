@@ -9,11 +9,21 @@ import { UserRepository } from 'src/user/user.repository';
 import { MusicRepository } from 'src/music/music.repository';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import { FilesModule } from 'src/files/files.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports:[TypeOrmModule.forFeature([PlaylistEntity,UserEntity,MusicEntity]),FilesModule],
+  imports: [
+    TypeOrmModule.forFeature([PlaylistEntity, UserEntity, MusicEntity]),
+    FilesModule,
+    AuthModule,
+  ],
   controllers: [PlaylistController],
-  providers: [PlaylistService,PlaylistRepository,UserRepository,MusicRepository],
-  exports: [PlaylistRepository]
+  providers: [
+    PlaylistService,
+    PlaylistRepository,
+    UserRepository,
+    MusicRepository,
+  ],
+  exports: [PlaylistRepository],
 })
 export class PlaylistModule {}
