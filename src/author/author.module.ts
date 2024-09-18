@@ -11,9 +11,17 @@ import { MusicModule } from 'src/music/music.module';
 import { AlbumModule } from 'src/album/album.module';
 import { PlaylistModule } from 'src/playlist/playlist.module';
 import { FilesModule } from 'src/files/files.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthorEntity]), MusicModule, AlbumModule, PlaylistModule,FilesModule],
+  imports: [
+    TypeOrmModule.forFeature([AuthorEntity]),
+    MusicModule,
+    AlbumModule,
+    PlaylistModule,
+    FilesModule,
+    AuthModule,
+  ],
   controllers: [AuthorController],
   providers: [
     AlbumRepository,

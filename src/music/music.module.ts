@@ -7,9 +7,15 @@ import { MusicEntity } from './entities/music.entity';
 import { AlbumModule } from 'src/album/album.module';
 import { FilesModule } from 'src/files/files.module';
 import { FileEntity } from 'src/files/entities/file.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MusicEntity]), AlbumModule, FilesModule],
+  imports: [
+    TypeOrmModule.forFeature([MusicEntity]),
+    AlbumModule,
+    FilesModule,
+    AuthModule,
+  ],
   controllers: [MusicController],
   providers: [MusicService, MusicRepository],
   exports: [MusicService, MusicRepository, TypeOrmModule],
