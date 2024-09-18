@@ -11,7 +11,7 @@ export class AuthorService {
   ) {}
 
   async create(file,createAuthorDto: CreateAuthorDto) {
-    const res =await this.fileService.uploadFile(file)
+    const res = await this.fileService.uploadFile(file)
     return await this.authorRepository.create(res,createAuthorDto);
   }
 

@@ -34,8 +34,11 @@ export class AuthorController {
     return this.authorService.findAllSearch(search);
   }
 
+  
+
   @Get(':id')
   findOne(@Param('id') id: string) {
+    console.log(id)
     return this.authorService.findOne(+id);
   }
 
