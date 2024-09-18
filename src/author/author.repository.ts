@@ -22,7 +22,10 @@ export class AuthorRepository {
   }
 
   async findAll() {
-    return await this.authorRepository.createQueryBuilder('author').getMany();
+    return await this.authorRepository.find({
+      relations: [ 'music', 'files'],
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findAllSearch(search?: string) {
