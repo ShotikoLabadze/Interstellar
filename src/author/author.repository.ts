@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorEntity } from './entities/author.entity';
+import { FileEntity } from 'src/files/entities/file.entity';
 
 @Injectable()
 export class AuthorRepository {
@@ -12,13 +13,19 @@ export class AuthorRepository {
     private authorRepository: Repository<AuthorEntity>,
   ) {}
 
-  async create(createAuthorDto: CreateAuthorDto) {
-    const author = this.authorRepository.create(createAuthorDto);
-    return await this.authorRepository.save(author);
+  async create(file: FileEntity, createAuthorDto: CreateAuthorDto) {
+    const author = this.authorRepository.save({
+      ...createAuthorDto,
+      files: [file],
+    });
+    return author;
   }
 
   async findAll() {
-    return await this.authorRepository.createQueryBuilder('author').getMany();
+    return await this.authorRepository.find({
+      relations: [ 'music', 'files'],
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findAllSearch(search?: string) {

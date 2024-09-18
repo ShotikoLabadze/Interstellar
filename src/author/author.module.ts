@@ -10,9 +10,10 @@ import { AuthorEntity } from './entities/author.entity';
 import { MusicModule } from 'src/music/music.module';
 import { AlbumModule } from 'src/album/album.module';
 import { PlaylistModule } from 'src/playlist/playlist.module';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthorEntity]), MusicModule, AlbumModule, PlaylistModule],
+  imports: [TypeOrmModule.forFeature([AuthorEntity]), MusicModule, AlbumModule, PlaylistModule,FilesModule],
   controllers: [AuthorController],
   providers: [
     AlbumRepository,

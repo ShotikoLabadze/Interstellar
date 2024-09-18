@@ -4,14 +4,17 @@ import {
   Post,
   Body,
   Patch,
+  UseInterceptors,
   Param,
   Delete,
   Query,
+  UploadedFile,
   UseGuards,
 } from '@nestjs/common';
 import { MusicService } from './music.service';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('music')
@@ -20,8 +23,12 @@ export class MusicController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() createMusicDto: CreateMusicDto) {
-    return await this.musicService.create(createMusicDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createMusicDto: CreateMusicDto,
+  ) {
+    return await this.musicService.create(file, createMusicDto);
   }
 
   @UseGuards(AuthGuard)

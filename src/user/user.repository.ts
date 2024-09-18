@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserRepository {
@@ -13,41 +12,36 @@ export class UserRepository {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const newUser = this.userRepository.create(createUserDto);
-    newUser.password = await bcrypt.hash(newUser.password, 10);
-    try {
-      const result = await this.userRepository.save(newUser);
-      const { password, ...user } = result;
-      return user;
-    } catch (err) {
-      if (err.errno == 1062) {
-        return 'mail exsist try another';
-        // throw new BadRequestException('mail already exists');
-      }
-    }
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+     const user = this.userRepository.create(createUserDto);
+     return await this.userRepository.save(user);
   }
 
-  async findAll() {
-    return await this.userRepository.createQueryBuilder('user').getMany();
+
+  async findAll(): Promise<UserEntity[]> {
+    return await this.userRepository
+    .createQueryBuilder('user')
+    .orderBy('user.createdAt', 'DESC')
+    .leftJoinAndSelect('user.playlists', 'playlist')
+    .getMany();
   }
 
-  async findOneByEmail(email: string) {
+  async findOne(id: number): Promise<UserEntity | null> {
     const user = await this.userRepository
       .createQueryBuilder('user')
-      .where('user.email = :email', { email })
-      .getOne();
-    return await user;
-  }
-
-  async findOne(id: number) {
-    return await this.userRepository
-      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.playlists', 'playlist')
       .where('user.id = :id', { id })
       .getOne();
+      
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return user;
+      
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const result = await this.userRepository
       .createQueryBuilder()
       .update(UserEntity)
@@ -56,10 +50,20 @@ export class UserRepository {
       .execute();
     if (result.affected === 0) {
       throw new Error(`User with ID ${id} not found`);
-    }
-  }
+    } const updatedUser = await this.userRepository
+          .createQueryBuilder('user')
+          .where('user.id = :id', { id })
+          .getOne();
+          
+  return updatedUser;
+}
 
-  async remove(id: number) {
+async findOneByEmail(email: string): Promise<UserEntity | undefined> {
+  return this.userRepository.findOne({ where: { email } }); 
+}
+  
+
+  async remove(id: number): Promise<UserEntity | null> {
     const user = await this.userRepository
       .createQueryBuilder('user')
       .where('user.id = :id', { id })
@@ -69,5 +73,9 @@ export class UserRepository {
     }
     await this.userRepository.softDelete(id);
     return user;
+  }
+
+  async findByIds(ids: number[]): Promise<UserEntity[]> {
+    return this.userRepository.findBy({ id: In(ids) });
   }
 }

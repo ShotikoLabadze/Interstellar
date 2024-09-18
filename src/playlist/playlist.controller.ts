@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
+  UseInterceptors,
+  UploadedFile,
   UseGuards,
 } from '@nestjs/common';
 import { PlaylistService } from './playlist.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('playlist')
@@ -19,8 +23,16 @@ export class PlaylistController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async create(@Body() createPlaylistDto: CreatePlaylistDto) {
-    return await this.playlistService.create(createPlaylistDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createPlaylistDto: CreatePlaylistDto,
+  ) {
+    const { userId } = createPlaylistDto;
+    if (!userId) {
+      throw new Error('User Id is required');
+    }
+    return await this.playlistService.create(file, createPlaylistDto, userId);
   }
 
   @UseGuards(AuthGuard)

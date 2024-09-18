@@ -8,12 +8,15 @@ import {
   Delete,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { SearchDto } from 'src/search/dto/search.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('author')
 export class AuthorController {
@@ -21,8 +24,12 @@ export class AuthorController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createAuthorDto: CreateAuthorDto) {
-    return this.authorService.create(createAuthorDto);
+  @UseInterceptors(FileInterceptor('file'))
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createAuthorDto: CreateAuthorDto,
+  ) {
+    return this.authorService.create(file, createAuthorDto);
   }
 
   @UseGuards(AuthGuard)

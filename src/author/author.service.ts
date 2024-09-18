@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorRepository } from './author.repository';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class AuthorService {
-  constructor(private readonly authorRepository: AuthorRepository) {}
+  constructor(private readonly authorRepository: AuthorRepository,
+    private readonly fileService: FilesService,
+  ) {}
 
-  create(createAuthorDto: CreateAuthorDto) {
-    return this.authorRepository.create(createAuthorDto);
+  async create(file,createAuthorDto: CreateAuthorDto) {
+    const res =await this.fileService.uploadFile(file)
+    return await this.authorRepository.create(res,createAuthorDto);
   }
 
   findAll(search?: string) {
