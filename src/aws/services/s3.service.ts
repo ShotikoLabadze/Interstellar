@@ -39,4 +39,21 @@ export class S3Service {
             throw e
         }
     }
+
+    async getPresignedUrl(key: string): Promise<string>{
+        const params = {
+            Bucket: 'miulai-bucket',
+            Key: key,
+        };
+        try {
+            const url = await this.s3Client.getSignedUrlPromise('getObject', params);
+            return url;
+        } catch (error){
+            console.log(
+                `Failed to get presigned URL for key ${key}`,
+                error.stack,
+            )
+        }
+    } 
+
 }

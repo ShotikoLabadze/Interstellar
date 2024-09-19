@@ -39,9 +39,12 @@ export class AuthorController {
     return await this.authorService.findAll();
   }
 
+  
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.authorService.findOne(+id);
+
   }
 
   @Patch(':id')

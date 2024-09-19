@@ -22,12 +22,14 @@ export class AuthorRepository {
   }
 
   async findAll() {
-    return await this.authorRepository.find({
-      relations:['files','musics'],
 
-    })
+    const query = await this.authorRepository
+      .createQueryBuilder('author')
+      .orderBy('author.createdAt', 'DESC')
+      .leftJoinAndSelect('author.files', 'files')
+      .getMany();
+    return query
 
-    
   }
 
   async findAllSearch(search?: string) {
@@ -44,12 +46,15 @@ export class AuthorRepository {
   }
 
   async findOne(id: number) {
-    return await this.authorRepository
+    const query = await this.authorRepository
       .createQueryBuilder('author')
       .where('author.id = :id', { id })
+
       .leftJoinAndSelect('author.files','files')
       .leftJoinAndSelect('author.musics','musics')
       .getOne();
+    return await query.getOne();
+
   }
 
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {
