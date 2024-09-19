@@ -30,6 +30,17 @@ export class MusicController {
     return await this.musicService.findAll();
   }
 
+  @Get('top-hits')
+  async getTopHits() {
+    return await this.musicService.findTopHits();
+  }
+
+  @Patch(':id/increment-play')
+  async playCount(@Param('id') id: number) {
+    return await this.musicService.playCount(id);
+  }
+
+
   @Get('search')
   async findAllSearch(@Query('search') search: string) {
     return await this.musicService.findAllSearch(search);
