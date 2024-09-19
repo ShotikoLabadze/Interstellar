@@ -44,6 +44,7 @@ export class PlaylistRepository {
     const playlist = await this.playlistRepository
       .createQueryBuilder('playlist')
       .leftJoinAndSelect('playlist.user', 'user')
+      .leftJoinAndSelect('playlist.files','files')
       .where('playlist.id = :id', { id })
       .getOne();
 

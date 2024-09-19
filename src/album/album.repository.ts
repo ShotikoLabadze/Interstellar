@@ -57,7 +57,8 @@ export class AlbumRepository {
   async findOne(id: number): Promise<AlbumEntity> {
     const album = await this.albumRepository
       .createQueryBuilder('album')
-      .leftJoinAndSelect('album.musics', 'musics')
+      // .leftJoinAndSelect('album.musics', 'musics')
+      .leftJoinAndSelect('album.files','files')
       .where('album.id = :id', { id })
       .getOne();
 

@@ -22,33 +22,41 @@ export class AuthorController {
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  create(
+  async create(
     @UploadedFile() file: Express.Multer.File,
     @Body() createAuthorDto: CreateAuthorDto,
   ) {
-    return this.authorService.create(file,createAuthorDto);
+    return await this.authorService.create(file, createAuthorDto);
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.authorService.findAllSearch(search);
+  async findAllSearch(@Query('search') search?: string) {
+    return await this.authorService.findAllSearch(search);
+  }
+
+  @Get()
+  async findAll() {
+    return await this.authorService.findAll();
   }
 
   
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    console.log(id)
-    return this.authorService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.authorService.findOne(+id);
+
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
-    return this.authorService.update(+id, updateAuthorDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateAuthorDto: UpdateAuthorDto,
+  ) {
+    return await this.authorService.update(+id, updateAuthorDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authorService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.authorService.remove(+id);
   }
 }
