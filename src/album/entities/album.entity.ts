@@ -26,6 +26,9 @@ export class AlbumEntity {
   @Column({ type: 'varchar', length: 255 })
   albumName: string;
 
+  @Column({ type: 'varchar', length: 255 })
+  artistName: string;
+
   // @OneToMany(() => MusicEntity, (music) => music.album, { cascade: true })
   // musics: MusicEntity[];
 
