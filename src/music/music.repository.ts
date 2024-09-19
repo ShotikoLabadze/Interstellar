@@ -22,6 +22,24 @@ export class MusicRepository {
     return music;
   }
 
+  async playCount(id: number) {
+    const music = await this.musicRepository.findOne({ where: { id } });
+    if (!music) {
+      throw new NotFoundException('Music not found');
+    }
+    music.playCount += 1; 
+    return await this.musicRepository.save(music);
+  }
+
+
+  async findTopHits() {
+    return await this.musicRepository.find({
+      order: {
+        playCount: 'DESC', 
+      },
+    });
+  }
+
   async findAll() {
     return await this.musicRepository.find({
       relations: {

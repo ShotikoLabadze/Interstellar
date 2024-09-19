@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { MusicRepository } from './music.repository';
@@ -19,6 +19,15 @@ export class MusicService {
 
   async findAll() {
     return await this.musicRepository.findAll();
+  }
+
+  async findTopHits() {
+    return await this.musicRepository.findTopHits();
+  
+  }
+
+  async playCount(id: number) {
+    return await this.musicRepository.playCount(id);
   }
 
   async findAllSearch(search?: string) {
