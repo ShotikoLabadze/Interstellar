@@ -35,7 +35,7 @@ export class MusicController {
     return await this.musicService.findTopHits();
   }
 
-  @Patch(':id/increment-play')
+  @Patch(':id/playcounter')
   async playCount(@Param('id') id: number) {
     return await this.musicService.playCount(id);
   }

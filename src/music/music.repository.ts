@@ -27,15 +27,14 @@ export class MusicRepository {
     if (!music) {
       throw new NotFoundException('Music not found');
     }
-    music.playCount += 1; 
+    music.playCount += 1;
     return await this.musicRepository.save(music);
   }
-
 
   async findTopHits() {
     return await this.musicRepository.find({
       order: {
-        playCount: 'DESC', 
+        playCount: 'DESC',
       },
     });
   }
@@ -63,6 +62,7 @@ export class MusicRepository {
     const music = await this.musicRepository
       .createQueryBuilder('music')
       .where('music.id = :id', { id })
+      .leftJoinAndSelect('music.files', 'files')
       .getOne();
 
     if (!music) {
@@ -70,6 +70,14 @@ export class MusicRepository {
     }
 
     return music;
+  }
+
+  async findByViews(): Promise<MusicEntity[]> {
+    return await this.musicRepository.find({
+      order: {
+        views: 'DESC',
+      },
+    });
   }
 
   async update(id: number, updateMusicDto: UpdateMusicDto) {

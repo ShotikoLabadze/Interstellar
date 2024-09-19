@@ -9,12 +9,12 @@ import { FilesService } from 'src/files/files.service';
 export class MusicService {
   constructor(
     private readonly fileService: FilesService,
-    private readonly musicRepository: MusicRepository) {}
+    private readonly musicRepository: MusicRepository,
+  ) {}
 
   async create(file, createMusicDto: CreateMusicDto) {
     const res = await this.fileService.uploadFile(file);
     return await this.musicRepository.create(res, createMusicDto);
-    
   }
 
   async findAll() {
@@ -23,18 +23,21 @@ export class MusicService {
 
   async findTopHits() {
     return await this.musicRepository.findTopHits();
-  
   }
 
   async playCount(id: number) {
     return await this.musicRepository.playCount(id);
   }
 
+  async findByViews(): Promise<MusicEntity[]> {
+    return await this.musicRepository.findByViews()
+  }
+
   async findAllSearch(search?: string) {
     return await this.musicRepository.findAllSearch(search);
   }
 
-  async findOne(id: number): Promise <MusicEntity> {
+  async findOne(id: number): Promise<MusicEntity> {
     return await this.musicRepository.findOne(id);
   }
 

@@ -25,14 +25,17 @@ export class MusicEntity {
   @Column({ type: 'varchar', length: 255 })
   name: string;
 
-  // @Column({ type: 'varchar'})
-  // artistName: string;
+  @Column({ type: 'varchar'})
+  artistName: string;
 
   // @ManyToOne(() => AlbumEntity, (album) => album.musics)
   // album: AlbumEntity[];
 
   @Column({ default: 0 })
   playCount: number;
+
+  @Column({ default: 0 })
+  views: number;
 
   @ManyToOne(() => AuthorEntity, (author) => author.musics)
   author: AuthorEntity[];

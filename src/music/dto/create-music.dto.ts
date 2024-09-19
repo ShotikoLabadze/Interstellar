@@ -4,6 +4,6 @@ export class CreateMusicDto {
   @IsString()
   name: string;
 
-  // @IsString()
-  // artistName: string;
+  @IsString()
+  artistName: string;
 }
