@@ -72,7 +72,6 @@ async findOneByEmail(email: string): Promise<UserEntity | undefined> {
       throw new Error(`User with ID ${id} not found`);
     }
     await this.userRepository.softDelete(id);
-    console.log('user removed')
     return user;
   }
 

@@ -50,7 +50,7 @@ export class AuthorRepository {
       .leftJoinAndSelect('author.files', 'files')
       .leftJoinAndSelect('author.musics', 'musics')
       .getOne();
-    console.log(query);
+
 
     return query;
   }

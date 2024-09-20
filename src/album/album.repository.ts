@@ -100,7 +100,6 @@ export class AlbumRepository {
 
   async remove(id: number) {
     await this.albumRepository.softDelete(id);
-    console.log('album removed')
     return await this.albumRepository
       .createQueryBuilder('album')
       .withDeleted()

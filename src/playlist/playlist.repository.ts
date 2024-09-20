@@ -68,7 +68,6 @@ export class PlaylistRepository {
 
   async remove(id: number) {
     await this.playlistRepository.softDelete(id);
-    console.log('playlist removed')
     return await this.playlistRepository
       .createQueryBuilder('playlist')
       .withDeleted()
