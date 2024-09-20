@@ -35,6 +35,11 @@ export class MusicController {
     return await this.musicService.findTopHits();
   }
 
+  // @Get('most-viewed')
+  // async getViews() {
+  //   return await this.musicService.findByViews();
+  // }
+
   @Patch(':id/playcounter')
   async playCount(@Param('id') id: number) {
     return await this.musicService.playCount(id);
