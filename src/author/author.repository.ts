@@ -65,7 +65,7 @@ export class AuthorRepository {
   }
 
   async remove(id: number) {
-    await this.authorRepository.softDelete(id);
+    // await this.authorRepository.softDelete(id);
     console.log('author removed');
     return this.authorRepository
       .createQueryBuilder('author')

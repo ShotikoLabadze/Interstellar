@@ -53,7 +53,7 @@ export class ListenersRepository {
   }
 
   async remove(id: number) {
-    await this.listenerRepository.softDelete(id);
+    // await this.listenerRepository.softDelete(id);
     console.log('listener removed')
     return await this.listenerRepository
       .createQueryBuilder('listeners')
