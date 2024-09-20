@@ -5,6 +5,7 @@ import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorEntity } from './entities/author.entity';
 import { FileEntity } from 'src/files/entities/file.entity';
+import { error } from 'console';
 
 @Injectable()
 export class AuthorRepository {
@@ -24,7 +25,6 @@ export class AuthorRepository {
   async findAll() {
     const query = await this.authorRepository
       .createQueryBuilder('author')
-      .orderBy('author.createdAt', 'DESC')
       .leftJoinAndSelect('author.files', 'files')
       .getMany();
     return query;
@@ -65,8 +65,7 @@ export class AuthorRepository {
   }
 
   async remove(id: number) {
-    // await this.authorRepository.softDelete(id);
-    console.log('author removed');
+    await this.authorRepository.softDelete(id);
     return this.authorRepository
       .createQueryBuilder('author')
       .withDeleted()

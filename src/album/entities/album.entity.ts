@@ -20,8 +20,8 @@ export class AlbumEntity {
   @Column({ type: 'varchar', length: 255 })
   title: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  releaseDate: string;
+  @Column()
+  releaseDate: number;
 
   @Column({ type: 'varchar', length: 255 })
   albumName: string;

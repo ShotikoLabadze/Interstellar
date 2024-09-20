@@ -36,11 +36,11 @@ export class ListenersService {
   }
 
   async remove(id: number) {
-    // const result = await this.listenerRepository.softDelete(id);
-  //   if (result.affected > 0) {
-  //     return { message: 'Listener successfully deleted.' };
-  //   } else {
-  //     throw new NotFoundException('Listener not found.');
-  //   }
-  // }
-  }}
+    const result = await this.listenerRepository.softDelete(id);
+    if (result.affected > 0) {
+      return { message: 'Listener successfully deleted.' };
+    } else {
+      throw new NotFoundException('Listener not found.');
+    }
+  }
+  }
