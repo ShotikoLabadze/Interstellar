@@ -50,6 +50,9 @@ export class AuthorRepository {
       .leftJoinAndSelect('author.files', 'files')
       .leftJoinAndSelect('author.musics', 'musics')
       .getOne();
+    console.log(query);
+
+    return query;
   }
 
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {
@@ -63,7 +66,7 @@ export class AuthorRepository {
 
   async remove(id: number) {
     await this.authorRepository.softDelete(id);
-
+    console.log('author removed');
     return this.authorRepository
       .createQueryBuilder('author')
       .withDeleted()
