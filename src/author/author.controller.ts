@@ -29,7 +29,7 @@ export class AuthorController {
     return await this.authorService.create(file, createAuthorDto);
   }
 
-  @Get()
+  @Get('search')
   async findAllSearch(@Query('search') search?: string) {
     return await this.authorService.findAllSearch(search);
   }
