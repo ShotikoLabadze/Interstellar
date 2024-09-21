@@ -25,14 +25,15 @@ export class AuthorService {
     return await this.authorRepository.findAllSearch(search);
   }
 
+  async addExistingAlbumToAuthor(authorId: number, albumId: number) {
+    return await this.authorRepository.addExistingAlbumToAuthor(authorId, albumId);
+  }
+
   async findAlbumsByAuthor(id: number) {
     return await this.authorRepository.findOneWithAlbums(id);
   }
   async addAlbumToAuthor(authorId: number, createAlbumDto: CreateAlbumDto) {
-    return await this.authorRepository.addAlbumToAuthor(
-      authorId,
-      createAlbumDto,
-    );
+    return await this.authorRepository.addAlbumToAuthor(authorId, createAlbumDto);
   }
 
   async findOne(id: number) {

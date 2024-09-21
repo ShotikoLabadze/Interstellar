@@ -30,19 +30,39 @@ export class AlbumRepository {
     //     }
     //   }
     //   album.musics = musics;
-    // }
+    // } naxe. me ukugm VAKETEB. ALBUMIS SHEKMNISAS VATAM ABTORIS AIDIS DA MAGIS MERE VKMNI ROMEL AVTORSHI. EGAA MERE ARTISTI IKMNEBA DA MERE POULOB 
+    //NAXE. XO KMNI AVTORIS. MERE ALBUMIS SHEMNISAS, JER AVTORS EDZEB, CLICKZE POULOBS ROMELI ID ARIS , DA MAGIS MIXEDVIT  AMATEBS MERE 
+    //SHEGIDZLIA CADO ESE, MARA  JER SHENSAS MIACEKI DA TURAME ORSHABATS GADAVAKETOT :D 
 
     return await this.albumRepository.save(album);
   }
 
   async findAll() {
     return await this.albumRepository.find({
-      relations:['files'],
+      relations:['files','musics'],
       order: {
         createdAt:'DESC'
       }
 
     })
+  }
+
+  async addMusicsToAlbum(albumId: number, musicIds: number[]) {
+    const album = await this.albumRepository.findOne({ where: { id: albumId }, relations: ['musics'] });
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    const musics = await this.musicRepository.findByIds(musicIds);
+    if (!album.musics) {
+      album.musics = []; // Initialize if not set
+    }
+  
+    album.musics.push(...musics); // Add new music
+  
+    // Save the updated album
+    return await this.albumRepository.save(album);
+    
   }
 
   async findAllSearch(search?: string) {
@@ -57,7 +77,7 @@ export class AlbumRepository {
   async findOne(id: number): Promise<AlbumEntity> {
     const album = await this.albumRepository
       .createQueryBuilder('album')
-      // .leftJoinAndSelect('album.musics', 'musics')
+      .leftJoinAndSelect('album.musics', 'musics')
       .leftJoinAndSelect('album.files','files')
       .where('album.id = :id', { id })
       .getOne();

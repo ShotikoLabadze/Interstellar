@@ -6,9 +6,9 @@ export class CreateAlbumDto {
   @Transform(({ value }) => parseInt(value, 10)) 
   releaseDate: number;
 
-//   @IsArray()
-//   @IsNumberString({}, { each: true })
-//   musicIds: number[];
+  @IsArray()
+  @IsNumber({}, { each: true })
+  musicIds: number[];
 
   @IsString()
   albumName: string;

@@ -35,28 +35,32 @@ export class AuthorController {
     return await this.authorService.findAllSearch(search);
   }
 
-  @Post(':id/albums')
-  async addAlbumToAuthor(
-    @Param('id') id: string, 
-    @Body() createAlbumDto: CreateAlbumDto
+  @Post(':id/albums') // POST to add an existing album
+  async addAlbumId(
+    @Param('id') authorId: string,
+    @Body('albumId') albumId: number, // Accept the existing album ID
   ) {
-    return await this.authorService.addAlbumToAuthor(+id, createAlbumDto);
+    return await this.authorService.addExistingAlbumToAuthor(
+      +authorId,
+      albumId,
+    );
   }
-
   @Get()
   async findAll() {
     return await this.authorService.findAll();
   }
 
-  @Get(':id/albums')
-  async getAuthorAlbums(@Param('id') id: string) {
-    return await this.authorService.findAlbumsByAuthor(+id);
+  @Post(':id/albums')
+  async addAlbumToAuthor(
+    @Param('id') id: string,
+    @Body() createAlbumDto: CreateAlbumDto,
+  ) {
+    return await this.authorService.addAlbumToAuthor(+id, createAlbumDto);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.authorService.findOne(+id);
-
   }
 
   @Patch(':id')
