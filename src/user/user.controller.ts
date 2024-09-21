@@ -35,6 +35,17 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  //block endpoints
+  @Patch('block/:id')
+  async blockUser(@Param('id') id: string) {
+    return this.userService.blockUser(+id);
+  }
+
+  @Patch('unblock/:id')
+  async unblockUser(@Param('id') id: string) {
+    return this.userService.unblockUser(+id);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
