@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { AuthorRepository } from './author.repository';
 import { FilesService } from 'src/files/files.service';
+import { CreateAlbumDto } from 'src/album/dto/create-album.dto';
 
 @Injectable()
 export class AuthorService {
@@ -10,7 +11,6 @@ export class AuthorService {
     private readonly authorRepository: AuthorRepository,
     private readonly fileService: FilesService,
   ) {}
-
 
   async create(file, createAuthorDto: CreateAuthorDto) {
     const res = await this.fileService.uploadFile(file);
@@ -23,6 +23,16 @@ export class AuthorService {
 
   async findAllSearch(search?: string) {
     return await this.authorRepository.findAllSearch(search);
+  }
+
+  async findAlbumsByAuthor(id: number) {
+    return await this.authorRepository.findOneWithAlbums(id);
+  }
+  async addAlbumToAuthor(authorId: number, createAlbumDto: CreateAlbumDto) {
+    return await this.authorRepository.addAlbumToAuthor(
+      authorId,
+      createAlbumDto,
+    );
   }
 
   async findOne(id: number) {

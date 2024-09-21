@@ -15,6 +15,7 @@ import { CreateAuthorDto } from './dto/create-author.dto';
 import { SearchDto } from 'src/search/dto/search.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateAlbumDto } from 'src/album/dto/create-album.dto';
 
 @Controller('author')
 export class AuthorController {
@@ -34,12 +35,23 @@ export class AuthorController {
     return await this.authorService.findAllSearch(search);
   }
 
+  @Post(':id/albums')
+  async addAlbumToAuthor(
+    @Param('id') id: string, 
+    @Body() createAlbumDto: CreateAlbumDto
+  ) {
+    return await this.authorService.addAlbumToAuthor(+id, createAlbumDto);
+  }
+
   @Get()
   async findAll() {
     return await this.authorService.findAll();
   }
 
-  
+  @Get(':id/albums')
+  async getAuthorAlbums(@Param('id') id: string) {
+    return await this.authorService.findAlbumsByAuthor(+id);
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {

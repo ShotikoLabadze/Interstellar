@@ -13,6 +13,4 @@ export class CreateAlbumDto {
   @IsString()
   albumName: string;
 
-  @IsString()
-  artistName: string;
 }

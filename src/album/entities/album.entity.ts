@@ -1,3 +1,4 @@
+import { AuthorEntity } from 'src/author/entities/author.entity';
 import { FileEntity } from 'src/files/entities/file.entity';
 import { ListenerEntity } from 'src/listeners/entities/listener.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
@@ -7,6 +8,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -31,6 +33,9 @@ export class AlbumEntity {
 
   // @OneToMany(() => MusicEntity, (music) => music.album, { cascade: true })
   // musics: MusicEntity[];
+
+  @ManyToOne(() => AuthorEntity, (author) => author.albums)
+  author: AuthorEntity;
 
   @OneToMany(() => ListenerEntity, (listener) => listener.album)
   listeners: ListenerEntity[];

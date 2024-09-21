@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsString } from 'class-validator';
+import { CreateAlbumDto } from 'src/album/dto/create-album.dto';
 import { CreateMusicDto } from 'src/music/dto/create-music.dto';
 
 export class CreateAuthorDto {
@@ -15,4 +16,7 @@ export class CreateAuthorDto {
   @IsArray()
   @Type(() => CreateMusicDto)
   musics: CreateMusicDto[];
+
+  @IsArray()
+  albums: CreateAlbumDto[];
 }

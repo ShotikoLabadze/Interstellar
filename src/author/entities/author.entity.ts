@@ -1,3 +1,4 @@
+import { AlbumEntity } from 'src/album/entities/album.entity';
 import { FileEntity } from 'src/files/entities/file.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import {
@@ -28,6 +29,9 @@ export class AuthorEntity {
   @OneToMany(() => FileEntity, (file) => file.author, { cascade: true })
   @JoinColumn()
   files: FileEntity[];
+
+  @OneToMany(() => AlbumEntity, (album) => album.author, { cascade: true })
+  albums: AlbumEntity[];
 
   @Column()
   biography: string;
