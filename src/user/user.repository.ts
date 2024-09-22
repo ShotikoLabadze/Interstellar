@@ -4,6 +4,7 @@ import { In, Repository, UpdateResult } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserRepository {
@@ -12,9 +13,19 @@ export class UserRepository {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const user = this.userRepository.create(createUserDto);
-    return await this.userRepository.save(user);
+  async create(createUserDto: CreateUserDto) {
+    const newUser = this.userRepository.create(createUserDto);
+    newUser.password = await bcrypt.hash(newUser.password, 10);
+
+    try {
+      const result = await this.userRepository.save(newUser);
+      const { password, ...user } = result;
+      return user;
+    } catch (err) {
+      if (err.errno == 1062) {
+        return;
+      }
+    }
   }
 
   async findAll(): Promise<UserEntity[]> {
@@ -43,6 +54,10 @@ export class UserRepository {
     id: number,
     updateUserDto: UpdateUserDto,
   ): Promise<UpdateResult> {
+    //check if password is updated
+    if (updateUserDto.password) {
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+    }
     const result = await this.userRepository
       .createQueryBuilder()
       .update(UserEntity)

@@ -18,12 +18,7 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await encodePassword(createUserDto.password);
-
-    return await this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
-    });
+    return await this.userRepository.create(createUserDto);
   }
 
   async blockUser(id: number): Promise<{ message: string }> {
