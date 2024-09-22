@@ -10,7 +10,6 @@ export class AlbumService {
   constructor(
     private readonly albumsRepository: AlbumRepository,
     private readonly fileService: FilesService,
-    
   ) {}
 
   async create(file, createAlbumDto: CreateAlbumDto) {
@@ -21,8 +20,6 @@ export class AlbumService {
   async addMusicsToAlbum(albumId: number, musicIds: number[]) {
     return await this.albumsRepository.addMusicsToAlbum(albumId, musicIds);
   }
-
- 
 
   async findAll() {
     return await this.albumsRepository.findAll();

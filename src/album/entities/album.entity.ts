@@ -36,7 +36,7 @@ export class AlbumEntity {
   // @OneToMany(() => MusicEntity, (music) => music.album, { cascade: true })
   // musics: MusicEntity[];
 
-  @ManyToMany(() => MusicEntity, (music) => music.albums, {cascade: true})
+  @ManyToMany(() => MusicEntity, (music) => music.albums, { cascade: true })
   @JoinTable()
   musics: MusicEntity[];
 
@@ -49,6 +49,9 @@ export class AlbumEntity {
   @OneToMany(() => FileEntity, (file) => file.music, { cascade: true })
   @JoinColumn()
   files: FileEntity[];
+  //viewers
+  @Column({ default: 0 })
+  views: number;
 
   @CreateDateColumn()
   createdAt: Date;

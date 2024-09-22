@@ -1,11 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { AlbumEntity } from './entities/album.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MusicEntity } from 'src/music/entities/music.entity';
 import { FileEntity } from 'src/files/entities/file.entity';
 
 @Injectable()
@@ -13,58 +12,15 @@ export class AlbumRepository {
   constructor(
     @InjectRepository(AlbumEntity)
     private albumRepository: Repository<AlbumEntity>,
-    @InjectRepository(MusicEntity)
-    private musicRepository: Repository<MusicEntity>,
   ) {}
 
-  async create(file: FileEntity, createAlbumDto: CreateAlbumDto) {
-    const { ...albumData } = createAlbumDto;
-    const album = this.albumRepository.create({...albumData, files: [file] });
-
-    // if (musicIds && musicIds.length > 0) {
-    //   const musics = [];
-    //   for (const id of musicIds) {
-    //     const music = await this.musicRepository.findOne({ where: { id } });
-    //     if (music) {
-    //       musics.push(music);
-    //     }
-    //   }
-    //   album.musics = musics;
-    // } naxe. me ukugm VAKETEB. ALBUMIS SHEKMNISAS VATAM ABTORIS AIDIS DA MAGIS MERE VKMNI ROMEL AVTORSHI. EGAA MERE ARTISTI IKMNEBA DA MERE POULOB 
-    //NAXE. XO KMNI AVTORIS. MERE ALBUMIS SHEMNISAS, JER AVTORS EDZEB, CLICKZE POULOBS ROMELI ID ARIS , DA MAGIS MIXEDVIT  AMATEBS MERE 
-    //SHEGIDZLIA CADO ESE, MARA  JER SHENSAS MIACEKI DA TURAME ORSHABATS GADAVAKETOT :D 
-
+  async create(res: FileEntity, createAlbumDto: CreateAlbumDto) {
+    const album = this.albumRepository.create(createAlbumDto);
     return await this.albumRepository.save(album);
   }
 
   async findAll() {
-    return await this.albumRepository.find({
-      relations:['files','musics'],
-      order: {
-        createdAt:'DESC'
-      }
-
-    })
-  }
-
-
-
-  async addMusicsToAlbum(albumId: number, musicIds: number[]) {
-    const album = await this.albumRepository.findOne({ where: { id: albumId }, relations: ['musics'] });
-    if (!album) {
-      throw new NotFoundException('Album not found');
-    }
-
-    const musics = await this.musicRepository.findByIds(musicIds);
-    if (!album.musics) {
-      album.musics = []; // Initialize if not set
-    }
-  
-    album.musics.push(...musics); // Add new music
-  
-    // Save the updated album
-    return await this.albumRepository.save(album);
-    
+    return await this.albumRepository.createQueryBuilder('album').getMany();
   }
 
   async findAllSearch(search?: string) {
@@ -76,47 +32,32 @@ export class AlbumRepository {
     }
   }
 
-  async findOne(id: number): Promise<AlbumEntity> {
+  async findOne(id: number) {
     const album = await this.albumRepository
       .createQueryBuilder('album')
-      .leftJoinAndSelect('album.musics', 'musics')
-      .leftJoinAndSelect('album.files','files')
       .where('album.id = :id', { id })
       .getOne();
 
-    if (!album) {
-      throw new NotFoundException(`Album with ID ${id} not found`);
+    if (album) {
+      await this.albumRepository
+        .createQueryBuilder()
+        .update(AlbumEntity)
+        .set({ views: () => 'views + 1' })
+        .where('id = :id', { id })
+        .execute();
     }
 
     return album;
   }
 
   async update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    const { ...albumData } = updateAlbumDto;
-
-    await this.albumRepository
+    const query = await this.albumRepository
       .createQueryBuilder()
       .update()
-      .set(albumData)
+      .set(updateAlbumDto)
       .where('id = :id', { id })
       .execute();
 
-    // if (musicIds && musicIds.length > 0) {
-    //   const musics = [];
-    //   for (const musicId of musicIds) {
-    //     const music = await this.musicRepository.findOne({
-    //       where: { id: musicId },
-    //     });
-    //     if (music) {
-    //       musics.push(music);
-    //     }
-    //   }
-    //   const album = await this.findOne(id);
-    //   if (album) {
-    //     album.musics = musics;
-    //     await this.albumRepository.save(album);
-    //   }
-    // }
     return await this.findOne(id);
   }
 
