@@ -50,6 +50,19 @@ export class AuthorController {
     return await this.authorService.findAll();
   }
 
+  @Get(':id/albums')
+  async getAuthorWithAlbumsAndMusic(@Param('id') id: string) {
+    return await this.authorService.findAlbumsWithMusicByAuthor(+id);
+  }
+
+  @Get(':authorId/albums/:albumId/musics')
+async getAlbumMusicByAuthor(
+  @Param('authorId') authorId: string, 
+  @Param('albumId') albumId: string
+) {
+  return await this.authorService.findMusicByAuthorAndAlbum(+authorId, +albumId);
+}
+
   @Post(':id/albums')
   async addAlbumToAuthor(
     @Param('id') id: string,

@@ -149,6 +149,30 @@ export class AuthorRepository {
     };
   }
 
+
+  async findMusicByAuthorAndAlbum(authorId: number, albumId: number) {
+    const albumWithMusic = await this.authorRepository
+      .createQueryBuilder('author')
+      .leftJoinAndSelect('author.albums', 'album')
+      .leftJoinAndSelect('album.musics', 'music')
+      .where('author.id = :authorId', { authorId })
+      .andWhere('album.id = :albumId', { albumId })
+      .getOne();
+  
+    if (!albumWithMusic || !albumWithMusic.albums.length) {
+      throw new NotFoundException('Album or author not found');
+    }
+  
+    const album = albumWithMusic.albums.find(a => a.id === albumId);
+  
+    return {
+      albumId: album?.id,
+      albumName: album?.albumName,
+      musics: album?.musics || [],
+    };
+  }
+  
+
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {
     await this.authorRepository
       .createQueryBuilder('author')
