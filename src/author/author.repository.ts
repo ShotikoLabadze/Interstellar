@@ -59,6 +59,27 @@ export class AuthorRepository {
     };
   }
 
+  async findAlbumByAuthor(authorId: number, albumId: number) {
+    const author = await this.authorRepository.findOne({
+      where: { id: authorId },
+      relations: ['albums',],
+    });
+
+    if (!author) {
+      throw new NotFoundException(`Author with ID ${authorId} not found`);
+    }
+
+    const album = author.albums.find((album) => album.id === albumId);
+
+    if (!album) {
+      throw new NotFoundException(
+        `Album with ID ${albumId} not found for author with ID ${authorId}`,
+      );
+    }
+
+    return album;
+  }
+
   async addExistingAlbumToAuthor(authorId: number, albumId: number) {
     const author = await this.authorRepository.findOne({
       where: { id: authorId },
@@ -101,7 +122,7 @@ export class AuthorRepository {
   async findOneWithAlbums(id: number) {
     return this.authorRepository.findOne({
       where: { id },
-      relations: ['albums'],
+      relations: ['albums',],
     });
   }
 

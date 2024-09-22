@@ -37,6 +37,11 @@ export class AuthorService {
     return await this.authorRepository.findMusicByAuthorAndAlbum(authorId, albumId);
   }
 
+  async findAlbumByAuthor(authorId: number, albumId: number) {
+    return await this.authorRepository.findAlbumByAuthor(authorId, albumId);
+  }
+  
+
   async findAlbumsByAuthor(id: number) {
     return await this.authorRepository.findOneWithAlbums(id);
   }

@@ -33,6 +33,8 @@ export class AlbumController {
     return await this.albumService.findAll();
   }
 
+
+
   @Patch(':id/musics')
   async addMusics(@Param('id') id: number, @Body('musicIds') musicIds: number[]) {
     return await this.albumService.addMusicsToAlbum(id, musicIds);

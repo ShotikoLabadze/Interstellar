@@ -71,6 +71,15 @@ async getAlbumMusicByAuthor(
     return await this.authorService.addAlbumToAuthor(+id, createAlbumDto);
   }
 
+  @Get(':authorId/albums/:albumId')
+  async getAlbumByAuthorId(
+    @Param('authorId') authorId: number,
+    @Param('albumId') albumId: number,
+  ) {
+    return await this.authorService.findAlbumByAuthor(authorId, albumId);
+  }
+  
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.authorService.findOne(+id);

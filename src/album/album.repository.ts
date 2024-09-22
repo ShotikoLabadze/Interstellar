@@ -47,6 +47,8 @@ export class AlbumRepository {
     })
   }
 
+
+
   async addMusicsToAlbum(albumId: number, musicIds: number[]) {
     const album = await this.albumRepository.findOne({ where: { id: albumId }, relations: ['musics'] });
     if (!album) {
