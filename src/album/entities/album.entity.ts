@@ -36,7 +36,7 @@ export class AlbumEntity {
   // @OneToMany(() => MusicEntity, (music) => music.album, { cascade: true })
   // musics: MusicEntity[];
 
-  @OneToMany(() => MusicEntity, (music) => music.albums, {cascade: true})
+  @ManyToMany(() => MusicEntity, (music) => music.albums, {cascade: true})
   @JoinTable()
   musics: MusicEntity[];
 
