@@ -28,7 +28,7 @@ export class MusicEntity {
   @Column({ type: 'varchar'})
   artistName: string;
 
-  @ManyToMany(() => AlbumEntity, (album) => album.musics)
+  @ManyToOne(() => AlbumEntity, (album) => album.musics)
   albums: AlbumEntity[];
 
   @Column({ default: 0 })

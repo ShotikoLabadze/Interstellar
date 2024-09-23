@@ -40,7 +40,6 @@ export class AlbumController {
     return await this.albumService.addMusicsToAlbum(id, musicIds);
   }
 
-
   @Get('search')
   async findAllSearch(@Query('search') search: string) {
     return await this.albumService.findAllSearch(search);

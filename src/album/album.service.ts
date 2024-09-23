@@ -22,8 +22,6 @@ export class AlbumService {
     return await this.albumsRepository.addMusicsToAlbum(albumId, musicIds);
   }
 
- 
-
   async findAll() {
     return await this.albumsRepository.findAll();
   }
