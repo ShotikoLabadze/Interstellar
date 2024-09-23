@@ -22,25 +22,26 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token is missing');
     }
+
     let payload;
     try {
       payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
-      request['user'] = payload;
+      request['user'] = payload; 
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token');
     }
 
-    //check if user is blocked
-    const user: UserEntity = await this.userRepository.findOne(payload.id);
-    if (user?.blocked) {
-      throw new UnauthorizedException('User is blocked');
-    }
+    // Check if user is blocked
+    const user: UserEntity = await this.userRepository.findOne(payload.userId);
+  if (user?.blocked) {
+    throw new UnauthorizedException('User account is blocked');
+  }
 
-    return true;
+    return true; 
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
