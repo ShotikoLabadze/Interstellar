@@ -14,6 +14,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
+
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -23,9 +24,10 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll(@Req() req) {
-    console.log(req.user);
+    console.log(req.user)
     return this.userService.findAll();
   }
 
