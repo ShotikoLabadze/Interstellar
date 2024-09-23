@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
+
 
 @Controller('user')
 export class UserController {
@@ -20,8 +24,10 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
+  findAll(@Req() req) {
+    console.log(req.user)
     return this.userService.findAll();
   }
 
@@ -33,6 +39,17 @@ export class UserController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
+  }
+
+  //block endpoints
+  @Patch('block/:id')
+  async blockUser(@Param('id') id: string) {
+    return this.userService.blockUser(+id);
+  }
+
+  @Patch('unblock/:id')
+  async unblockUser(@Param('id') id: string) {
+    return this.userService.unblockUser(+id);
   }
 
   @Delete(':id')

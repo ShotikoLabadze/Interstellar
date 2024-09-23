@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsNumber,
@@ -28,9 +29,12 @@ export class CreateUserDto {
   @IsStrongPassword()
   password: string;
 
-
   @IsArray()
   @IsOptional()
-  @ValidateNested({each: true})
-  playlists: PlaylistEntity[];  
+  @ValidateNested({ each: true })
+  playlists: PlaylistEntity[];
+
+  @IsOptional()
+  @IsBoolean()
+  blocked?: boolean;
 }

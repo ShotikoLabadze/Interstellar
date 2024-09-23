@@ -7,27 +7,41 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { jwtConstants } from './constants';
+import { UserRepository } from 'src/user/user.repository';
+import { UserEntity } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private userRepository: UserRepository,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token is missing');
     }
+
+    let payload;
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       });
-      request['user'] = payload;
+      request['user'] = payload; 
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token');
     }
-    return true;
+
+    // Check if user is blocked
+    const user: UserEntity = await this.userRepository.findOne(payload.userId);
+  if (user?.blocked) {
+    throw new UnauthorizedException('User account is blocked');
+  }
+
+    return true; 
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

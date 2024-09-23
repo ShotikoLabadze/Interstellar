@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserRepository } from './user.repository';
@@ -7,29 +7,49 @@ import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import { encodePassword } from 'src/utils/bcrypt';
-
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository,
+  constructor(
+    private readonly userRepository: UserRepository,
     @InjectRepository(PlaylistEntity)
-    private readonly playlistRepository: Repository<PlaylistEntity>
+    private readonly playlistRepository: Repository<PlaylistEntity>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await encodePassword(createUserDto.password);
+    return await this.userRepository.create(createUserDto);
+  }
 
-    return await this.userRepository.create({
-      ...createUserDto,
-      password: hashedPassword,
+  async blockUser(id: number): Promise<{ message: string }> {
+    const result: UpdateResult = await this.userRepository.update(id, {
+      blocked: true,
     });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return { message: `User with ID ${id} has been blocked.` };
+  }
+
+  async unblockUser(id: number): Promise<{ message: string }> {
+    const result: UpdateResult = await this.userRepository.update(id, {
+      blocked: false,
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return { message: `User with ID ${id} has been unblocked.` };
   }
 
   findAll() {
     return this.userRepository.findAll();
   }
 
-  findOne(id: number): Promise<UserEntity>{
+  findOne(id: number): Promise<UserEntity> {
     return this.userRepository.findOne(id);
   }
 
