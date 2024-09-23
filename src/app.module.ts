@@ -27,7 +27,7 @@ import { JwtModule } from '@nestjs/jwt';
       password: '12345',
       database: 'miulai',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: true,//3retertret
     }),
     UserModule,
     MusicModule,
