@@ -21,6 +21,7 @@ export class UserService {
     return await this.userRepository.create(createUserDto);
   }
 
+
   async blockUser(id: number): Promise<{ message: string }> {
     const result: UpdateResult = await this.userRepository.update(id, {
       blocked: true,
