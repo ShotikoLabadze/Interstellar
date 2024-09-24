@@ -25,6 +25,22 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
 
+  //get me
+  async getCurrentUser(
+    userId: number,
+  ): Promise<{ name: string; email: string }> {
+    const user = await this.userRepository.findUserById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return {
+      name: user.name,
+      email: user.email,
+    };
+  }
+
   async blockUser(id: number): Promise<{ message: string }> {
     const result: UpdateResult = await this.userRepository.update(id, {
       blocked: true,

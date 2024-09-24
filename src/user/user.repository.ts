@@ -41,6 +41,11 @@ export class UserRepository {
     return user ? user.isAdmin : false;
   }
 
+  //get me
+  async findUserById(userId: number): Promise<UserEntity | undefined> {
+    return await this.findOne(userId);
+  }
+
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository
       .createQueryBuilder('user')

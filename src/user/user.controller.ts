@@ -23,6 +23,12 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
+  //get me
+  @Get('me/:id')
+  async getCurrentUser(@Param('id') userId: string) {
+    return this.userService.getCurrentUser(Number(userId));
+  }
+
   @UseGuards(AuthGuard)
   @Get()
   findAll(@Req() req) {
