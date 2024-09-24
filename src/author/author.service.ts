@@ -29,24 +29,8 @@ export class AuthorService {
     return await this.authorRepository.addExistingAlbumToAuthor(authorId, albumId);
   }
 
-  async findAlbumsWithMusicByAuthor(id: number) {
-    return await this.authorRepository.findAlbumsWithMusicByAuthor(id);
-  }
-
-  async findMusicByAuthorAndAlbum(authorId: number, albumId: number) {
-    return await this.authorRepository.findMusicByAuthorAndAlbum(authorId, albumId);
-  }
-
-  async findAlbumByAuthor(authorId: number, albumId: number) {
-    return await this.authorRepository.findAlbumByAuthor(authorId, albumId);
-  }
-  
-
   async findAlbumsByAuthor(id: number) {
     return await this.authorRepository.findOneWithAlbums(id);
-  }
-  async addAlbumToAuthor(authorId: number, createAlbumDto: CreateAlbumDto) {
-    return await this.authorRepository.addAlbumToAuthor(authorId, createAlbumDto);
   }
 
   async findOne(id: number) {

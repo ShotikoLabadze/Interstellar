@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -50,21 +50,43 @@ export class AlbumRepository {
 
 
   async addMusicsToAlbum(albumId: number, musicIds: number[]) {
-    const album = await this.albumRepository.findOne({ where: { id: albumId }, relations: ['musics'] });
+    const album = await this.albumRepository.findOne({
+      where: { id: albumId },
+      relations: ['musics'], 
+    });
+
     if (!album) {
       throw new NotFoundException('Album not found');
     }
 
     const musics = await this.musicRepository.findByIds(musicIds);
+
     if (!album.musics) {
-      album.musics = []; // Initialize if not set
+      album.musics = []; 
     }
-  
-    album.musics.push(...musics); // Add new music
-  
-    // Save the updated album
+
+    album.musics.push(...musics);
+
     return await this.albumRepository.save(album);
-    
+  }
+
+  async removeMusicsFromAlbum(albumId: number, musicIds: number[]) {
+    // Validate that musicIds is an array and has elements
+    if (!musicIds || !Array.isArray(musicIds) || musicIds.length === 0) {
+      throw new BadRequestException('Invalid or missing musicIds');
+    }
+
+    // Fetch the album with its musics
+    const album = await this.albumRepository.findOne({ where: { id: albumId }, relations: ['musics'] });
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    // Filter out the musics that need to be removed
+    album.musics = album.musics.filter((music) => !musicIds.includes(music.id));
+
+    // Save the updated album without the removed musics
+    return await this.albumRepository.save(album);
   }
 
   async findAllSearch(search?: string) {

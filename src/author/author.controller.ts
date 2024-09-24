@@ -35,10 +35,10 @@ export class AuthorController {
     return await this.authorService.findAllSearch(search);
   }
 
-  @Post(':id/albums') // POST to add an existing album
+  @Post(':id/albums')
   async addAlbumId(
     @Param('id') authorId: string,
-    @Body('albumId') albumId: number, // Accept the existing album ID
+    @Body('albumId') albumId: number, 
   ) {
     return await this.authorService.addExistingAlbumToAuthor(
       +authorId,
@@ -49,36 +49,6 @@ export class AuthorController {
   async findAll() {
     return await this.authorService.findAll();
   }
-
-  @Get(':id/albums')
-  async getAuthorWithAlbumsAndMusic(@Param('id') id: string) {
-    return await this.authorService.findAlbumsWithMusicByAuthor(+id);
-  }
-
-  @Get(':authorId/albums/:albumId/musics')
-async getAlbumMusicByAuthor(
-  @Param('authorId') authorId: string, 
-  @Param('albumId') albumId: string
-) {
-  return await this.authorService.findMusicByAuthorAndAlbum(+authorId, +albumId);
-}
-
-  @Post(':id/albums')
-  async addAlbumToAuthor(
-    @Param('id') id: string,
-    @Body() createAlbumDto: CreateAlbumDto,
-  ) {
-    return await this.authorService.addAlbumToAuthor(+id, createAlbumDto);
-  }
-
-  @Get(':authorId/albums/:albumId')
-  async getAlbumByAuthorId(
-    @Param('authorId') authorId: number,
-    @Param('albumId') albumId: number,
-  ) {
-    return await this.authorService.findAlbumByAuthor(authorId, albumId);
-  }
-  
 
   @Get(':id')
   async findOne(@Param('id') id: string) {

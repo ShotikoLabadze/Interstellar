@@ -59,27 +59,6 @@ export class AuthorRepository {
     };
   }
 
-  async findAlbumByAuthor(authorId: number, albumId: number) {
-    const author = await this.authorRepository.findOne({
-      where: { id: authorId },
-      relations: ['albums',],
-    });
-
-    if (!author) {
-      throw new NotFoundException(`Author with ID ${authorId} not found`);
-    }
-
-    const album = author.albums.find((album) => album.id === albumId);
-
-    if (!album) {
-      throw new NotFoundException(
-        `Album with ID ${albumId} not found for author with ID ${authorId}`,
-      );
-    }
-
-    return album;
-  }
-
   async addExistingAlbumToAuthor(authorId: number, albumId: number) {
     const author = await this.authorRepository.findOne({
       where: { id: authorId },
@@ -122,7 +101,7 @@ export class AuthorRepository {
   async findOneWithAlbums(id: number) {
     return this.authorRepository.findOne({
       where: { id },
-      relations: ['albums',],
+      relations: ['albums'],
     });
   }
 
@@ -165,34 +144,10 @@ export class AuthorRepository {
         releaseDate: album.releaseDate,
         albumName: album.albumName,
         artistName: album.artistName,
-        musics: album.musics, 
+        musics: album.musics, // This includes only the music associated with this album
       })),
     };
   }
-
-
-  async findMusicByAuthorAndAlbum(authorId: number, albumId: number) {
-    const albumWithMusic = await this.authorRepository
-      .createQueryBuilder('author')
-      .leftJoinAndSelect('author.albums', 'album')
-      .leftJoinAndSelect('album.musics', 'music')
-      .where('author.id = :authorId', { authorId })
-      .andWhere('album.id = :albumId', { albumId })
-      .getOne();
-  
-    if (!albumWithMusic || !albumWithMusic.albums.length) {
-      throw new NotFoundException('Album or author not found');
-    }
-  
-    const album = albumWithMusic.albums.find(a => a.id === albumId);
-  
-    return {
-      albumId: album?.id,
-      albumName: album?.albumName,
-      musics: album?.musics || [],
-    };
-  }
-  
 
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {
     await this.authorRepository

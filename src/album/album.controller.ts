@@ -24,7 +24,8 @@ export class AlbumController {
   @UseInterceptors(FileInterceptor('file'))
   async create(
     @UploadedFile() file: Express.Multer.File,
-    @Body() createAlbumDto: CreateAlbumDto, ) {
+    @Body() createAlbumDto: CreateAlbumDto,
+  ) {
     return await this.albumService.create(file, createAlbumDto);
   }
 
@@ -32,11 +33,11 @@ export class AlbumController {
   async findAll() {
     return await this.albumService.findAll();
   }
-
-
-
   @Patch(':id/musics')
-  async addMusics(@Param('id') id: number, @Body('musicIds') musicIds: number[]) {
+  async addMusics(
+    @Param('id') id: number,
+    @Body('musicIds') musicIds: number[],
+  ) {
     return await this.albumService.addMusicsToAlbum(id, musicIds);
   }
 
@@ -48,6 +49,14 @@ export class AlbumController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.albumService.findOne(+id);
+  }
+
+  @Delete(':id/musics')
+  async removeMusics(
+    @Param('id') albumId: number,
+    @Body('musicIds') musicIds: number[]
+  ) {
+    return await this.albumService.removeMusicsFromAlbum(albumId, musicIds);
   }
 
   @Patch(':id')
