@@ -11,29 +11,37 @@ export class UserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
-    const newUser = this.userRepository.create(createUserDto);
-    newUser.password = await bcrypt.hash(newUser.password, 10);
+
+    const existingUser = await this.findOneByEmail(createUserDto.email);
+    if (existingUser) {
+      throw new Error('Email already exists');
+    }
+
+    const newUser = this.userRepository.create({
+      ...createUserDto,
+      password: await bcrypt.hash(createUserDto.password, 10),
+    });
 
     try {
       const result = await this.userRepository.save(newUser);
       const { password, ...user } = result;
       return user;
     } catch (err) {
-      if (err.errno == 1062) {
-        return;
+      if (err.errno === 1062) {
+        throw new Error('Email already exists');
       }
+      throw err;
     }
   }
 
-  async blockUser(userId: number) {
-    await this.userRepository.update(userId, { blocked: true });
-  }
 
-  async unblockUser(userId: number) {
-    await this.userRepository.update(userId, { blocked: false });
+
+  async isAdminEmail(email: string): Promise<boolean> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    return user ? user.isAdmin : false;
   }
 
   async findAll(): Promise<UserEntity[]> {

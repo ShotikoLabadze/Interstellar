@@ -37,4 +37,9 @@ export class CreateUserDto {
   @IsOptional()
   @IsBoolean()
   blocked?: boolean;
+
+
+  @IsOptional()
+  @IsBoolean()
+  isAdmin?: boolean;
 }

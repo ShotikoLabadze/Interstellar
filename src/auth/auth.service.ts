@@ -10,11 +10,11 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   async login(email: string, password: string) {
     const user = await this.userRepository.findOneByEmail(email);
-    
+    console.log(email, password, user)
     if (!user) {
       throw new UnauthorizedException('Invalid credentials.');
     }
@@ -29,18 +29,20 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials.');
     }
+    const isAdmin = user.isAdmin;
 
     // Create JWT token
     const payload = {
       userId: user.id,
       email: user.email,
+      isAdmin
     };
 
-    const jwtToken = await this.jwtService.signAsync(payload);
+    const jwtToken = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'),
+      expiresIn: '1h', // Adjust token expiration as needed
+    });
 
-     // Check if user is admin
-     const adminEmails = this.configService.get<string>('ADMIN_EMAILS')?.split(',');
-     const role = adminEmails.includes(user.email) ? 'admin' : 'user';
 
     // Return the JWT token and user info
     return {
@@ -48,7 +50,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       id: user.id,
-      role: role,
+      role: isAdmin ? 'admin' : 'user',
     };
   }
 }
