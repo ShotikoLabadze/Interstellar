@@ -19,7 +19,7 @@ import { AuthGuard } from './auth.guard';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
-  exports: [JwtModule], 
+  providers: [AuthService,ConfigService],
+  exports: [JwtModule,ConfigService], 
 })
 export class AuthModule {}

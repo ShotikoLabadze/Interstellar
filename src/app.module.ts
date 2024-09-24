@@ -26,7 +26,7 @@ import { AwsModule } from './aws/aws.module';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: true,//3retertret
     }),
     UserModule,
     MusicModule,
