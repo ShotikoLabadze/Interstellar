@@ -6,17 +6,14 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/user/user.repository';
 import { UserEntity } from 'src/user/entities/user.entity';
-import { jwtConstants } from './constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private userRepository: UserRepository,
-    private configService: ConfigService, // Inject ConfigService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -29,9 +26,7 @@ export class AuthGuard implements CanActivate {
 
     let payload;
     try {
-      payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
-      });
+      payload = await this.jwtService.verifyAsync(token);
       request['user'] = payload; 
     } catch {
       throw new UnauthorizedException('Invalid token');
@@ -43,13 +38,8 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('User account is blocked');
     }
 
-    // Check if user is admin
-    const adminEmails = this.configService.get<string>('ADMIN_EMAILS')?.split(',');
-    if (adminEmails.includes(user.email)) {
-      request.user.isAdmin = true; // Mark the user as admin in the request object
-    } else {
-      request.user.isAdmin = false;
-    }
+    // Check if the user is an admin
+    request.user.isAdmin = user.isAdmin; // Set isAdmin on the request object
 
     return true; 
   }

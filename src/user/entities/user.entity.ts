@@ -39,6 +39,9 @@ export class UserEntity {
   @Column({ default: false })
   blocked: boolean;
 
+  @Column({ default: false })
+  isAdmin: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

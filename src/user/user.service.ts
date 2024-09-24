@@ -15,7 +15,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     @InjectRepository(PlaylistEntity)
     private readonly playlistRepository: Repository<PlaylistEntity>,
-  ) {}
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
     return await this.userRepository.create(createUserDto);
