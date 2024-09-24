@@ -14,10 +14,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 
-
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -26,9 +25,9 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get()
-  findAll(@Req() req) {
-    console.log(req.user)
-    return this.userService.findAll();
+  async findAll(@Req() req) {
+    const users = await this.userService.findAll();
+    return users.filter((user) => !user.isAdmin);
   }
 
   @Get(':id')

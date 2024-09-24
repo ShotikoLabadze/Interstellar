@@ -11,10 +11,9 @@ export class UserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
-
     const existingUser = await this.findOneByEmail(createUserDto.email);
     if (existingUser) {
       throw new Error('Email already exists');
@@ -36,8 +35,6 @@ export class UserRepository {
       throw err;
     }
   }
-
-
 
   async isAdminEmail(email: string): Promise<boolean> {
     const user = await this.userRepository.findOne({ where: { email } });
