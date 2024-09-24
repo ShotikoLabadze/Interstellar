@@ -1,3 +1,4 @@
+import { AlbumEntity } from 'src/album/entities/album.entity';
 import { FileEntity } from 'src/files/entities/file.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import {
@@ -29,8 +30,14 @@ export class AuthorEntity {
   @JoinColumn()
   files: FileEntity[];
 
+  @OneToMany(() => AlbumEntity, (album) => album.author, { cascade: true })
+  albums: AlbumEntity[];
+
   @Column()
   biography: string;
+
+  @Column({ nullable: true })
+  coverPhoto: string;
 
   @CreateDateColumn()
   createdAt: Date;

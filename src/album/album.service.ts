@@ -18,6 +18,14 @@ export class AlbumService {
     return await this.albumsRepository.create(res, createAlbumDto);
   }
 
+  async addMusicsToAlbum(albumId: number, musicIds: number[]) {
+    return await this.albumsRepository.addMusicsToAlbum(albumId, musicIds);
+  }
+
+  async removeMusicsFromAlbum(albumId: number, musicIds: number[]) {
+    return await this.albumsRepository.removeMusicsFromAlbum(albumId, musicIds);
+  }
+
   async findAll() {
     return await this.albumsRepository.findAll();
   }

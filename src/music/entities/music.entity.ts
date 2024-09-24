@@ -28,8 +28,8 @@ export class MusicEntity {
   @Column({ type: 'varchar'})
   artistName: string;
 
-  // @ManyToOne(() => AlbumEntity, (album) => album.musics)
-  // album: AlbumEntity[];
+  @ManyToMany(() => AlbumEntity, (album) => album.musics)
+  albums: AlbumEntity[];
 
   @Column({ default: 0 })
   playCount: number;

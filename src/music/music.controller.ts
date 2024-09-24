@@ -9,6 +9,7 @@ import {
   Delete,
   Query,
   UploadedFile,
+  Req,
 } from '@nestjs/common';
 import { MusicService } from './music.service';
 import { CreateMusicDto } from './dto/create-music.dto';
@@ -20,9 +21,12 @@ export class MusicController {
   constructor(private readonly musicService: MusicService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file')) 
-  async create(@UploadedFile() file: Express.Multer.File, @Body() createMusicDto: CreateMusicDto) {
-    return await this.musicService.create(file,createMusicDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createMusicDto: CreateMusicDto,
+  ) {
+    return await this.musicService.create(file, createMusicDto);
   }
 
   @Get()
@@ -45,7 +49,6 @@ export class MusicController {
     return await this.musicService.playCount(id);
   }
 
-
   @Get('search')
   async findAllSearch(@Query('search') search: string) {
     return await this.musicService.findAllSearch(search);
@@ -57,7 +60,10 @@ export class MusicController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateMusicDto: UpdateMusicDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateMusicDto: UpdateMusicDto,
+  ) {
     return await this.musicService.update(+id, updateMusicDto);
   }
 
