@@ -25,9 +25,9 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get()
-  async findAll(@Req() req) {
-    const users = await this.userService.findAll();
-    return users.filter((user) => !user.isAdmin);
+  findAll(@Req() req) {
+    console.log(req.user);
+    return this.userService.findAll();
   }
 
   @Get(':id')

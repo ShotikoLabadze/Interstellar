@@ -15,12 +15,15 @@ export class UserService {
     private readonly userRepository: UserRepository,
     @InjectRepository(PlaylistEntity)
     private readonly playlistRepository: Repository<PlaylistEntity>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     return await this.userRepository.create(createUserDto);
   }
 
+  async findById(id: number): Promise<UserEntity> {
+    return this.userRepository.findOne(id);
+  }
 
   async blockUser(id: number): Promise<{ message: string }> {
     const result: UpdateResult = await this.userRepository.update(id, {
