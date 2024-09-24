@@ -32,6 +32,7 @@ export class MusicService {
   async findByViews(): Promise<MusicEntity[]> {
     return await this.musicRepository.findByViews()
   }
+  
 
   async findAllSearch(search?: string) {
     return await this.musicRepository.findAllSearch(search);

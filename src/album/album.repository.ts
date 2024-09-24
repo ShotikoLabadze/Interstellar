@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import { FileEntity } from 'src/files/entities/file.entity';
+import { AuthorEntity } from 'src/author/entities/author.entity';
 
 @Injectable()
 export class AlbumRepository {
@@ -17,23 +18,13 @@ export class AlbumRepository {
     private musicRepository: Repository<MusicEntity>,
   ) {}
 
-  async create(file: FileEntity, createAlbumDto: CreateAlbumDto) {
+  async create(file: FileEntity, createAlbumDto: CreateAlbumDto, author: AuthorEntity) {
     const { ...albumData } = createAlbumDto;
-    const album = this.albumRepository.create({...albumData, files: [file] });
-
-    // if (musicIds && musicIds.length > 0) {
-    //   const musics = [];
-    //   for (const id of musicIds) {
-    //     const music = await this.musicRepository.findOne({ where: { id } });
-    //     if (music) {
-    //       musics.push(music);
-    //     }
-    //   }
-    //   album.musics = musics;
-    // } naxe. me ukugm VAKETEB. ALBUMIS SHEKMNISAS VATAM ABTORIS AIDIS DA MAGIS MERE VKMNI ROMEL AVTORSHI. EGAA MERE ARTISTI IKMNEBA DA MERE POULOB 
-    //NAXE. XO KMNI AVTORIS. MERE ALBUMIS SHEMNISAS, JER AVTORS EDZEB, CLICKZE POULOBS ROMELI ID ARIS , DA MAGIS MIXEDVIT  AMATEBS MERE 
-    //SHEGIDZLIA CADO ESE, MARA  JER SHENSAS MIACEKI DA TURAME ORSHABATS GADAVAKETOT :D 
-
+    const album = this.albumRepository.create({
+      ...albumData,
+      files: [file],
+      author, 
+    });
     return await this.albumRepository.save(album);
   }
 

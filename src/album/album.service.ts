@@ -1,21 +1,36 @@
-import { Injectable, Search } from '@nestjs/common';
+import { Injectable, NotFoundException, Search } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { AlbumRepository } from './album.repository';
 import { AlbumEntity } from './entities/album.entity';
 import { FilesService } from 'src/files/files.service';
+import { Repository } from 'typeorm/repository/Repository';
+import { AuthorEntity } from 'src/author/entities/author.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+
 
 @Injectable()
 export class AlbumService {
   constructor(
     private readonly albumsRepository: AlbumRepository,
     private readonly fileService: FilesService,
+    @InjectRepository(AuthorEntity)
+    private readonly authorRepository: Repository<AuthorEntity>,
     
   ) {}
 
   async create(file, createAlbumDto: CreateAlbumDto) {
+    const { authorId } = createAlbumDto;
+
+    const author = await this.authorRepository.findOne({ where: { id: authorId } });
+    if (!author) {
+      throw new NotFoundException('Author not found');
+    }
+
+
     const res = await this.fileService.uploadFile(file);
-    return await this.albumsRepository.create(res, createAlbumDto);
+
+    return await this.albumsRepository.create(res, createAlbumDto, author);
   }
 
   async addMusicsToAlbum(albumId: number, musicIds: number[]) {

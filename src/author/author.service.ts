@@ -25,8 +25,8 @@ export class AuthorService {
     return await this.authorRepository.findAllSearch(search);
   }
 
-  async addExistingAlbumToAuthor(authorId: number, albumId: number) {
-    return await this.authorRepository.addExistingAlbumToAuthor(authorId, albumId);
+  async addAlbumsToAuthor(authorId: number, albumIds: number[]) {
+    return await this.authorRepository.addAlbumsToAuthor(authorId, albumIds);
   }
 
   async findAlbumsByAuthor(id: number) {

@@ -21,8 +21,6 @@ export class AlbumEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  title: string;
 
   @Column()
   releaseDate: number;

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -59,31 +59,29 @@ export class AuthorRepository {
     };
   }
 
-  async addExistingAlbumToAuthor(authorId: number, albumId: number) {
-    const author = await this.authorRepository.findOne({
-      where: { id: authorId },
-      relations: ['albums'],
-    });
+  async addAlbumsToAuthor(authorId: number, albumIds: number[]) {
+    // Validate that albumIds is an array and has elements
+    if (!albumIds || !Array.isArray(albumIds) || albumIds.length === 0) {
+      throw new BadRequestException('Invalid or missing albumIds');
+    }
 
+    // Fetch the author with its albums
+    const author = await this.authorRepository.findOne({ where: { id: authorId }, relations: ['albums'] });
     if (!author) {
-      throw new NotFoundException(`Author with ID ${authorId} not found`);
+      throw new NotFoundException('Author not found');
     }
 
-    const existingAlbum = await this.albumRepository.findOne({
-      where: { id: albumId },
-    });
+    // Fetch the albums using the provided IDs
+    const albums = await this.albumRepository.findByIds(albumIds);
 
-    if (!existingAlbum) {
-      throw new NotFoundException(`Album with ID ${albumId} not found`);
+    // Add the new albums to the existing ones
+    if (!author.albums) {
+      author.albums = [];
     }
+    author.albums.push(...albums);
 
-    existingAlbum.author = author;
-    await this.albumRepository.save(existingAlbum);
-
-    return {
-      ...author,
-      albums: [...author.albums, existingAlbum],
-    };
+    // Save the updated author with the new albums
+    return await this.authorRepository.save(author);
   }
 
   async findAllSearch(search?: string) {
@@ -140,7 +138,6 @@ export class AuthorRepository {
       biography: authorWithAlbums.biography,
       albums: authorWithAlbums.albums.map((album) => ({
         id: album.id,
-        title: album.title,
         releaseDate: album.releaseDate,
         albumName: album.albumName,
         artistName: album.artistName,

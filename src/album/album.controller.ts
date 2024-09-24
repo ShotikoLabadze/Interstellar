@@ -9,11 +9,11 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { SearchDto } from 'src/search/dto/search.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('album')
@@ -24,8 +24,11 @@ export class AlbumController {
   @UseInterceptors(FileInterceptor('file'))
   async create(
     @UploadedFile() file: Express.Multer.File,
+    @Body('authorId') authorId: number, 
     @Body() createAlbumDto: CreateAlbumDto,
+    
   ) {
+    createAlbumDto.authorId = authorId; 
     return await this.albumService.create(file, createAlbumDto);
   }
 
@@ -54,7 +57,7 @@ export class AlbumController {
   @Delete(':id/musics')
   async removeMusics(
     @Param('id') albumId: number,
-    @Body('musicIds') musicIds: number[]
+    @Body('musicIds') musicIds: number[],
   ) {
     return await this.albumService.removeMusicsFromAlbum(albumId, musicIds);
   }

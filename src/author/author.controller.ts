@@ -35,16 +35,14 @@ export class AuthorController {
     return await this.authorService.findAllSearch(search);
   }
 
-  @Post(':id/albums')
-  async addAlbumId(
-    @Param('id') authorId: string,
-    @Body('albumId') albumId: number, 
+  @Patch(':id/albums')
+  async addAlbumsToAuthor(
+    @Param('id') authorId: number,
+    @Body('albumIds') albumIds: number[],
   ) {
-    return await this.authorService.addExistingAlbumToAuthor(
-      +authorId,
-      albumId,
-    );
+    return await this.authorService.addAlbumsToAuthor(authorId, albumIds);
   }
+  
   @Get()
   async findAll() {
     return await this.authorService.findAll();
