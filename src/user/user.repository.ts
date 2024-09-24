@@ -28,6 +28,14 @@ export class UserRepository {
     }
   }
 
+  async blockUser(userId: number) {
+    await this.userRepository.update(userId, { blocked: true });
+  }
+
+  async unblockUser(userId: number) {
+    await this.userRepository.update(userId, { blocked: false });
+  }
+
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository
       .createQueryBuilder('user')
