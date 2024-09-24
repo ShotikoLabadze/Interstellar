@@ -22,6 +22,7 @@ export class UserRepository {
 
     const newUser = this.userRepository.create({
       ...createUserDto,
+      isAdmin: false,
       password: await bcrypt.hash(createUserDto.password, 10),
     });
 
@@ -46,7 +47,7 @@ export class UserRepository {
 
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository
-      .createQueryBuilder('user')
+      .createQueryBuilder('user').where('user.isAdmin = :isAdmin', { isAdmin: false })
       .orderBy('user.createdAt', 'DESC')
       .leftJoinAndSelect('user.playlists', 'playlist')
       .getMany();
