@@ -48,17 +48,20 @@ export class UserController {
 
   //block endpoints
   @Patch('block/:id')
-  async blockUser(@Param('id') id: string) {
-    return this.userService.blockUser(+id);
+  async blockUsers(@Param('id') id: string) {
+    const idArray = id.split(',').map(Number);
+    return this.userService.blockUsers(idArray);
   }
 
   @Patch('unblock/:id')
-  async unblockUser(@Param('id') id: string) {
-    return this.userService.unblockUser(+id);
+  async unblockUsers(@Param('id') id: string) {
+    const idArray = id.split(',').map(Number);
+    return this.userService.unblockUsers(idArray);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Delete('delete/:id')
+  async deleteUsers(@Param('id') id: string) {
+    const idArray = id.split(',').map(Number);
+    return this.userService.deleteUsers(idArray);
   }
 }
