@@ -89,12 +89,41 @@ export class UserService {
     return { message: messages };
   }
 
+  //block unblock single users
+  async blockUser(id: number): Promise<{ message: string }> {
+    const result: UpdateResult = await this.userRepository.update(id, {
+      blocked: true,
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return { message: `User with ID ${id} has been blocked.` };
+  }
+
+  async unblockUser(id: number): Promise<{ message: string }> {
+    const result: UpdateResult = await this.userRepository.update(id, {
+      blocked: false,
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return { message: `User with ID ${id} has been unblocked.` };
+  }
+
   findAll() {
     return this.userRepository.findAll();
   }
 
   findOne(id: number): Promise<UserEntity> {
     return this.userRepository.findOne(id);
+  }
+
+  remove(id: number) {
+    return this.userRepository.remove(id);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
