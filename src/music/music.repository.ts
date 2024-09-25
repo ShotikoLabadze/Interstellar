@@ -42,7 +42,7 @@ export class MusicRepository {
   async findAll() {
     return await this.musicRepository.find({
       relations: {
-        files: true,
+        file: true,
       },
     });
   }
@@ -62,7 +62,7 @@ export class MusicRepository {
     const music = await this.musicRepository
       .createQueryBuilder('music')
       .where('music.id = :id', { id })
-      .leftJoinAndSelect('music.files', 'files')
+      .leftJoinAndSelect('music.file', 'file')
       .getOne();
 
     if (!music) {
