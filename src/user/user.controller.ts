@@ -23,7 +23,6 @@ export class UserController {
     return await this.userService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
   @Get()
   findAll(@Req() req) {
     console.log(req.user);
@@ -33,6 +32,11 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(+id, updateUserDto);
   }
 
   //block endpoints
