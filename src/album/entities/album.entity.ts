@@ -46,7 +46,7 @@ export class AlbumEntity {
 
   @OneToMany(() => FileEntity, (file) => file.music, { cascade: true })
   @JoinColumn()
-  files: FileEntity[];
+  file: FileEntity;
 
   @CreateDateColumn()
   createdAt: Date;

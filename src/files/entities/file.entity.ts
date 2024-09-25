@@ -21,7 +21,7 @@ export class FileEntity {
   @ManyToOne(() => MusicEntity, (music) => music.files)
   music: MusicEntity;
 
-  @ManyToOne(() => AlbumEntity, (album) => album.files)
+  @ManyToOne(() => AlbumEntity, (album) => album.file)
   album: AlbumEntity;
   
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.files)
