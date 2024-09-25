@@ -11,10 +11,9 @@ export class UserRepository {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
-
     const existingUser = await this.findOneByEmail(createUserDto.email);
     if (existingUser) {
       throw new Error('Email already exists');
@@ -37,16 +36,20 @@ export class UserRepository {
     }
   }
 
-
-
   async isAdminEmail(email: string): Promise<boolean> {
     const user = await this.userRepository.findOne({ where: { email } });
     return user ? user.isAdmin : false;
   }
 
+  //get me
+  async findUserById(userId: number): Promise<UserEntity | undefined> {
+    return await this.findOne(userId);
+  }
+
   async findAll(): Promise<UserEntity[]> {
     return await this.userRepository
       .createQueryBuilder('user')
+      .where('user.isAdmin =:isAdmin', {isAdmin: false})
       .orderBy('user.createdAt', 'DESC')
       .leftJoinAndSelect('user.playlists', 'playlist')
       .getMany();
@@ -84,6 +87,18 @@ export class UserRepository {
     return result;
   }
 
+
+  async updateMultiple(
+    ids: number[],
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateResult> {
+    return this.userRepository
+      .createQueryBuilder()
+      .update(UserEntity)
+      .set(updateUserDto)
+      .where('id IN (:...ids)', { ids }) // Update where id is in the given array
+      .execute();
+  }
   async findOneByEmail(email: string): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({ where: { email } });
   }

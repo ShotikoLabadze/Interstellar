@@ -13,21 +13,27 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
-
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
+  //get me
+  @Get('me/:id')
+  async getCurrentUser(@Param('id') userId: string) {
+    return this.userService.getCurrentUser(Number(userId));
+  }
+
+  @UseGuards(AdminGuard)
   @Get()
   findAll(@Req() req) {
-    console.log(req.user)
+    console.log(req.user);
     return this.userService.findAll();
   }
 
@@ -36,12 +42,26 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  //block endpoints
+  @Patch('block')
+  async blockUsers(@Body() body: { ids: number[] }) {
+    const { ids } = body;
+    return this.userService.blockUsers(ids);
   }
 
-  //block endpoints
+  @Patch('unblock')
+  async unblockUsers(@Body() body: { ids: number[] }) {
+    const { ids } = body;
+    return this.userService.unblockUsers(ids);
+  }
+
+  @Delete('delete')
+  async deleteUsers(@Body() body: { ids: number[] }) {
+    const { ids } = body;
+    return this.userService.deleteUsers(ids);
+  }
+
+  //block unblock single endpoints
   @Patch('block/:id')
   async blockUser(@Param('id') id: string) {
     return this.userService.blockUser(+id);
