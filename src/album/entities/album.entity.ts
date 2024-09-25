@@ -44,7 +44,7 @@ export class AlbumEntity {
   @OneToMany(() => ListenerEntity, (listener) => listener.album)
   listeners: ListenerEntity[];
 
-  @OneToMany(() => FileEntity, (file) => file.music, { cascade: true })
+  @ManyToOne(() => FileEntity, (file) => file.music, { cascade: true })
   @JoinColumn()
   file: FileEntity;
 
