@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -36,7 +37,7 @@ export class AlbumController {
   async findAll() {
     return await this.albumService.findAll();
   }
-  @Patch(':id/musics')
+  @Put(':id/musics')
   async addMusics(
     @Param('id') id: number,
     @Body('musicIds') musicIds: number[],
