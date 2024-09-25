@@ -9,7 +9,6 @@ import {
   Delete,
   Query,
   UploadedFile,
-  Req,
 } from '@nestjs/common';
 import { MusicService } from './music.service';
 import { CreateMusicDto } from './dto/create-music.dto';

@@ -149,7 +149,7 @@ export class AuthorRepository {
         releaseDate: album.releaseDate,
         albumName: album.albumName,
         artistName: album.artistName,
-        musics: album.musics, // This includes only the music associated with this album
+        musics: album.musics,
       })),
     };
   }

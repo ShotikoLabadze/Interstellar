@@ -12,8 +12,12 @@ export class MusicService {
     private readonly musicRepository: MusicRepository,
   ) {}
 
-  async create(file, createMusicDto: CreateMusicDto) {
-    const res = await this.fileService.uploadFile(file);
+  async create(file : Express.Multer.File, createMusicDto: CreateMusicDto) {
+    console.log(file ,'file111')
+    let res
+    if(file) {
+      res = await this.fileService.uploadFile(file);
+    }
     return await this.musicRepository.create(res, createMusicDto);
   }
 
