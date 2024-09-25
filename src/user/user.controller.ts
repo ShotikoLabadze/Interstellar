@@ -13,6 +13,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @Controller('user')
 export class UserController {
@@ -29,7 +30,7 @@ export class UserController {
     return this.userService.getCurrentUser(Number(userId));
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AdminGuard)
   @Get()
   findAll(@Req() req) {
     console.log(req.user);
