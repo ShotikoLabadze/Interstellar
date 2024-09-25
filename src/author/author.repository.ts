@@ -114,7 +114,7 @@ export class AuthorRepository {
     const query = await this.authorRepository
       .createQueryBuilder('author')
       .where('author.id = :id', { id })
-      .leftJoinAndSelect('author.files', 'file')
+      .leftJoinAndSelect('author.files', 'authorImg')
       .leftJoinAndSelect('author.albums', 'albums')
       .leftJoinAndSelect('albums.musics', 'musics')
       .leftJoinAndSelect('albums.file', 'file')
