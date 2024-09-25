@@ -81,6 +81,17 @@ export class UserRepository {
     return result;
   }
 
+  async updateMultiple(
+    ids: number[],
+    updateUserDto: UpdateUserDto,
+  ): Promise<UpdateResult> {
+    return this.userRepository
+      .createQueryBuilder()
+      .update(UserEntity)
+      .set(updateUserDto)
+      .where('id IN (:...ids)', { ids }) // Update where id is in the given array
+      .execute();
+  }
   async findOneByEmail(email: string): Promise<UserEntity | undefined> {
     return this.userRepository.findOne({ where: { email } });
   }

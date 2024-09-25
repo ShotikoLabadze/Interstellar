@@ -1,4 +1,5 @@
 import {
+  ArrayNotEmpty,
   IsArray,
   IsBoolean,
   IsEmail,
@@ -38,8 +39,13 @@ export class CreateUserDto {
   @IsBoolean()
   blocked?: boolean;
 
-
   @IsOptional()
   @IsBoolean()
   isAdmin?: boolean;
+
+  @IsOptional()
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNumber({}, { each: true })
+  ids?: number[];
 }
