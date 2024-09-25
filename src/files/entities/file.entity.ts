@@ -2,7 +2,7 @@ import { AlbumEntity } from 'src/album/entities/album.entity';
 import { AuthorEntity } from 'src/author/entities/author.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'files' })
 export class FileEntity {
@@ -21,7 +21,7 @@ export class FileEntity {
   @ManyToOne(() => MusicEntity, (music) => music.files)
   music: MusicEntity;
 
-  @ManyToOne(() => AlbumEntity, (album) => album.files)
+  @OneToMany(() => AlbumEntity, (album) => album.file)
   album: AlbumEntity;
   
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.files)

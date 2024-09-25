@@ -19,23 +19,19 @@ export class AlbumRepository {
   ) {}
 
   async create(file: FileEntity, createAlbumDto: CreateAlbumDto, author: AuthorEntity) {
-    const { ...albumData } = createAlbumDto;
     const album = this.albumRepository.create({
-      ...albumData,
-      files: [file],
-      author, 
+      ...createAlbumDto,
+      file,  // Assign the single file
+      author,
     });
     return await this.albumRepository.save(album);
   }
 
   async findAll() {
     return await this.albumRepository.find({
-      relations:['files','musics'],
-      order: {
-        createdAt:'DESC'
-      }
-
-    })
+      relations: ['file', 'musics'],  // Adjusted to only retrieve the single file.
+      order: { createdAt: 'DESC' },
+    });
   }
 
 
