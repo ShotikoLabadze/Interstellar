@@ -41,27 +41,22 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
   //block endpoints
-  @Patch('block/:id')
-  async blockUsers(@Param('id') id: string) {
-    const idArray = id.split(',').map(Number);
-    return this.userService.blockUsers(idArray);
+  @Patch('block')
+  async blockUsers(@Body() body: { ids: number[] }) {
+    const { ids } = body;
+    return this.userService.blockUsers(ids);
   }
 
-  @Patch('unblock/:id')
-  async unblockUsers(@Param('id') id: string) {
-    const idArray = id.split(',').map(Number);
-    return this.userService.unblockUsers(idArray);
+  @Patch('unblock')
+  async unblockUsers(@Body() body: { ids: number[] }) {
+    const { ids } = body;
+    return this.userService.unblockUsers(ids);
   }
 
-  @Delete('delete/:id')
-  async deleteUsers(@Param('id') id: string) {
-    const idArray = id.split(',').map(Number);
-    return this.userService.deleteUsers(idArray);
+  @Delete('delete')
+  async deleteUsers(@Body() body: { ids: number[] }) {
+    const { ids } = body;
+    return this.userService.deleteUsers(ids);
   }
 }
