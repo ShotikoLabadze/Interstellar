@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -66,7 +70,10 @@ export class AuthorRepository {
     }
 
     // Fetch the author with its albums
-    const author = await this.authorRepository.findOne({ where: { id: authorId }, relations: ['albums'] });
+    const author = await this.authorRepository.findOne({
+      where: { id: authorId },
+      relations: ['albums'],
+    });
     if (!author) {
       throw new NotFoundException('Author not found');
     }
@@ -110,6 +117,7 @@ export class AuthorRepository {
       .leftJoinAndSelect('author.albums', 'albums')
       .leftJoinAndSelect('albums.musics', 'musics')
       .leftJoinAndSelect('author.files', 'files')
+      .leftJoinAndSelect('albums.file', 'file')
       .getOne();
 
     if (!query) {
