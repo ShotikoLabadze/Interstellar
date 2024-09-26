@@ -35,14 +35,15 @@ export class MusicEntity {
   @ManyToOne(() => AuthorEntity, (author) => author.musics)
   author: AuthorEntity[];
 
-  @ManyToOne(() => ListenerEntity, (listener) => listener.music)
-  listeners: ListenerEntity[];
+  @OneToMany(() => ListenerEntity, (listener) => listener.music)
+    listeners: ListenerEntity[];
 
   @ManyToMany(() => PlaylistEntity, (playlist) => playlist.musics)
   playlists: PlaylistEntity[];
 
   @OneToMany(() => FavoritesEntity, (favorites) => favorites.music)
   favorites: FavoritesEntity[];
+
 
   @OneToOne(() => FileEntity, (file) => file.music, { cascade: true })
   @JoinColumn()

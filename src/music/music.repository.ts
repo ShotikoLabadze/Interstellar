@@ -14,24 +14,36 @@ export class MusicRepository {
     private musicRepository: Repository<MusicEntity>,
   ) {}
 
-  async create(file: FileEntity, createMusicDto: CreateMusicDto, album: AlbumEntity) {
+  async create(
+    file: FileEntity,
+    createMusicDto: CreateMusicDto,
+    album: AlbumEntity,
+  ) {
     const music = await this.musicRepository.save({
       ...createMusicDto,
-      albums: [album], 
-      file: file, 
+      albums: [album],
+      file: file,
     });
 
     return music;
   }
 
-
   async findAll() {
-    return await this.musicRepository.find({
-      relations: {
-        file: true,
-        albums: true
-      },
-    });
+    const musics = await this.musicRepository
+      .createQueryBuilder('music')
+      .leftJoinAndSelect('music.file', 'file')
+      .leftJoinAndSelect('music.albums', 'albums')
+      .leftJoinAndSelect('music.listeners', 'listeners')
+      .getMany();
+
+    const musicsWithCount = musics.map((music) => ({
+      ...music,
+      listenerCount: music.listeners.length,
+    }));
+
+    musicsWithCount.sort((a, b) => b.listenerCount - a.listenerCount);
+
+    return musicsWithCount;
   }
 
   async findAllSearch(search?: string) {
@@ -50,6 +62,7 @@ export class MusicRepository {
       .createQueryBuilder('music')
       .leftJoinAndSelect('music.file', 'file')
       .leftJoinAndSelect('music.albums', 'albums')
+      .leftJoinAndSelect('music.listeners', 'listeners')
       .where('music.id = :id', { id })
       .getOne();
 
@@ -59,7 +72,6 @@ export class MusicRepository {
 
     return music;
   }
-
 
   async update(id: number, updateMusicDto: UpdateMusicDto) {
     await this.musicRepository

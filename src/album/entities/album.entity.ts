@@ -1,3 +1,4 @@
+import { NumberLengthEquals2 } from 'aws-sdk/clients/paymentcryptographydata';
 import { AuthorEntity } from 'src/author/entities/author.entity';
 import { FileEntity } from 'src/files/entities/file.entity';
 import { ListenerEntity } from 'src/listeners/entities/listener.entity';
@@ -21,7 +22,6 @@ export class AlbumEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-
   @Column()
   releaseDate: number;
 
@@ -31,10 +31,11 @@ export class AlbumEntity {
   @Column({ type: 'varchar', length: 255 })
   artistName: string;
 
-  // @OneToMany(() => MusicEntity, (music) => music.album, { cascade: true })
-  // musics: MusicEntity[];
 
-  @ManyToMany(() => MusicEntity, (music) => music.albums, {cascade: true})
+  // @Column({ nullable: true })
+  // views: number;
+
+  @ManyToMany(() => MusicEntity, (music) => music.albums, { cascade: true })
   @JoinTable()
   musics: MusicEntity[];
 

@@ -9,17 +9,19 @@ import { FilesModule } from 'src/files/files.module';
 import { FileEntity } from 'src/files/entities/file.entity';
 import { UserModule } from 'src/user/user.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { ListenersRepository } from 'src/listeners/listeners.repository';
+import { ListenerEntity } from 'src/listeners/entities/listener.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MusicEntity]),
+    TypeOrmModule.forFeature([MusicEntity , ListenerEntity]),
     AlbumModule,
     FilesModule,
     UserModule,
     forwardRef(() => AuthModule),
   ],
   controllers: [MusicController],
-  providers: [MusicService, MusicRepository],
+  providers: [MusicService, MusicRepository , ListenersRepository],
   exports: [MusicService, MusicRepository, TypeOrmModule],
 })
 export class MusicModule {}

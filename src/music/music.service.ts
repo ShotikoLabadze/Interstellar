@@ -7,6 +7,7 @@ import { FilesService } from 'src/files/files.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AlbumEntity } from 'src/album/entities/album.entity';
+import { ListenersRepository } from 'src/listeners/listeners.repository';
 
 @Injectable()
 export class MusicService {
@@ -15,6 +16,8 @@ export class MusicService {
     private readonly musicRepository: MusicRepository,
     @InjectRepository(AlbumEntity)
     private readonly albumRepository: Repository<AlbumEntity>, 
+    private readonly listenerRepostory: ListenersRepository
+
   ) {}
 
   async create(file, createMusicDto: CreateMusicDto) {
@@ -36,7 +39,8 @@ export class MusicService {
     return await this.musicRepository.findAllSearch(search);
   }
 
-  async findOne(id: number): Promise<MusicEntity> {
+  async findOne(id: number , userId: number): Promise<MusicEntity> {
+    await this.listenerRepostory.create({musicId: id ,userId:userId })
     return await this.musicRepository.findOne(id);
   }
 

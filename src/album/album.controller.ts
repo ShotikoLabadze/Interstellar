@@ -36,7 +36,6 @@ export class AlbumController {
     return await this.albumService.create(file, createAlbumDto);
   }
 
-  @UseGuards(AuthGuard)
   @Get()
   async findAll() {
     return await this.albumService.findAll();
