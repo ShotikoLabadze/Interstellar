@@ -121,7 +121,7 @@ export class AuthorRepository {
   }
 
   async findOne(id: number) {
-    const query = await this.authorRepository
+    const author = await this.authorRepository
       .createQueryBuilder('author')
       .where('author.id = :id', { id })
       .leftJoinAndSelect('author.files', 'authorImg')
@@ -129,13 +129,23 @@ export class AuthorRepository {
       .leftJoinAndSelect('albums.musics', 'musics')
       .leftJoinAndSelect('albums.file', 'file')
       .getOne();
-
-    if (!query) {
+  
+    if (!author) {
       throw new NotFoundException(`Author with ID ${id} not found`);
     }
-
-    return query;
+  
+    // Calculate the total music count
+    const musicCount = author.albums.reduce((count, album) => {
+      return count + (album.musics ? album.musics.length : 0);
+    }, 0);
+  
+    // Return the author object with the musicCount
+    return {
+      ...author,
+      musicCount,
+    };
   }
+  
 
   async findAlbumsWithMusicByAuthor(authorId: number) {
     const authorWithAlbums = await this.authorRepository
