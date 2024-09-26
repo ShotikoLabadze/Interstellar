@@ -99,7 +99,7 @@ export class AlbumRepository {
       .createQueryBuilder('album')
       .where('album.id=:id', { id })
       .leftJoinAndSelect('album.author', 'author')
-      .leftJoinAndSelect('author.musics', 'musics')
+      .leftJoinAndSelect('album.musics', 'musics')
       .leftJoinAndSelect('album.file', 'file')
       .getOne();
 
