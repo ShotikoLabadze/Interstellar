@@ -9,6 +9,7 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -49,9 +50,9 @@ export class MusicEntity {
   @OneToMany(() => FavoritesEntity, (favorites) => favorites.music)
   favorites: FavoritesEntity[];
 
-  @OneToMany(() => FileEntity, (file) => file.music, { cascade: true })
+  @OneToOne(() => FileEntity, (file) => file.music, { cascade: true })
   @JoinColumn()
-  files: FileEntity[];
+  file: FileEntity;
 
   @CreateDateColumn()
   createdAt: Date;

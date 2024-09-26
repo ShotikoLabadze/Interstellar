@@ -4,17 +4,28 @@ import { UpdateMusicDto } from './dto/update-music.dto';
 import { MusicRepository } from './music.repository';
 import { MusicEntity } from './entities/music.entity';
 import { FilesService } from 'src/files/files.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AlbumEntity } from 'src/album/entities/album.entity';
 
 @Injectable()
 export class MusicService {
   constructor(
     private readonly fileService: FilesService,
     private readonly musicRepository: MusicRepository,
+    @InjectRepository(AlbumEntity)
+    private readonly albumRepository: Repository<AlbumEntity>, 
   ) {}
 
   async create(file, createMusicDto: CreateMusicDto) {
     const res = await this.fileService.uploadFile(file);
-    return await this.musicRepository.create(res, createMusicDto);
+    const album = await this.albumRepository.findOne({ where: { id: createMusicDto.albumId } });
+    if (!album) {
+      throw new NotFoundException(`Album with ID ${createMusicDto.albumId} not found`);
+    }
+
+    return await this.musicRepository.create(res, createMusicDto, album);
+  ;
   }
 
   async findAll() {

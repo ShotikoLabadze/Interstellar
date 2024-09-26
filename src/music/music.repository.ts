@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MusicEntity } from './entities/music.entity';
 import { Repository } from 'typeorm';
 import { FileEntity } from 'src/files/entities/file.entity';
+import { AlbumEntity } from 'src/album/entities/album.entity';
 
 @Injectable()
 export class MusicRepository {
@@ -13,10 +14,11 @@ export class MusicRepository {
     private musicRepository: Repository<MusicEntity>,
   ) {}
 
-  async create(file: FileEntity, createMusicDto: CreateMusicDto) {
+  async create(file: FileEntity, createMusicDto: CreateMusicDto, album: AlbumEntity) {
     const music = await this.musicRepository.save({
       ...createMusicDto,
-      files: [file],
+      albums: [album], 
+      file: file, 
     });
 
     return music;
@@ -42,7 +44,8 @@ export class MusicRepository {
   async findAll() {
     return await this.musicRepository.find({
       relations: {
-        files: true,
+        file: true,
+        albums: true
       },
     });
   }
@@ -61,8 +64,9 @@ export class MusicRepository {
   async findOne(id: number): Promise<MusicEntity> {
     const music = await this.musicRepository
       .createQueryBuilder('music')
+      .leftJoinAndSelect('music.file', 'file')
+      .leftJoinAndSelect('music.albums', 'albums')
       .where('music.id = :id', { id })
-      .leftJoinAndSelect('music.files', 'files')
       .getOne();
 
     if (!music) {

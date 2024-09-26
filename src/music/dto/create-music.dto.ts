@@ -1,3 +1,4 @@
+import { Transform, Type } from 'class-transformer';
 import { IsNumber, IsNumberString, IsString, IsUrl } from 'class-validator';
 
 export class CreateMusicDto {
@@ -7,6 +8,7 @@ export class CreateMusicDto {
   @IsString()
   artistName: string;
 
-  @IsNumberString()
+  @Type(() => Number)
+  @IsNumber()
   albumId: number;
 }

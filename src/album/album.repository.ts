@@ -89,7 +89,7 @@ export class AlbumRepository {
     const album = await this.albumRepository
       .createQueryBuilder('album')
       .leftJoinAndSelect('album.musics', 'musics')
-      .leftJoinAndSelect('album.files','files')
+      .leftJoinAndSelect('album.file','file')
       .where('album.id = :id', { id })
       .getOne();
 
