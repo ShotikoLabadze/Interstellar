@@ -25,9 +25,11 @@ export class UserController {
   }
 
   //get me
-  @Get('me/:id')
-  async getCurrentUser(@Param('id') userId: string) {
-    return this.userService.getCurrentUser(Number(userId));
+  @UseGuards(AuthGuard)
+  @Get('me')
+  async getCurrentUser(@Req() req) {
+    console.log(req.user)
+    return this.userService.getCurrentUser(Number(req.user.userId));
   }
 
   @UseGuards(AdminGuard)

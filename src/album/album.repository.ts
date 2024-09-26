@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -18,10 +22,14 @@ export class AlbumRepository {
     private musicRepository: Repository<MusicEntity>,
   ) {}
 
-  async create(file: FileEntity, createAlbumDto: CreateAlbumDto, author: AuthorEntity) {
+  async create(
+    file: FileEntity,
+    createAlbumDto: CreateAlbumDto,
+    author: AuthorEntity,
+  ) {
     const album = this.albumRepository.create({
       ...createAlbumDto,
-      file,  // Assign the single file
+      file, // Assign the single file
       author,
     });
     return await this.albumRepository.save(album);
@@ -29,17 +37,15 @@ export class AlbumRepository {
 
   async findAll() {
     return await this.albumRepository.find({
-      relations: ['file', 'musics'],  // Adjusted to only retrieve the single file.
+      relations: ['file', 'musics'], // Adjusted to only retrieve the single file.
       order: { createdAt: 'DESC' },
     });
   }
 
-
-
   async addMusicsToAlbum(albumId: number, musicIds: number[]) {
     const album = await this.albumRepository.findOne({
       where: { id: albumId },
-      relations: ['musics'], 
+      relations: ['musics'],
     });
 
     if (!album) {
@@ -49,7 +55,7 @@ export class AlbumRepository {
     const musics = await this.musicRepository.findByIds(musicIds);
 
     if (!album.musics) {
-      album.musics = []; 
+      album.musics = [];
     }
 
     album.musics.push(...musics);
@@ -64,7 +70,10 @@ export class AlbumRepository {
     }
 
     // Fetch the album with its musics
-    const album = await this.albumRepository.findOne({ where: { id: albumId }, relations: ['musics'] });
+    const album = await this.albumRepository.findOne({
+      where: { id: albumId },
+      relations: ['musics'],
+    });
     if (!album) {
       throw new NotFoundException('Album not found');
     }
@@ -88,10 +97,16 @@ export class AlbumRepository {
   async findOne(id: number): Promise<AlbumEntity> {
     const album = await this.albumRepository
       .createQueryBuilder('album')
-      .leftJoinAndSelect('album.musics', 'musics')
-      .leftJoinAndSelect('album.file','file')
-      .where('album.id = :id', { id })
+      .where('album.id=:id', { id })
+      .leftJoinAndSelect('album.author', 'author')
+      .leftJoinAndSelect('author.musics', 'musics')
+      .leftJoinAndSelect('album.file', 'file')
       .getOne();
+
+    // const album = await this.albumRepository.findOne({
+    //   where: { id },
+    //   relations: { author: true, musics: true, file: true },
+    // });
 
     if (!album) {
       throw new NotFoundException(`Album with ID ${id} not found`);

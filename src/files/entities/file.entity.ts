@@ -23,7 +23,7 @@ export class FileEntity {
 
   @OneToMany(() => AlbumEntity, (album) => album.file)
   album: AlbumEntity;
-  
+
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.files)
   playlist: AlbumEntity;
 
