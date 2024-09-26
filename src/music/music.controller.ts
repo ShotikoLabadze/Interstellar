@@ -9,16 +9,19 @@ import {
   Delete,
   Query,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { MusicService } from './music.service';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AdminGuard } from 'src/auth/admin.guard';
 
 @Controller('music')
 export class MusicController {
   constructor(private readonly musicService: MusicService) {}
 
+  @UseGuards(AdminGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async create(
@@ -27,7 +30,6 @@ export class MusicController {
   ) {
     return await this.musicService.create(file, createMusicDto);
   }
-
 
   @Get()
   async findAll() {
@@ -59,6 +61,7 @@ export class MusicController {
     return await this.musicService.findOne(+id);
   }
 
+  @UseGuards(AdminGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -67,6 +70,7 @@ export class MusicController {
     return await this.musicService.update(+id, updateMusicDto);
   }
 
+  @UseGuards(AdminGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.musicService.remove(+id);

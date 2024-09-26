@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MusicService } from './music.service';
 import { MusicController } from './music.controller';
 import { MusicRepository } from './music.repository';
@@ -7,9 +7,17 @@ import { MusicEntity } from './entities/music.entity';
 import { AlbumModule } from 'src/album/album.module';
 import { FilesModule } from 'src/files/files.module';
 import { FileEntity } from 'src/files/entities/file.entity';
+import { UserModule } from 'src/user/user.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([MusicEntity]), AlbumModule, FilesModule],
+  imports: [
+    TypeOrmModule.forFeature([MusicEntity]),
+    AlbumModule,
+    FilesModule,
+    UserModule,
+    forwardRef(() => AuthModule),
+  ],
   controllers: [MusicController],
   providers: [MusicService, MusicRepository],
   exports: [MusicService, MusicRepository, TypeOrmModule],

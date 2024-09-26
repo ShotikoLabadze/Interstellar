@@ -10,7 +10,6 @@ export class FilesService {
   ) {}
 
   async uploadFile(file: Express.Multer.File) {
-    console.log(file , '122222222222222222')
     const buffer = file.buffer;
     const fileName = file.originalname.split('.').slice(0, -1).join('.');
 

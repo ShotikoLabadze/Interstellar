@@ -36,8 +36,8 @@ export class AuthorEntity {
   @Column()
   biography: string;
 
-  @Column({ nullable: true })
-  coverPhoto: string;
+  // @Column({ nullable: true })
+  // coverPhoto: string;
 
   @CreateDateColumn()
   createdAt: Date;

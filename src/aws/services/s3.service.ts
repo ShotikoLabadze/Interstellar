@@ -21,7 +21,6 @@ export class S3Service {
   async  upload(file: Express.Multer.File, key: string){
     const buffer = file.buffer
     const fileKey = key
-        console.log(buffer , 'buffer')
         const params = {
             Bucket: 'miulai-bucket',
             Key: fileKey,
