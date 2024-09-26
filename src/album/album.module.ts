@@ -7,14 +7,13 @@ import { AlbumEntity } from './entities/album.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
 import { AuthorEntity } from 'src/author/entities/author.entity'; // Import AuthorEntity
 import { FilesModule } from 'src/files/files.module';
-import { AdminGuard } from 'src/auth/admin.guard';
-import { AuthGuard } from 'src/auth/auth.guard';
 import { AuthModule } from 'src/auth/auth.module';
 import { UserModule } from 'src/user/user.module';
 
+
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AlbumEntity, MusicEntity, AuthorEntity]), // Add AuthorEntity
+    TypeOrmModule.forFeature([AlbumEntity, MusicEntity, AuthorEntity]), 
     FilesModule,
     UserModule,
     forwardRef(() => AuthModule),

@@ -7,6 +7,7 @@ import { FilesService } from 'src/files/files.service';
 import { Repository } from 'typeorm/repository/Repository';
 import { AuthorEntity } from 'src/author/entities/author.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ListenersRepository } from 'src/listeners/listeners.repository';
 
 
 @Injectable()
