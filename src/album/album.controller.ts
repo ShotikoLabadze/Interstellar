@@ -12,6 +12,7 @@ import {
   ParseIntPipe,
   Put,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';

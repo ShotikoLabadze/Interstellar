@@ -34,16 +34,29 @@ export class MusicRepository {
       .leftJoinAndSelect('music.file', 'file')
       .leftJoinAndSelect('music.albums', 'albums')
       .leftJoinAndSelect('music.listeners', 'listeners')
-      .getMany();
-
-    const musicsWithCount = musics.map((music) => ({
-      ...music,
-      listenerCount: music.listeners.length,
-    }));
-
-    musicsWithCount.sort((a, b) => b.listenerCount - a.listenerCount);
-
-    return musicsWithCount;
+      .select([
+        'music.id AS id',
+        'music.name AS name',
+        'music.artistName AS artistName',
+        'music.file AS file',
+        'music.createdAt AS createdAt',
+        'music.updatedAt AS updatedAt',
+        'music.deletedAt AS deletedAt',
+        'COUNT(listeners.id) AS listenerCount', 
+      ])
+      .groupBy('music.id') 
+      .orderBy('listenerCount', 'DESC') 
+      .getRawMany();
+      return musics.map(music => ({
+        id: music.id,
+        name: music.name,
+        artistName: music.artistName,
+        file: music.file,
+        createdAt: music.createdAt,
+        updatedAt: music.updatedAt,
+        deletedAt: music.deletedAt,
+        listenerCount: Number(music.listenerCount) || 0, 
+      }));
   }
 
   async findAllSearch(search?: string) {
