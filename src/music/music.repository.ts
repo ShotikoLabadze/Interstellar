@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { CreateMusicDto } from './dto/create-music.dto';
 import { UpdateMusicDto } from './dto/update-music.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,7 +18,11 @@ export class MusicRepository {
     file: FileEntity,
     createMusicDto: CreateMusicDto,
     album: AlbumEntity,
-  ) {
+  ): Promise<MusicEntity> {
+    if (!file) {
+      throw new BadRequestException('File must be provided');
+    }
+
     const music = await this.musicRepository.save({
       ...createMusicDto,
       albums: [album],
@@ -28,7 +32,7 @@ export class MusicRepository {
     return music;
   }
 
-  async findAll() {
+  async findAll(): Promise<MusicEntity[]> {
     const musics = await this.musicRepository
       .createQueryBuilder('music')
       .leftJoinAndSelect('music.file', 'file')
@@ -36,24 +40,20 @@ export class MusicRepository {
       .leftJoinAndSelect('music.listeners', 'listeners')
       .getMany();
 
-    const musicsWithCount = musics.map((music) => ({
+    return musics.map(music => ({
       ...music,
       listenerCount: music.listeners.length,
-    }));
-
-    musicsWithCount.sort((a, b) => b.listenerCount - a.listenerCount);
-
-    return musicsWithCount;
+    })).sort((a, b) => b.listenerCount - a.listenerCount);
   }
 
-  async findAllSearch(search?: string) {
+  async findAllSearch(search?: string): Promise<MusicEntity[]> {
     if (search) {
       return await this.musicRepository
         .createQueryBuilder('music')
-        .where('name LIKE :search', { search: `%${search}%` })
+        .where('music.name LIKE :search', { search: `%${search}%` })
         .getMany();
     } else {
-      return await [];
+      return [];
     }
   }
 
@@ -73,23 +73,25 @@ export class MusicRepository {
     return music;
   }
 
-  async update(id: number, updateMusicDto: UpdateMusicDto) {
+  async update(id: number, updateMusicDto: UpdateMusicDto): Promise<MusicEntity> {
     await this.musicRepository
       .createQueryBuilder('music')
       .update()
       .set(updateMusicDto)
-      .where('id = :id', { id })
+      .where('music.id = :id', { id })
       .execute();
 
     return this.findOne(id);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<MusicEntity> {
     await this.musicRepository.softDelete(id);
-    return await this.musicRepository
+    const deletedMusic = await this.musicRepository
       .createQueryBuilder('music')
       .withDeleted()
       .where('music.id = :id', { id })
       .getOne();
+
+    return deletedMusic;
   }
 }

@@ -32,6 +32,7 @@ export class MusicController {
   ) {
     return await this.musicService.create(file, createMusicDto);
   }
+  
 
   @Get()
   async findAll() {
