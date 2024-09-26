@@ -31,13 +31,23 @@ export class AuthorRepository {
   }
 
   async findAll() {
-    const query = await this.authorRepository
+    const authors = await this.authorRepository
       .createQueryBuilder('author')
       .leftJoinAndSelect('author.files', 'files')
       .leftJoinAndSelect('author.albums', 'albums')
       .leftJoinAndSelect('albums.musics', 'musics')
       .getMany();
-    return query;
+  
+    return authors.map(author => {
+      const musicCount = author.albums.reduce((count, album) => {
+        return count + (album.musics ? album.musics.length : 0);
+      }, 0);
+  
+      return {
+        ...author,
+        musicCount,
+      };
+    });
   }
 
   async addAlbumToAuthor(authorId: number, createAlbumDto: CreateAlbumDto) {

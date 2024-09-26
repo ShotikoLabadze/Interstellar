@@ -33,7 +33,7 @@ export class MusicRepository {
   }
 
   
-  async findAll() {
+     async findAll() {
     const musics = await this.musicRepository
       .createQueryBuilder('music')
       .leftJoinAndSelect('music.file', 'file')

@@ -1,10 +1,9 @@
 import { Transform, Type } from 'class-transformer';
-import { IsNumber, IsNumberString, IsString, IsUrl } from 'class-validator';
+import { IsNumber, IsNumberString, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateMusicDto {
   @IsString()
   name: string;
-
 
 
   @Type(() => Number)
