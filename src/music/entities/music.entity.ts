@@ -32,12 +32,6 @@ export class MusicEntity {
   @ManyToMany(() => AlbumEntity, (album) => album.musics)
   albums: AlbumEntity[];
 
-  @Column({ default: 0 })
-  playCount: number;
-
-  @Column({ default: 0 })
-  views: number;
-
   @ManyToOne(() => AuthorEntity, (author) => author.musics)
   author: AuthorEntity[];
 

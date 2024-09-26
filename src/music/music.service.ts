@@ -31,18 +31,6 @@ export class MusicService {
   async findAll() {
     return await this.musicRepository.findAll();
   }
-
-  async findTopHits() {
-    return await this.musicRepository.findTopHits();
-  }
-
-  async playCount(id: number) {
-    return await this.musicRepository.playCount(id);
-  }
-
-  async findByViews(): Promise<MusicEntity[]> {
-    return await this.musicRepository.findByViews()
-  }
   
   async findAllSearch(search?: string) {
     return await this.musicRepository.findAllSearch(search);
