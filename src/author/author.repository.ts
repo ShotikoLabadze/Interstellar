@@ -34,6 +34,7 @@ export class AuthorRepository {
     const authors = await this.authorRepository
       .createQueryBuilder('author')
       .leftJoinAndSelect('author.files', 'files')
+      .leftJoinAndSelect('author.musics', 'authorMusics')
       .leftJoinAndSelect('author.albums', 'albums')
       .leftJoinAndSelect('albums.musics', 'musics')
       .getMany();
@@ -124,11 +125,11 @@ export class AuthorRepository {
   async findOne(id: number) {
     const author = await this.authorRepository
       .createQueryBuilder('author')
-      .where('author.id = :id', { id })
       .leftJoinAndSelect('author.files', 'authorImg')
       .leftJoinAndSelect('author.albums', 'albums')
       .leftJoinAndSelect('albums.musics', 'musics')
-      .leftJoinAndSelect('albums.file', 'file')
+      .leftJoinAndSelect('author.musics', 'authorMusics') // Fetch the musics directly related to the author
+      .where('author.id = :id', { id })
       .getOne();
   
     if (!author) {
@@ -136,14 +137,15 @@ export class AuthorRepository {
     }
   
     // Calculate the total music count
-    const musicCount = author.albums.reduce((count, album) => {
+    const musicCount = author.musics.length + author.albums.reduce((count, album) => {
       return count + (album.musics ? album.musics.length : 0);
     }, 0);
   
-    // Return the author object with the musicCount
+    // Return the author object with the musicCount and musics
     return {
       ...author,
       musicCount,
+      musics: author.musics // Add musics to the response
     };
   }
   
