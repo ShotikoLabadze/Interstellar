@@ -86,12 +86,17 @@ export class AlbumRepository {
   }
 
   async findAllSearch(search?: string) {
-    if (search) {
-      return await this.albumRepository
-        .createQueryBuilder('album')
-        .where('album.title LIKE :name', { name: `%${search}%` })
-        .getMany();
-    }
+    // Return an empty array if no search term is provided
+    if (!search) return [];
+  
+    // Use a query builder to search for albums with matching titles
+    const albums = await this.albumRepository
+      .createQueryBuilder('album')
+      .where('album.albumName LIKE :name', { name: `%${search}%` }) // Adjusted to match the albumName field
+      .getMany();
+  
+    console.log('Found albums:', albums); // Log the found albums for debugging
+    return albums;
   }
 
   async findOne(id: number): Promise<AlbumEntity> {
