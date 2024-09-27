@@ -108,7 +108,8 @@ export class AuthorRepository {
       query
         .where('author.firstName LIKE :search', { search: `%${search}%` })
         .orWhere('author.lastName LIKE :search', { search: `%${search}%` })
-        .orWhere('author.biography LIKE :search', { search: `%${search}%` });
+        .orWhere('author.biography LIKE :search', { search: `%${search}%` })
+        .leftJoinAndSelect('author.files','files');
     }
 
     return await query.getMany();
