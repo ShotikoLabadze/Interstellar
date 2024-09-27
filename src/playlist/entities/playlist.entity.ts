@@ -18,8 +18,7 @@ export class PlaylistEntity {
     @ManyToOne(() => UserEntity, {eager:true})
     user: UserEntity;
 
-    @OneToMany(() => FileEntity, (file) => file.playlist, { cascade: true })
-    @JoinColumn()
+    @OneToMany(() => FileEntity, (file) => file.playlist)
     files: FileEntity[];
 
     @CreateDateColumn()
