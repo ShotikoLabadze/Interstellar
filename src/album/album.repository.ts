@@ -29,7 +29,7 @@ export class AlbumRepository {
   ) {
     const album = this.albumRepository.create({
       ...createAlbumDto,
-      file, // Assign the single file
+      file, 
       author,
     });
     return await this.albumRepository.save(album);
@@ -37,7 +37,7 @@ export class AlbumRepository {
 
   async findAll() {
     return await this.albumRepository.find({
-      relations: ['file', 'musics'], // Adjusted to only retrieve the single file.
+      relations: ['file', 'musics'], 
       order: { createdAt: 'DESC' },
     });
   }
@@ -64,12 +64,10 @@ export class AlbumRepository {
   }
 
   async removeMusicsFromAlbum(albumId: number, musicIds: number[]) {
-    // Validate that musicIds is an array and has elements
     if (!musicIds || !Array.isArray(musicIds) || musicIds.length === 0) {
       throw new BadRequestException('Invalid or missing musicIds');
     }
 
-    // Fetch the album with its musics
     const album = await this.albumRepository.findOne({
       where: { id: albumId },
       relations: ['musics'],
@@ -78,24 +76,18 @@ export class AlbumRepository {
       throw new NotFoundException('Album not found');
     }
 
-    // Filter out the musics that need to be removed
     album.musics = album.musics.filter((music) => !musicIds.includes(music.id));
 
-    // Save the updated album without the removed musics
     return await this.albumRepository.save(album);
   }
 
   async findAllSearch(search?: string) {
-    // Return an empty array if no search term is provided
     if (!search) return [];
-  
-    // Use a query builder to search for albums with matching titles
     const albums = await this.albumRepository
       .createQueryBuilder('album')
-      .where('album.albumName LIKE :name', { name: `%${search}%` }) // Adjusted to match the albumName field
+      .where('album.albumName LIKE :name', { name: `%${search}%` }) 
       .getMany();
   
-    console.log('Found albums:', albums); // Log the found albums for debugging
     return albums;
   }
 
