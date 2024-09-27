@@ -47,17 +47,7 @@ export class PlaylistService {
       throw new NotFoundException(`Playlist with ID ${id} not found`);
     }
 
-    if (updatePlaylistDto.userId !== undefined) {
-      const user = await this.userRepository.findOne(updatePlaylistDto.userId);
-      if (!user) {
-        throw new NotFoundException(
-          `User with ID ${updatePlaylistDto.userId} not found`,
-        );
-      }
-      playlist.user = user;
-    }
-
-    return await this.playlistRepository.update(id, playlist);
+    return await this.playlistRepository.update(id, updatePlaylistDto);
   }
 
   async remove(id: number) {

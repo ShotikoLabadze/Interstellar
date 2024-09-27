@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
-import { Like, Repository } from 'typeorm';
+import { UpdatePlaylistDto } from './dto/update-playlist.dto';
+import { Repository } from 'typeorm';
 import { PlaylistEntity } from './entities/playlist.entity';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { MusicEntity } from 'src/music/entities/music.entity';
@@ -10,9 +11,7 @@ import { MusicEntity } from 'src/music/entities/music.entity';
 export class PlaylistRepository {
   constructor(
     @InjectRepository(PlaylistEntity)
-    private playlistRepository: Repository<PlaylistEntity>,
-    @InjectRepository(MusicEntity)
-    private musicRepository: Repository<MusicEntity>,
+    private readonly playlistRepository: Repository<PlaylistEntity>,
   ) {}
 
   async create(createPlaylistDto: CreatePlaylistDto, user: UserEntity) {
@@ -22,7 +21,8 @@ export class PlaylistRepository {
     });
 
     if (createPlaylistDto.musicIds && createPlaylistDto.musicIds.length > 0) {
-      const musics = await this.musicRepository.findByIds(
+      const musics = await this.playlistRepository.manager.findByIds(
+        MusicEntity,
         createPlaylistDto.musicIds,
       );
       playlist.musics = musics;
@@ -34,23 +34,10 @@ export class PlaylistRepository {
   async findAll() {
     return await this.playlistRepository.find({
       relations: ['user', 'musics'],
-      order: { createdAt: 'DESC' },
     });
   }
 
-  async findAllSearch(search?: string) {
-    if (search) {
-      return await this.playlistRepository.find({
-        where: {
-          name: Like(`%${search}%`),
-        },
-        relations: ['musics'],
-      });
-    }
-    return [];
-  }
-
-  async findOne(id: number): Promise<PlaylistEntity> {
+  async findOne(id: number) {
     const playlist = await this.playlistRepository.findOne({
       where: { id },
       relations: ['user', 'musics'],
@@ -63,9 +50,31 @@ export class PlaylistRepository {
     return playlist;
   }
 
-  async update(id: number, updatePlaylistDto: Partial<PlaylistEntity>) {
-    await this.playlistRepository.update(id, updatePlaylistDto);
-    return this.findOne(id);
+  async findAllSearch(search?: string) {
+    if (search) {
+      return await this.playlistRepository.find({
+        where: { name: search },
+        relations: ['user', 'musics'],
+      });
+    } else {
+      return await this.findAll();
+    }
+  }
+
+  async update(id: number, updatePlaylistDto: UpdatePlaylistDto) {
+    const playlist = await this.findOne(id);
+    if (updatePlaylistDto.musicIds && updatePlaylistDto.musicIds.length > 0) {
+      const musics = await this.playlistRepository.manager.findByIds(
+        MusicEntity,
+        updatePlaylistDto.musicIds,
+      );
+      playlist.musics = musics;
+    }
+
+    return await this.playlistRepository.save({
+      ...playlist,
+      ...updatePlaylistDto,
+    });
   }
 
   async remove(id: number) {
