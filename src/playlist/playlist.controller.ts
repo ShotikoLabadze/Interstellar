@@ -1,23 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PlaylistService } from './playlist.service';
 import { CreatePlaylistDto } from './dto/create-playlist.dto';
 import { UpdatePlaylistDto } from './dto/update-playlist.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('playlist')
 export class PlaylistController {
   constructor(private readonly playlistService: PlaylistService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('file')) 
-  async create(@UploadedFile() file: Express.Multer.File,@Body() createPlaylistDto: CreatePlaylistDto) {
+  async create(@Body() createPlaylistDto: CreatePlaylistDto) {
     const { userId } = createPlaylistDto;
-    if(!userId){
-      throw new Error('User Id is required')
+    if (!userId) {
+      throw new Error('User ID is required');
     }
-    return await this.playlistService.create(file,createPlaylistDto , userId)
-}
-
+    return await this.playlistService.create(createPlaylistDto, userId);
+  }
 
   @Get()
   async findAll() {
@@ -30,7 +35,10 @@ export class PlaylistController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updatePlaylistDto: UpdatePlaylistDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updatePlaylistDto: UpdatePlaylistDto,
+  ) {
     return await this.playlistService.update(+id, updatePlaylistDto);
   }
 

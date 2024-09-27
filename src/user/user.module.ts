@@ -8,11 +8,21 @@ import { PlaylistEntity } from 'src/playlist/entities/playlist.entity';
 import { PlaylistRepository } from 'src/playlist/playlist.repository';
 import { FavoritesEntity } from 'src/favorites/entities/favorites.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { MusicRepository } from 'src/music/music.repository';
+import { MusicEntity } from 'src/music/entities/music.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity,PlaylistEntity, FavoritesEntity]),forwardRef(() => AuthModule),],
+  imports: [
+    TypeOrmModule.forFeature([
+      UserEntity,
+      PlaylistEntity,
+      FavoritesEntity,
+      MusicEntity,
+    ]),
+    forwardRef(() => AuthModule),
+  ],
   controllers: [UserController],
-  providers: [UserService, UserRepository , PlaylistRepository],
+  providers: [UserService, UserRepository, PlaylistRepository, MusicRepository],
   exports: [UserRepository],
 })
 export class UserModule {}

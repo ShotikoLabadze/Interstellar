@@ -1,32 +1,44 @@
-import { FileEntity } from "src/files/entities/file.entity";
-import { MusicEntity } from "src/music/entities/music.entity";
-import { UserEntity } from "src/user/entities/user.entity";
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { FileEntity } from 'src/files/entities/file.entity';
+import { MusicEntity } from 'src/music/entities/music.entity';
+import { UserEntity } from 'src/user/entities/user.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class PlaylistEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ type: 'varchar', length: 255})
-    name: string;
+  @Column({ type: 'varchar', length: 255 })
+  name: string;
 
-    @ManyToMany(() => MusicEntity, (music) => music.playlists)
-    @JoinTable({name:'playlist_music'})
-    musics: MusicEntity[];
-    
-    @ManyToOne(() => UserEntity, {eager:true})
-    user: UserEntity;
+  @ManyToMany(() => MusicEntity, (music) => music.playlists)
+  @JoinTable({ name: 'playlist_music' })
+  musics: MusicEntity[];
 
-    @OneToMany(() => FileEntity, (file) => file.playlist)
-    files: FileEntity[];
+  @ManyToOne(() => UserEntity, { eager: true })
+  user: UserEntity;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @OneToMany(() => FileEntity, (file) => file.playlist)
+  files: FileEntity[];
 
-    @UpdateDateColumn()
-    updatedAt: Date;
- 
-    @DeleteDateColumn()
-    deletedAt: Date;
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
