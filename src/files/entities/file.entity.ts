@@ -22,10 +22,10 @@ export class FileEntity {
   music: MusicEntity;
 
   @OneToMany(() => AlbumEntity, (album) => album.file)
-  album: AlbumEntity;
+  albums: AlbumEntity[]; 
 
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.files)
-  playlist: AlbumEntity;
+  playlist: PlaylistEntity; 
 
   @ManyToOne(() => AuthorEntity, (author) => author.files)
   author: AuthorEntity;
