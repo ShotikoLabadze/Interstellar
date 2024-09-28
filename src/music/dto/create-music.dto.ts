@@ -21,6 +21,5 @@ export class CreateMusicDto {
 
   @IsOptional() 
   @IsString()
-
   albumCover?: string;
 }

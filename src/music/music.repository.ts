@@ -47,7 +47,6 @@ export class MusicRepository {
         'music.artistName AS artistName',
         'music.albumCover AS albumCover',
         'music.albumName AS albumName',
-      
         'music.duration AS duration',
         'music.file AS file',
         'music.createdAt AS createdAt',
@@ -64,7 +63,6 @@ export class MusicRepository {
         artistName: music.artistName,
         albumName: music.albumName,
         albumCover: music.albumCover,
-
         duration: Number(music.duration) || 0,
         file: music.file,
         createdAt: music.createdAt,
