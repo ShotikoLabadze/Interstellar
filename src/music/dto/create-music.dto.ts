@@ -5,7 +5,9 @@ export class CreateMusicDto {
   @IsString()
   name: string;
 
-  
+  @IsOptional() // Optional if you want to calculate duration automatically
+  @IsNumber()
+  duration?: number;
 
   @Type(() => Number)
   @IsNumber()

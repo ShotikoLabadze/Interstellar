@@ -8,6 +8,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AlbumEntity } from 'src/album/entities/album.entity';
 import { ListenersRepository } from 'src/listeners/listeners.repository';
+import { promises as fs } from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import { getAudioDurationInSeconds } from 'get-audio-duration';
 
 @Injectable()
 export class MusicService {
@@ -20,15 +23,27 @@ export class MusicService {
 
   ) {}
 
-  async create(file, createMusicDto: CreateMusicDto) {
+  private async getDurationFromBuffer(buffer: Buffer): Promise<number> {
+    const tempFilePath = `./${uuidv4()}.mp3`;
+
+    try {
+      await fs.writeFile(tempFilePath, buffer);
+      return await getAudioDurationInSeconds(tempFilePath);
+    } catch (error) {
+      throw new Error(`Failed to process buffer: ${error.message}`);
+    }
+  }
+
+  async create(file: Express.Multer.File, createMusicDto: CreateMusicDto) {
     const res = await this.fileService.uploadFile(file);
     const album = await this.albumRepository.findOne({ where: { id: createMusicDto.albumId } });
     if (!album) {
       throw new NotFoundException(`Album with ID ${createMusicDto.albumId} not found`);
     }
 
-    return await this.musicRepository.create(res, createMusicDto, album);
-  ;
+    const duration = await this.getDurationFromBuffer(file.buffer);
+    const musicEntity = await this.musicRepository.create(res, createMusicDto, album, duration);
+    return musicEntity;
   }
 
   async findAll() {

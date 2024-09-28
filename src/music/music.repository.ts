@@ -18,17 +18,19 @@ export class MusicRepository {
     file: FileEntity,
     createMusicDto: CreateMusicDto,
     album: AlbumEntity,
+    duration: number,
   ): Promise<MusicEntity> {
     if (!file) {
       throw new BadRequestException('File must be provided');
     }
-
+  
     const music = await this.musicRepository.save({
       ...createMusicDto,
       albums: [album],
       file: file,
+      duration, // Add the duration here
     });
-
+  
     return music;
   }
 
@@ -43,6 +45,7 @@ export class MusicRepository {
         'music.id AS id',
         'music.name AS name',
         'music.artistName AS artistName',
+        'music.duration AS duration',
         'music.file AS file',
         'music.createdAt AS createdAt',
         'music.updatedAt AS updatedAt',
@@ -56,6 +59,7 @@ export class MusicRepository {
         id: music.id,
         name: music.name,
         artistName: music.artistName,
+        duration: Number(music.duration) || 0,
         file: music.file,
         createdAt: music.createdAt,
         updatedAt: music.updatedAt,
@@ -82,13 +86,15 @@ export class MusicRepository {
       .leftJoinAndSelect('music.listeners', 'listeners')
       .where('music.id = :id', { id })
       .getOne();
-
+  
     if (!music) {
       throw new NotFoundException(`Music with ID ${id} not found`);
     }
-
-    return music;
+    console.log(music)
+  
+    return music; 
   }
+  
 
   async update(id: number, updateMusicDto: UpdateMusicDto): Promise<MusicEntity> {
     await this.musicRepository
