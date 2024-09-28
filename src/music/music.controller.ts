@@ -65,4 +65,6 @@ export class MusicController {
   async remove(@Param('id') id: string) {
     return await this.musicService.remove(+id);
   }
+
+  
 }

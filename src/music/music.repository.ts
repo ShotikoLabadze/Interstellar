@@ -35,42 +35,54 @@ export class MusicRepository {
   }
 
   
-     async findAll() {
+  async findAll() {
     const musics = await this.musicRepository
-      .createQueryBuilder('music')
-      .leftJoinAndSelect('music.file', 'file')
-      .leftJoinAndSelect('music.albums', 'albums')
-      .leftJoinAndSelect('music.listeners', 'listeners')
-      .select([
-        'music.id AS id',
-        'music.name AS name',
-        'music.artistName AS artistName',
-        'music.albumCover AS albumCover',
-        'music.albumName AS albumName',
-        'music.duration AS duration',
-        'music.file AS file',
-        'music.createdAt AS createdAt',
-        'music.updatedAt AS updatedAt',
-        'music.deletedAt AS deletedAt',
-        'COUNT(listeners.id) AS listenerCount', 
-      ])
-      .groupBy('music.id') 
-      .orderBy('listenerCount', 'DESC') 
-      .getRawMany();
-      return musics.map(music => ({
+        .createQueryBuilder('music')
+        .leftJoinAndSelect('music.file', 'file')
+        .leftJoinAndSelect('music.albums', 'albums')
+        .leftJoinAndSelect('music.listeners', 'listeners')
+        .select([
+            'music.id AS id',
+            'music.name AS name',
+            'music.artistName AS artistName',
+            'music.albumCover AS albumCover',
+            'music.albumName AS albumName',
+            'music.duration AS duration',
+            'file.id AS fileId',
+            'file.url AS fileUrl',
+            'file.key AS fileKey',
+            'file.bucket AS fileBucket',
+            'file.fileName AS fileName',
+            'music.createdAt AS createdAt',
+            'music.updatedAt AS updatedAt',
+            'music.deletedAt AS deletedAt',
+            'COUNT(listeners.id) AS listenerCount',
+        ])
+        .groupBy('music.id')
+        .orderBy('listenerCount', 'DESC')
+        .getRawMany();
+
+    return musics.map(music => ({
         id: music.id,
         name: music.name,
         artistName: music.artistName,
         albumName: music.albumName,
         albumCover: music.albumCover,
         duration: Number(music.duration) || 0,
-        file: music.file,
+        file: {
+            id: music.fileId,
+            url: music.fileUrl,
+            key: music.fileKey,
+            bucket: music.fileBucket,
+            fileName: music.fileName,
+        },
         createdAt: music.createdAt,
         updatedAt: music.updatedAt,
         deletedAt: music.deletedAt,
-        listenerCount: Number(music.listenerCount) || 0, 
-      }));
-  }
+        listenerCount: Number(music.listenerCount) || 0,
+    }));
+}
+
   async findAllSearch(search?: string): Promise<MusicEntity[]> {
     if (search) {
       return await this.musicRepository
@@ -98,6 +110,8 @@ export class MusicRepository {
   
     return music; 
   }
+
+  
   
 
   async update(id: number, updateMusicDto: UpdateMusicDto): Promise<MusicEntity> {
