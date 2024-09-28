@@ -85,6 +85,7 @@ export class AlbumRepository {
     if (!search) return [];
     const albums = await this.albumRepository
       .createQueryBuilder('album')
+       .leftJoinAndSelect('album.file', 'file')
       .where('album.albumName LIKE :name', { name: `%${search}%` }) 
       .getMany();
   
