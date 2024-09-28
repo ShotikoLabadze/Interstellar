@@ -37,7 +37,7 @@ export class AlbumRepository {
 
   async findAll() {
     return await this.albumRepository.find({
-      relations: ['file', 'musics'], 
+      relations: ['file', 'musics','musics.file'], 
       order: { createdAt: 'DESC' },
     });
   }
@@ -99,6 +99,7 @@ export class AlbumRepository {
       .leftJoinAndSelect('album.author', 'author')
       .leftJoinAndSelect('album.musics', 'musics')
       .leftJoinAndSelect('album.file', 'file')
+      .leftJoinAndSelect('musics.file','musicFile')
       .getOne();
 
     // const album = await this.albumRepository.findOne({

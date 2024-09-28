@@ -90,7 +90,7 @@ export class MusicRepository {
     if (!music) {
       throw new NotFoundException(`Music with ID ${id} not found`);
     }
-    console.log(music)
+
   
     return music; 
   }
