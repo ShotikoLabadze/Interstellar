@@ -29,6 +29,9 @@ export class MusicEntity {
   @Column({ type: 'varchar' })
   artistName: string;
 
+  @Column({ type: 'varchar', length: 255 })
+  albumName: string;
+
   @Column({nullable: true }) // Add this line for duration
   duration: number;
 

@@ -9,6 +9,12 @@ export class CreateMusicDto {
   @IsNumber()
   duration?: number;
 
+  @IsString()
+  albumName:string
+
+  @IsString()
+  artistName:string
+
   @Type(() => Number)
   @IsNumber()
   albumId: number;
