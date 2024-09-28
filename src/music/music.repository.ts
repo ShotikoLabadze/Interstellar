@@ -45,6 +45,8 @@ export class MusicRepository {
         'music.id AS id',
         'music.name AS name',
         'music.artistName AS artistName',
+        'music.albumCover AS albumCover',
+        'music.albumName AS albumName',
       
         'music.duration AS duration',
         'music.file AS file',
@@ -60,6 +62,8 @@ export class MusicRepository {
         id: music.id,
         name: music.name,
         artistName: music.artistName,
+        albumName: music.albumName,
+        albumCover: music.albumCover,
 
         duration: Number(music.duration) || 0,
         file: music.file,
