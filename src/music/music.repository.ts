@@ -45,6 +45,7 @@ export class MusicRepository {
         'music.id AS id',
         'music.name AS name',
         'music.artistName AS artistName',
+      
         'music.duration AS duration',
         'music.file AS file',
         'music.createdAt AS createdAt',
@@ -59,6 +60,7 @@ export class MusicRepository {
         id: music.id,
         name: music.name,
         artistName: music.artistName,
+
         duration: Number(music.duration) || 0,
         file: music.file,
         createdAt: music.createdAt,

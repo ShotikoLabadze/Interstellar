@@ -18,4 +18,9 @@ export class CreateMusicDto {
   @Type(() => Number)
   @IsNumber()
   albumId: number;
+
+  @IsOptional() 
+  @IsString()
+  @IsUrl() 
+  albumCover?: string;
 }

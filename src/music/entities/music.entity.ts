@@ -32,8 +32,11 @@ export class MusicEntity {
   @Column({ type: 'varchar', length: 255 })
   albumName: string;
 
-  @Column({nullable: true }) // Add this line for duration
+  @Column({nullable: true }) 
   duration: number;
+
+  @Column({ nullable: true }) 
+  albumCover?: string;
 
   @ManyToMany(() => AlbumEntity, (album) => album.musics)
   albums: AlbumEntity[];
