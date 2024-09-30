@@ -46,10 +46,10 @@ export class UserController {
 
   //changing paswrod
   @UseGuards(AdminGuard)
-@Patch(':id')
-async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  return this.userService.update(+id, updateUserDto);
-}
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(+id, updateUserDto);
+  }
 
   //block endpoints
   @UseGuards(AdminGuard)

@@ -15,6 +15,14 @@ import { UpdatePlaylistDto } from './dto/update-playlist.dto';
 export class PlaylistController {
   constructor(private readonly playlistService: PlaylistService) {}
 
+  @Post(':id/:musicId')
+  async addMusicToPlaylist(
+    @Param('id') playlistId: string,
+    @Param('musicId') musicId: string,
+  ) {
+    return await this.playlistService.addMusicToPlaylist(+playlistId, +musicId);
+  }
+
   @Post()
   async create(@Body() createPlaylistDto: CreatePlaylistDto) {
     const { userId } = createPlaylistDto;

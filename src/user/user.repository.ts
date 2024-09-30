@@ -69,6 +69,10 @@ export class UserRepository {
     return user;
   }
 
+  async save(user:UserEntity) {
+    return await this.userRepository.save(user)
+  }
+
   async update(
     id: number,
     updateUserDto: UpdateUserDto,

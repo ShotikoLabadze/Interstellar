@@ -12,6 +12,8 @@ export class PlaylistRepository {
   constructor(
     @InjectRepository(PlaylistEntity)
     private readonly playlistRepository: Repository<PlaylistEntity>,
+    @InjectRepository(MusicEntity)
+    private readonly musicRepository: Repository<MusicEntity>
   ) {}
 
   async create(createPlaylistDto: CreatePlaylistDto, user: UserEntity) {
@@ -21,15 +23,13 @@ export class PlaylistRepository {
     });
 
     if (createPlaylistDto.musicIds && createPlaylistDto.musicIds.length > 0) {
-      const musics = await this.playlistRepository.manager.findByIds(
-        MusicEntity,
-        createPlaylistDto.musicIds,
-      );
+      const musics = await this.musicRepository.findByIds(createPlaylistDto.musicIds);
       playlist.musics = musics;
     }
 
     return await this.playlistRepository.save(playlist);
-  }
+
+    }
 
   async findAll() {
     return await this.playlistRepository.find({
@@ -60,6 +60,10 @@ export class PlaylistRepository {
       return await this.findAll();
     }
   }
+
+async save(playlist: PlaylistEntity){
+  return await this.playlistRepository.save(playlist)
+}
 
   async update(id: number, updatePlaylistDto: UpdatePlaylistDto) {
     const playlist = await this.findOne(id);
