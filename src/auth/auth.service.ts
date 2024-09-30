@@ -35,17 +35,13 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials.');
     }
-
-    // Check if the user is an admin
-    if (!user.isAdmin) {
-      throw new ForbiddenException('Access denied: Admins only');
-    }
+    const isAdmin = user.isAdmin;
 
     // Create JWT token
     const payload = {
       userId: user.id,
       email: user.email,
-      isAdmin: user.isAdmin,
+      isAdmin,
     };
 
     const jwtToken = await this.jwtService.signAsync(payload, {
@@ -59,7 +55,7 @@ export class AuthService {
       name: user.name,
       email: user.email,
       id: user.id,
-      role: 'admin', // Since we already checked if the user is an admin
+      role: isAdmin ? 'admin' : 'user',
     };
   }
 }
