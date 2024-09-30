@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
@@ -21,31 +22,37 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException('Token is missing');
+      throw new UnauthorizedException('Authorization token is missing.');
     }
 
     let payload;
     try {
       payload = await this.jwtService.verifyAsync(token);
-      request['user'] = payload; 
-    } catch {
-      throw new UnauthorizedException('Invalid token');
+      request.user = payload; // Directly set the user payload
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token.');
+    }
+
+    const user: UserEntity = await this.userRepository.findOne(payload.userId);
+    if (!user) {
+      throw new UnauthorizedException('User not found.');
     }
 
     // Check if user is blocked
-    const user: UserEntity = await this.userRepository.findOne(payload.userId);
-    if (user?.blocked) {
-      throw new UnauthorizedException('User account is blocked');
+    if (user.blocked) {
+      throw new ForbiddenException('User account is blocked.');
     }
 
-    // Check if the user is an admin
     request.user.isAdmin = user.isAdmin; // Set isAdmin on the request object
 
     return true; 
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    const authorizationHeader = request.headers.authorization;
+    if (!authorizationHeader) return undefined;
+
+    const [type, token] = authorizationHeader.split(' ');
     return type === 'Bearer' ? token : undefined;
   }
 }
