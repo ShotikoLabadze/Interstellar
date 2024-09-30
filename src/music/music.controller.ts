@@ -47,7 +47,6 @@ export class MusicController {
   @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string , @Req() req: any) {
-    console.log(req.user)
     return await this.musicService.findOne(+id, req.user.userId);
   }
 
