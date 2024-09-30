@@ -26,21 +26,19 @@ export class UserService {
   }
 
   //get me
-  async getCurrentUser(
-    userId: number,
-  ): Promise<{ name: string; email: string }> {
+  async getCurrentUser(userId: number): Promise<{ id: number; name: string; email: string }> {
     const user = await this.userRepository.findUserById(userId);
-
+  
     if (!user) {
       throw new Error('User not found');
     }
-
+  
     return {
+      id: user.id,
       name: user.name,
       email: user.email,
     };
   }
-
   //blocking users
 
   async blockUsers(ids: number[]): Promise<{ message: string }> {
