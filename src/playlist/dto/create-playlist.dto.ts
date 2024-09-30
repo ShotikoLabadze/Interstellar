@@ -5,8 +5,8 @@ export class CreatePlaylistDto {
   @IsString()
   name: string;
 
-  @Type(() => Number)
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   userId: number;
 
