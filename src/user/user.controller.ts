@@ -19,7 +19,6 @@ import { AdminGuard } from 'src/auth/admin.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AdminGuard)
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
