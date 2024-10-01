@@ -28,12 +28,17 @@ export class AuthGuard implements CanActivate {
     let payload;
     try {
       payload = await this.jwtService.verifyAsync(token);
-      request.user = payload; // Directly set the user payload
+      request.user = payload; // Set the user payload directly
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token.');
     }
 
-    const user: UserEntity = await this.userRepository.findOne(payload.userId);
+    const userId = payload?.userId;
+    if (!userId) {
+      throw new UnauthorizedException('User ID not found in token payload.');
+    }
+
+    const user: UserEntity = await this.userRepository.findOne(userId);
     if (!user) {
       throw new UnauthorizedException('User not found.');
     }
@@ -43,7 +48,8 @@ export class AuthGuard implements CanActivate {
       throw new ForbiddenException('User account is blocked.');
     }
 
-    request.user.isAdmin = user.isAdmin; // Set isAdmin on the request object
+    // Set isAdmin on the request object
+    request.user.isAdmin = user.isAdmin;
 
     return true; 
   }
