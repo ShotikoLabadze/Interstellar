@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
     let payload;
     try {
       payload = await this.jwtService.verifyAsync(token);
-      request.user = payload; // Set the user payload directly
+      request.user = payload; 
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token.');
     }
@@ -43,12 +43,10 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('User not found.');
     }
 
-    // Check if user is blocked
     if (user.blocked) {
       throw new ForbiddenException('User account is blocked.');
     }
 
-    // Set isAdmin on the request object
     request.user.isAdmin = user.isAdmin;
 
     return true; 

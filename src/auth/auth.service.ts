@@ -22,14 +22,12 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials.');
     }
 
-    // Check if the user is blocked
     if (user.blocked) {
       throw new ForbiddenException(
         'Your account is blocked. Please contact support.',
       );
     }
 
-    // Check if the password is valid
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -37,7 +35,6 @@ export class AuthService {
     }
     const isAdmin = user.isAdmin;
 
-    // Create JWT token
     const payload = {
       userId: user.id,
       email: user.email,
@@ -46,10 +43,9 @@ export class AuthService {
 
     const jwtToken = await this.jwtService.signAsync(payload, {
       secret: this.configService.get<string>('JWT_SECRET'),
-      expiresIn: '30d', // Adjust token expiration as needed
+      expiresIn: '30d', 
     });
 
-    // Return the JWT token and user info
     return {
       accessToken: jwtToken,
       name: user.name,

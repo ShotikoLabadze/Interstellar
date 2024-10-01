@@ -58,6 +58,7 @@ export class PlaylistController {
     return await this.playlistService.update(+id, updatePlaylistDto);
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.playlistService.remove(+id);

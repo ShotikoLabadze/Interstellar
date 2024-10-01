@@ -49,7 +49,7 @@ export class MusicController {
   async findOne(@Param('id') id: string , @Req() req: any) {
     return await this.musicService.findOne(+id, req.user.userId);
   }
-
+        
   @UseGuards(AdminGuard)
   @Patch(':id')
   async update(
