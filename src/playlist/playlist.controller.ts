@@ -44,7 +44,7 @@ export class PlaylistController {
     return await this.playlistService.findAll();
   }
 
-  @UseGuards(AuthGuard)
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.playlistService.findOne(+id);
