@@ -50,6 +50,7 @@ export class PlaylistController {
     return await this.playlistService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: string,
