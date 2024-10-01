@@ -21,13 +21,12 @@ export class FileEntity {
   @OneToOne(() => MusicEntity, (music) => music.file)
   music: MusicEntity;
 
-  @OneToMany(() => AlbumEntity, (album) => album.file)
-  albums: AlbumEntity[]; 
+  @OneToMany(() => AlbumEntity, (album) => album.file)  albums: AlbumEntity[]; 
 
   @ManyToOne(() => PlaylistEntity, (playlist) => playlist.files)
   playlist: PlaylistEntity; 
 
-  @ManyToOne(() => AuthorEntity, (author) => author.files)
+  @ManyToOne(() => AuthorEntity, (author) => author.files , {nullable: true})
   author: AuthorEntity;
 
   @Column()

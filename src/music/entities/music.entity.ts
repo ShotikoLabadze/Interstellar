@@ -41,8 +41,12 @@ export class MusicEntity {
   @ManyToMany(() => AlbumEntity, (album) => album.musics)
   albums: AlbumEntity[];
 
-  @ManyToOne(() => AuthorEntity, (author) => author.musics)
-  author: AuthorEntity[];
+
+  @Column({nullable: true})
+  authorId!: number
+
+  @ManyToOne(() => AuthorEntity, (author) => author.musics , {nullable: true})
+  author: AuthorEntity;
 
   @OneToMany(() => ListenerEntity, (listener) => listener.music)
     listeners: ListenerEntity[];
