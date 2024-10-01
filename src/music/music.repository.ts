@@ -56,9 +56,11 @@ export class MusicRepository {
             'music.createdAt AS createdAt',
             'music.updatedAt AS updatedAt',
             'music.deletedAt AS deletedAt',
+            "albums.id AS albumId",
             'COUNT(listeners.id) AS listenerCount',
         ])
         .groupBy('music.id')
+        .addGroupBy("albums.id")
         .orderBy('listenerCount', 'DESC')
         .getRawMany();
 
@@ -76,6 +78,7 @@ export class MusicRepository {
             bucket: music.fileBucket,
             fileName: music.fileName,
         },
+        albumId:music.albumId,
         createdAt: music.createdAt,
         updatedAt: music.updatedAt,
         deletedAt: music.deletedAt,
