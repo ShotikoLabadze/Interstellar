@@ -11,11 +11,16 @@ export class FilesService {
 
   async uploadFile(file: Express.Multer.File) {
     const buffer = file.buffer;
-    const fileName = file.originalname.split('.').slice(0, -1).join('.');
+    
+    // Use a static file name for all uploads, e.g., "file.mp3"
+    const staticFileName = 'file.mp3';
 
-    const result = await this.s3Service.upload(file, fileName);
+    // Upload the file to S3 with a fixed file name
+    const result = await this.s3Service.upload(file, staticFileName);
+
+    // Save the file metadata in the database using the static file name
     const savedFile = await this.filesRepository.save(
-      fileName,
+      staticFileName,  // Static file name used
       result.Location,
       result.Key,
       result.Bucket,
@@ -23,9 +28,9 @@ export class FilesService {
 
     return savedFile;
   }
-  async getFile(fileId:number) {
-    const file = await this.filesRepository.findOne(fileId)
 
+  async getFile(fileId: number) {
+    const file = await this.filesRepository.findOne(fileId);
     return file;
   }
 
