@@ -26,17 +26,25 @@ export class UserService {
   }
 
   //get me
-  async getCurrentUser(userId: number): Promise<{ id: number; name: string; email: string }> {
+  async getCurrentUser(userId: number): Promise<{ id: number; name: string; email: string; playlists: any[] }> {
     const user = await this.userRepository.findUserById(userId);
-  
+    
     if (!user) {
       throw new Error('User not found');
     }
+  
+    // Map playlists to desired structure (if you have a specific DTO, use that)
+    const playlists = user.playlists.map(playlist => ({
+      id: playlist.id, // Assuming you want to include ID
+      name: playlist.name,
+      // Include any other relevant fields here
+    }));
   
     return {
       id: user.id,
       name: user.name,
       email: user.email,
+      playlists, // Add playlists here
     };
   }
   //blocking users
