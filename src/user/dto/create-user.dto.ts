@@ -26,8 +26,7 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty()
-  @MinLength(8, { message: 'password must be at least 8 chattacters long' })
-  @IsStrongPassword()
+  @MinLength(5, { message: 'Password must be at least 5 characters long' })
   password: string;
 
   @IsArray()
